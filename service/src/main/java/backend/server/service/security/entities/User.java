@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -22,10 +23,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Size(max = 20)
+    private String prenom;
 
     @NotBlank
     @Size(max = 20)
@@ -39,6 +44,10 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
+
+    @NotBlank
+    @Size(max = 120)
+    private Date dateCreation;
 
     @ManyToMany(fetch = LAZY)
     @JoinTable(
