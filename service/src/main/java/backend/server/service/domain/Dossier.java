@@ -22,6 +22,7 @@ public class Dossier {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
     private List<Dossier> dossiers = new ArrayList<>();
 
+
     public String getFullPath(){
         String path= "/"+nom;
         if(racine != null) path = racine.getFullPath() + path;

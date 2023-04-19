@@ -1,9 +1,14 @@
 package backend.server.service;
 
+import backend.server.service.Service.CategorieService;
 import backend.server.service.Service.DossierService;
 import backend.server.service.Service.FichierService;
+import backend.server.service.Service.LabelService;
+import backend.server.service.domain.Categorie;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
+import backend.server.service.domain.Label;
+import backend.server.service.enums.ETAT;
 import backend.server.service.security.entities.EROLE;
 import backend.server.service.security.entities.Role;
 import backend.server.service.security.repositories.RoleRepository;
@@ -13,8 +18,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
+
 @SpringBootApplication @Slf4j
 public class ServiceApplication {
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(ServiceApplication.class, args);
@@ -22,7 +31,7 @@ public class ServiceApplication {
 
     // this command line runner creates new roles and new users for testing
     @Bean
-    CommandLineRunner run(RoleRepository roleRepository, DossierService dossierService, FichierService fichierService) {
+    CommandLineRunner run(RoleRepository roleRepository, DossierService dossierService, FichierService fichierService, LabelService labelService, CategorieService categorieService) {
         return args -> {
             roleRepository.save(new Role(null, EROLE.ROLE_USER));
             roleRepository.save(new Role(null, EROLE.ROLE_MODERATOR));
@@ -37,8 +46,21 @@ public class ServiceApplication {
             Dossier algebra = dossierService.addDossier(Dossier.builder().nom("algebra").build(),math.getId());
             school = dossierService.renameDossier(school.getId(),"mdrasa");
             log.info("current school name file named {}",school.getFullPath());
-            Fichier pdf = fichierService.addFichier(Fichier.builder().nom("TP1").extension("pdf").build(), math.getId());
+            Fichier pdf = fichierService.addFichier(Fichier.builder().nom("TP1").extension("pdf").type("Document").labels(new ArrayList<>()).build(), math.getId());
             dossierService.fileTree(root.getId(),1L);
+            pdf.setTaille(2569874.);
+            Label label = Label.builder().nom("à faire").build();
+            Label label2 = Label.builder().nom("devoir").build();
+            labelService.addLabel(label);
+            labelService.addLabel(label2);
+            Categorie categorie = Categorie.builder().nom("études").build();
+            categorieService.addCategorie(categorie);
+            pdf.getLabels().add(label);
+            pdf.getLabels().add(label2);
+            pdf.setCategorie(categorie);
+            pdf = fichierService.updateFichier(pdf);
+            pdf.setEtat(ETAT.ACCEPTED);
+            log.info(pdf.toString());
         };
     }
 
