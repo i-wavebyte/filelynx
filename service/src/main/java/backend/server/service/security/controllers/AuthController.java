@@ -136,7 +136,11 @@ public class AuthController {
         Compagnie compagnie = new Compagnie();
         compagnie.setNom(signUpRequest.getUsername());
         compagnie.setQuota(1024.*1024.*1024.*50);
-        compagnieService.createCompagnie(compagnie);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        compagnie = compagnieService.createCompagnie(compagnie);
+
+        // Creating a default groupe for the compagnie
+        compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
+
+        return ResponseEntity.ok(new MessageResponse("Compagnie registered successfully!"));
     }
 }
