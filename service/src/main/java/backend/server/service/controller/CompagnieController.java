@@ -4,6 +4,7 @@ import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
 import backend.server.service.Service.MembreService;
 import backend.server.service.domain.Compagnie;
+import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
 import backend.server.service.payloads.RegisterUserRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
@@ -78,5 +79,26 @@ public class CompagnieController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PostMapping("/ChangeMemberGroup/{username}/{group}")
+    public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Membre membre = membreService.getMembre(username);
+        membre.setGroupe(groupeService.getGroupe(group,compagnieNom));
+        membreService.updateMembre(membre);
+
+        return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PostMapping("/createGroup/{group}")
+    public ResponseEntity<?> createGroup(@PathVariable String group) {
+        compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
+
+        return ResponseEntity.ok(new MessageResponse("Group created successfully"));
+    }
+
 
 }

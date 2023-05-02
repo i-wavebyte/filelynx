@@ -31,4 +31,8 @@ public class MembreService {
         membreRepository.deleteById(id);
     }
 
+    public Membre getMembre(String username){
+        return membreRepository.findByUsername(username);
+    }
+
 }

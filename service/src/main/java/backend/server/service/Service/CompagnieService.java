@@ -46,18 +46,27 @@ public class CompagnieService {
         compagnieRepository.deleteByNom(nom);
     }
 
-    public Groupe createGroupe(String nom, double quota){
+    public Compagnie createGroupe(String nom, double quota){
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        //check if the compagnie has a groupe with the same name
+        if(groupeService.getGroupe(nom, compagnieName) != null){
+            throw new RuntimeException("Groupe already exists");
+        }
+
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
         //get the id of the current authenticated user via the security context holder
-        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
-        compagnieRepository.save(compagnie);
-        return groupeService.addGroupe(groupe);
+        return compagnieRepository.save(compagnie);
     }
 
     public Compagnie createGroupe(String nom, double quota, Long CompagnieId){
+        //check if the compagnie has a groupe with the same name
+        if(groupeService.getGroupe(nom, SecurityContextHolder.getContext().getAuthentication().getName()) != null){
+            throw new RuntimeException("Groupe already exists");
+        }
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
 
         Compagnie compagnie = compagnieRepository.findById(CompagnieId).orElseThrow(()-> new RuntimeException("Compagnie not found") );
