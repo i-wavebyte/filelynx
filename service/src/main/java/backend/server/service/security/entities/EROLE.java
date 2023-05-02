@@ -5,6 +5,5 @@ package backend.server.service.security.entities;
  */
 public enum EROLE {
     ROLE_USER, // The user has basic access to the system
-    ROLE_MODERATOR, // The user has elevated privileges to moderate content
-    ROLE_ADMIN // The user has full access to the system and can perform administrative tasks
-}
+    ROLE_COMPAGNIE // The user has elevated privileges to moderate content
+ }

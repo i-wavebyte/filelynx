@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -30,10 +29,6 @@ public class User{
 
     @NotBlank
     @Size(max = 20)
-    private String prenom;
-
-    @NotBlank
-    @Size(max = 20)
     private String username;
 
     @NotBlank
@@ -44,10 +39,6 @@ public class User{
     @NotBlank
     @Size(max = 120)
     private String password;
-
-    @NotBlank
-    @Size(max = 120)
-    private Date dateCreation;
 
     @ManyToMany(fetch = LAZY)
     @JoinTable(

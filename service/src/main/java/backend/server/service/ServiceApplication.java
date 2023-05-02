@@ -33,9 +33,15 @@ public class ServiceApplication {
     @Bean
     CommandLineRunner run(RoleRepository roleRepository, DossierService dossierService, FichierService fichierService, LabelService labelService, CategorieService categorieService) {
         return args -> {
-            roleRepository.save(new Role(null, EROLE.ROLE_USER));
-            roleRepository.save(new Role(null, EROLE.ROLE_MODERATOR));
-            roleRepository.save(new Role(null, EROLE.ROLE_ADMIN));
+            try{
+                roleRepository.save(new Role(null, EROLE.ROLE_USER));
+                roleRepository.save(new Role(null, EROLE.ROLE_COMPAGNIE));
+            }
+            catch (Exception e){
+                log.info("roles already created");
+            }
+
+
 
 
             Dossier root = dossierService.addDossier(Dossier.builder().nom("root").build(),null);

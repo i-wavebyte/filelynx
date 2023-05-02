@@ -1,6 +1,5 @@
 package backend.server.service.security.POJOs.responses;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

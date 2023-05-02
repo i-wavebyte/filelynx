@@ -1,17 +1,13 @@
 package backend.server.service.security.controllers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import backend.server.service.Service.CompagnieService;
+import backend.server.service.domain.Compagnie;
+import backend.server.service.security.JwtUtils;
+import backend.server.service.security.POJOs.requests.LoginRequest;
+import backend.server.service.security.POJOs.requests.SignupRequest;
 import backend.server.service.security.POJOs.requests.TokenRefreshRequest;
 import backend.server.service.security.POJOs.responses.JwtResponse;
-import backend.server.service.security.POJOs.requests.LoginRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
-import backend.server.service.security.POJOs.requests.SignupRequest;
 import backend.server.service.security.POJOs.responses.TokenRefreshResponse;
 import backend.server.service.security.entities.EROLE;
 import backend.server.service.security.entities.RefreshToken;
@@ -20,7 +16,6 @@ import backend.server.service.security.entities.User;
 import backend.server.service.security.exceptions.TokenRefreshException;
 import backend.server.service.security.repositories.RoleRepository;
 import backend.server.service.security.repositories.UserRepository;
-import backend.server.service.security.JwtUtils;
 import backend.server.service.security.services.RefreshTokenService;
 import backend.server.service.security.services.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +26,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 // This is a REST controller that handles user authentication and registration requests
 //codegpt do : generate an importable minified json file to postman for this controller, the root is http://localhost:8080
@@ -60,6 +57,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    CompagnieService compagnieService;
 
     /**
      * Authenticates a user and returns a JWT token if successful
@@ -126,23 +126,17 @@ public class AuthController {
         User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
 
         // Set user roles
-        Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                log.info("role: {}", role);
-                        Role adminRole = roleRepository.findByName(EROLE.valueOf(role)).orElseThrow(() -> new RuntimeException(String.format("Error: Role {} is not found.",role)));
-                        roles.add(adminRole);
-            });
-        }
-
+        Role CompagnieRole = roleRepository.findByName(EROLE.ROLE_COMPAGNIE).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        roles.add(CompagnieRole);
         user.setRoles(roles);
         userRepository.save(user);
 
+        // Create new compagnie
+        Compagnie compagnie = new Compagnie();
+        compagnie.setNom(signUpRequest.getUsername());
+        compagnie.setQuota(1024.*1024.*1024.*50);
+        compagnieService.createCompagnie(compagnie);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }

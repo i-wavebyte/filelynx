@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e0b6bbc4-f980-4cb1-b994-d4715a73ebe6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/Repository/DossierRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/Repository/DossierRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/Repository/FichierRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/Repository/FichierRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/ServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/ServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/domain/Dossier.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/domain/Dossier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/AuthEntryPointJwt.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/AuthEntryPointJwt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/AuthTokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/AuthTokenFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/JwtUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/POJOs/requests/SignupRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/POJOs/requests/SignupRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/POJOs/responses/TokenRefreshResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/POJOs/responses/TokenRefreshResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/entities/EROLE.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/entities/EROLE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/entities/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/services/RefreshTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/services/RefreshTokenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/services/UserDetailsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/java/backend/server/service/security/services/UserDetailsImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2OuSqNjuW61V15XFLHOf7FFK1pD" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/stagiaire7/Documents/GitHub/filelynx/service&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="backend.server.service.payloads" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="backend.server.service.ServiceApplication" />
+      <module name="service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="backend.server.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ServiceApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e0b6bbc4-f980-4cb1-b994-d4715a73ebe6" name="Changes" comment="" />
+      <created>1682409182254</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682409182254</updated>
+    </task>
+    <servers />
+  </component>
+</project>

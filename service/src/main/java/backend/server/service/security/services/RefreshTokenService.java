@@ -4,8 +4,8 @@ import backend.server.service.security.entities.RefreshToken;
 import backend.server.service.security.exceptions.TokenRefreshException;
 import backend.server.service.security.repositories.RefreshTokenRepository;
 import backend.server.service.security.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
