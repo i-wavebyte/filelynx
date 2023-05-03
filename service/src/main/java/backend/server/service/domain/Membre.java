@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity @AllArgsConstructor @NoArgsConstructor @Builder @Data
-public class Membre {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Membre extends RessourceAccessor{
     private String username;
     private String nom;
     private String prenom;

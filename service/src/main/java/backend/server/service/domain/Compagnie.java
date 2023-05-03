@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity @AllArgsConstructor @NoArgsConstructor @Data
-public class Compagnie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Compagnie extends RessourceAccessor{
     private String nom;
     private Double quota;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")

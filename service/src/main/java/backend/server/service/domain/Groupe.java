@@ -13,10 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Groupe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Groupe extends RessourceAccessor{
     private String nom;
     private Double quota;
     @ManyToOne
