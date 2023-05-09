@@ -6,7 +6,7 @@
 .container {
     margin-left: 60px;
     margin-right: 60px;
-    padding-top: 25px;
+    /* padding-top: 25px; */
 
 }
 
@@ -15,6 +15,11 @@ nav {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 40px;
+    padding-top: 25px;
+    /* position: fixed; */
+    /* z-index: 33; */
+  /* top: 0; */
+  /* width: 90%; */
 }
 
 .navbar .nav-links {
@@ -139,7 +144,7 @@ nav button {
     margin: auto;
     width: 90%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -152,7 +157,7 @@ nav button {
 }
 
 .item .logo img{
-    width: 55px;
+    width: 50px;
     height: 150px;
     margin-right: 10px;
     /* padding-top: -16px; */
@@ -165,7 +170,7 @@ nav button {
     font-style: normal;
     font-weight: 400;
     font-size: 17px;
-    line-height: 29px;
+    line-height: 25px;
     color: #191716;
     margin-bottom: 22px;
 }
