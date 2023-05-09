@@ -1,90 +1,79 @@
 <div class="login-wrapper">
-
+    <div class="decoration">
+      <img src="../../../assets/logo.svg" alt="FILELYNX LOGO">
+    </div>
     <div class="login-form">
-      <img src="./../../../assets/logo.png" alt="" class="logo">
+      <img src="./../../../assets/FileLynx logo hh.png" alt="" class="logo">
         <div>
-            <h1 class="login-title">Create an account here, soldier.</h1>
+            <h1 class="login-title">Créer un compte pour commencer</h1>
         </div>
-      <form
-        *ngIf="!isSuccessful"
-        name="form"
-        (ngSubmit)="f.form.valid && onSubmit()"
-        #f="ngForm"
-        novalidate
-      >
+      <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="alert centered" *ngIf="f.submitted && isSignUpFailed">
-        Signup failed!<br />{{ errorMessage }}
+        L'inscription a échoué!<br />{{ errorMessage }}
       </div>
         <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            class="form-control"
-            name="username"
-            [(ngModel)]="form.username"
-            required
-            minlength="3"
-            maxlength="20"
-            #username="ngModel"
-          />
+          <label for="username">Nom d'utilisateur <span class="required">*</span></label>
+          <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required minlength="3" maxlength="20" #username="ngModel"/>
           <div class="alert-danger" *ngIf="username.errors && f.submitted">
-            <div *ngIf="username.errors['required']" class="alert">Username is required</div>
+            <div *ngIf="username.errors['required']" class="alert">Nom d'utilisateur requis</div>
             <div *ngIf="username.errors['minlength']" class="alert">
-              Username must be at least 3 characters
+              Le nom d'utilisateur doit comporter au moins 3 caractères
             </div>
             <div *ngIf="username.errors['maxlength']" class="alert">
-              Username must be at most 20 characters
-            </div>
+              Le nom d'utilisateur doit comporter au maximum 20 caractères</div>
           </div>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            name="email"
-            [(ngModel)]="form.email"
-            required
-            email
-            #email="ngModel"
-          />
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" class="form-control" name="email" [(ngModel)]="form.email" required email #email="ngModel"/>
           <div class="alert-danger" *ngIf="email.errors && f.submitted">
-            <div *ngIf="email.errors['required']" class="alert">Email is required</div>
+            <div *ngIf="email.errors['required']" class="alert">Email requis</div>
             <div *ngIf="email.errors['email']" class="alert">
-              Email must be a valid email address
+              L'e-mail doit être une adresse e-mail valide
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            [(ngModel)]="form.password"
-            required
-            minlength="6"
-            #password="ngModel"
-          />
-          <div class="alert-danger" *ngIf="password.errors && f.submitted">
-            <div *ngIf="password.errors['required']"class="alert">Password is required</div>
-            <div *ngIf="password.errors['minlength']" class="alert">
-              Password must be at least 6 characters
+          <label for="compagnie">Nom de la compagnie <span class="required">*</span></label>
+          <input type="compagnie" class="form-control" name="compagnie" [(ngModel)]="form.compagnie" required minlength="6" #compagnie="ngModel" />
+          <div class="alert-danger" *ngIf="compagnie.errors && f.submitted">
+            <div *ngIf="compagnie.errors['required']"class="alert">compagnie est requis</div>
+            <div *ngIf="compagnie.errors['minlength']" class="alert">
+              La compagnie doit comporter au moins 6 caractères
+            </div>
+          </div>
+        </div>
+        <div class="two-inputs">
+          <div class="left">
+            <label for="password">Mot de passe <span class="required">*</span></label>
+            <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required minlength="6" #password="ngModel" />
+            <div class="alert-danger" *ngIf="password.errors && f.submitted">
+              <div *ngIf="password.errors['required']"class="alert">Mot de passe requis</div>
+              <div *ngIf="password.errors['minlength']" class="alert">
+                Mot de passe doit comporter au moins 6 caractères
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <label for="confirmPassword">Verifiez <span class="required">*</span></label>
+            <input type="Password" class="form-control" name="confirmPassword" [(ngModel)]="form.confirmPassword" required minlength="6" #confirmPassword="ngModel" />
+            <div class="alert-danger" *ngIf="confirmPassword.errors && f.submitted">
+              <div *ngIf="confirmPassword.errors['required']"class="alert">Vérification requise</div>
+              <div *ngIf="confirmPassword.errors['minlength']" class="alert">
+                Mot de passe doit comporter au moins 6 caractères
+              </div>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary btn-block">Sign-Up</button>
-          <p class="question">Already have an account? <a routerLink="/login">Sign-in</a></p>
-        </div>
-  
-        
+          <button class="btn btn-primary btn-block">Créer mon compte</button>
+          <!-- <p class="question">Already have an account? <a routerLink="/login">Sign-in</a></p> -->
+        </div>        
       </form>
   
       <div class="success" *ngIf="isSuccessful">
-        Your registration is successful! <a routerLink="/login" id="sign-in">Sign-in here.</a>
+        Votre inscription est réussie! <a routerLink="/login" id="sign-in">Se connecter ici.</a>
       </div>
     </div>
-    <div class="decoration">
-    </div>
+
   </div>
