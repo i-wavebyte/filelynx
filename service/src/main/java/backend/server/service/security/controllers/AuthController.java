@@ -1,7 +1,9 @@
 package backend.server.service.security.controllers;
 
 import backend.server.service.Service.CompagnieService;
+import backend.server.service.domain.Authorisation;
 import backend.server.service.domain.Compagnie;
+import backend.server.service.domain.Dossier;
 import backend.server.service.security.JwtUtils;
 import backend.server.service.security.POJOs.requests.LoginRequest;
 import backend.server.service.security.POJOs.requests.SignupRequest;
@@ -136,11 +138,18 @@ public class AuthController {
         Compagnie compagnie = new Compagnie();
         compagnie.setNom(signUpRequest.getUsername());
         compagnie.setQuota(1024.*1024.*1024.*50);
+        compagnie.setUsedQuota(0.);
         compagnie = compagnieService.createCompagnie(compagnie);
 
         // Creating a default groupe for the compagnie
         compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
 
+
+
+
+
         return ResponseEntity.ok(new MessageResponse("Compagnie registered successfully!"));
     }
+
+
 }

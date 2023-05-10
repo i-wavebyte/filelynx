@@ -12,6 +12,11 @@ import java.util.List;
 public class Compagnie extends RessourceAccessor{
     private String nom;
     private Double quota;
+    private Double usedQuota;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
     private List<Groupe> groupes = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    private List<Dossier> dossiers = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    private List<Fichier> fichiers = new ArrayList<>();
 }

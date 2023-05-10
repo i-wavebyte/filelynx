@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Authorisation {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
+    @ManyToOne
     private Dossier dossier;
     private boolean lecture;
     private boolean ecriture;
@@ -26,9 +26,21 @@ public class Authorisation {
     private boolean telechargement;
     private boolean upload;
     private boolean creationDossier;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ressource_accessor_id")
     private RessourceAccessor ressourceAccessor;
 
+    public static Authorisation generateFullAccess(){
+        return Authorisation.builder()
+                .lecture(true)
+                .ecriture(true)
+                .modification(true)
+                .suppression(true)
+                .partage(true)
+                .telechargement(true)
+                .upload(true)
+                .creationDossier(true)
+                .build();
+    }
 
 }

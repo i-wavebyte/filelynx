@@ -20,6 +20,10 @@ public class Dossier {
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
     private List<Dossier> dossiers = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Authorisation> authorisations = new ArrayList<>();
+    @ManyToOne
+    private Compagnie compagnie;
 
 
     public String getFullPath(){

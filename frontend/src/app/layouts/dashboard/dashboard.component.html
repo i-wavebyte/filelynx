@@ -5,5 +5,15 @@
     <button>Fichiers/Dossiers</button>
     <button>Collaborateurs</button>
   </nav>
+  <div class="header-card-container">
+    <div class="header-card">
+      <p class="header-card-title">Quota</p>
+      <span class="quota">{{tailleToUnit(quota.usedQuota,false,"Go",2)}} / {{tailleToUnit(quota.quota,true,"Go",2)}}</span>
+    </div>
+    <div class="header-card">
+      <p class="header-card-title">Overview</p>
+    </div>
+  </div>
+
  </div>
 </div>

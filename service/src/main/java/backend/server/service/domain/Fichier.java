@@ -37,6 +37,8 @@ public class Fichier {
         if(racine != null) path = racine.getFullPath() + path;
         return path;
     }
+    @ManyToOne
+    private Compagnie compagnie;
 
     public String toString(){
         String str = "\nFichier: "+nom+"."+extension+" ("+type+")";

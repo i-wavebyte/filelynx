@@ -46,7 +46,7 @@ public class CompagnieService {
         compagnieRepository.deleteByNom(nom);
     }
 
-    public Compagnie createGroupe(String nom, double quota){
+    public Groupe createGroupe(String nom, double quota){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         //check if the compagnie has a groupe with the same name
@@ -59,7 +59,8 @@ public class CompagnieService {
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
-        return compagnieRepository.save(compagnie);
+        compagnieRepository.save(compagnie);
+        return groupeService.getGroupe(nom, compagnieName);
     }
 
     public Compagnie createGroupe(String nom, double quota, Long CompagnieId){

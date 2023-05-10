@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.apache.tomcat.util.http.parser.Authorization;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -20,5 +22,8 @@ public abstract class RessourceAccessor {
 
     @OneToOne(mappedBy = "ressourceAccessor")
     private Authorisation Authorisation;
+
+    @OneToMany (cascade = CascadeType.ALL)
+    private List<Authorisation> authorisations = new ArrayList<>();
 
 }

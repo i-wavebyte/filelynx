@@ -1,5 +1,6 @@
-package backend.server.service.controller;
+package backend.server.service.Service.controller;
 
+import backend.server.service.POJO.Quota;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
 import backend.server.service.Service.MembreService;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/compagnie")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 @RequiredArgsConstructor
 public class CompagnieController {
     private final CompagnieService compagnieService;
@@ -100,5 +101,15 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Group created successfully"));
     }
 
-
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getQuotaStatus")
+    public ResponseEntity<?> getQuotaStatus() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Quota quota1 = new Quota();
+        quota1.setQuota(compagnie.getQuota());
+        quota1.setUsedQuota(compagnie.getUsedQuota());
+        quota1.setQuotaLeft(compagnie.getQuota() - compagnie.getUsedQuota());
+        return ResponseEntity.ok(quota1);
+    }
 }
