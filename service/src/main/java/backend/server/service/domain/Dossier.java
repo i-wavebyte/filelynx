@@ -20,7 +20,7 @@ public class Dossier {
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
     private List<Dossier> dossiers = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL , mappedBy = "dossier")
     private List<Authorisation> authorisations = new ArrayList<>();
     @ManyToOne
     private Compagnie compagnie;

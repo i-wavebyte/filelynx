@@ -63,7 +63,7 @@ public class CompagnieService {
         return groupeService.getGroupe(nom, compagnieName);
     }
 
-    public Compagnie createGroupe(String nom, double quota, Long CompagnieId){
+    public Groupe createGroupe(String nom, double quota, Long CompagnieId){
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, SecurityContextHolder.getContext().getAuthentication().getName()) != null){
             throw new RuntimeException("Groupe already exists");
@@ -74,7 +74,8 @@ public class CompagnieService {
 
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
-        return compagnieRepository.save(compagnie);
+        compagnieRepository.save(compagnie);
+        return groupeService.getGroupe(nom, compagnie.getNom());
     }
 
 }

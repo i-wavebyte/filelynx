@@ -1,9 +1,11 @@
 package backend.server.service.security.controllers;
 
 import backend.server.service.Service.CompagnieService;
+import backend.server.service.Service.DossierService;
 import backend.server.service.domain.Authorisation;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
+import backend.server.service.domain.Groupe;
 import backend.server.service.security.JwtUtils;
 import backend.server.service.security.POJOs.requests.LoginRequest;
 import backend.server.service.security.POJOs.requests.SignupRequest;
@@ -62,6 +64,8 @@ public class AuthController {
 
     @Autowired
     CompagnieService compagnieService;
+    @Autowired
+    DossierService dossierService;
 
     /**
      * Authenticates a user and returns a JWT token if successful
@@ -142,12 +146,25 @@ public class AuthController {
         compagnie = compagnieService.createCompagnie(compagnie);
 
         // Creating a default groupe for the compagnie
-        compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
+        Groupe groupe = compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
 
+        Dossier root = new Dossier();
+        root.setNom("root");
+        root.setCompagnie(compagnie);
+        Authorisation authorisation = Authorisation.generateFullAccess();
+        authorisation.setRessourceAccessor(compagnie);
+        authorisation.setDossier(root);
+        root.getAuthorisations().add(authorisation);
+        root = dossierService.addDossier(root, null, compagnie);
 
-
-
-
+        Dossier dossierGroupe = new Dossier();
+        Authorisation authorisationGroupe = Authorisation.generateFullAccess();
+        dossierGroupe.setNom(compagnie.getNom());
+        dossierGroupe.setRacine(root);
+        authorisation.setRessourceAccessor(groupe);
+        authorisation.setDossier(dossierGroupe);
+        dossierGroupe.getAuthorisations().add(authorisationGroupe);
+        dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
         return ResponseEntity.ok(new MessageResponse("Compagnie registered successfully!"));
     }
 

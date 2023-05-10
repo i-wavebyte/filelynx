@@ -20,10 +20,7 @@ public abstract class RessourceAccessor {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(mappedBy = "ressourceAccessor")
-    private Authorisation Authorisation;
-
-    @OneToMany (cascade = CascadeType.ALL)
+    @OneToMany (cascade = CascadeType.ALL,mappedBy = "ressourceAccessor")
     private List<Authorisation> authorisations = new ArrayList<>();
 
     @OneToMany

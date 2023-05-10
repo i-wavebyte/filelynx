@@ -1,12 +1,15 @@
 package backend.server.service.Service.controller;
 
 import backend.server.service.POJO.Quota;
+import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
 import backend.server.service.Service.MembreService;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
+import backend.server.service.domain.Log;
 import backend.server.service.domain.Membre;
+import backend.server.service.enums.LogType;
 import backend.server.service.payloads.RegisterUserRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.entities.EROLE;
@@ -22,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,6 +45,8 @@ public class CompagnieController {
     private final GroupeService groupeService;
 
     private final MembreService membreService;
+
+    private final LogRepository logRepository;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/RegisterMembre")
@@ -78,6 +84,8 @@ public class CompagnieController {
 
         membreService.addMembre(newMembre);
 
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " created and added to group " + membre.getGroup()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
