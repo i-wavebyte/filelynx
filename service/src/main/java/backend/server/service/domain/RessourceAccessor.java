@@ -26,4 +26,7 @@ public abstract class RessourceAccessor {
     @OneToMany (cascade = CascadeType.ALL)
     private List<Authorisation> authorisations = new ArrayList<>();
 
+    @OneToMany
+    private List<Log> logs = new ArrayList<>();
+
 }

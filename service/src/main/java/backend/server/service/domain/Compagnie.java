@@ -19,4 +19,6 @@ public class Compagnie extends RessourceAccessor{
     private List<Dossier> dossiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
     private List<Fichier> fichiers = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    private List<Log> logs = new ArrayList<>();
 }

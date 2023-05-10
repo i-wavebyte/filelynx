@@ -66,11 +66,26 @@ border-radius: 10px;
 .header-card-title{
   color : #3C3C3E;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .quota{
   font-size: 2.2em;
   font-weight: 500;
   color: #FF8400;
+
+}
+
+.progress{
+  margin-top: 22px;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #E2E2E2;
+}
+
+.progress-value{
+  height: 5px;
+  border-radius: 5px;
+  background-color: #FF8400;
 }

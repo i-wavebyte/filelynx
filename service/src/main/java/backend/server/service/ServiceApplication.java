@@ -40,36 +40,6 @@ public class ServiceApplication {
             catch (Exception e){
                 log.info("roles already created");
             }
-
-
-
-
-            Dossier root = dossierService.addDossier(Dossier.builder().nom("root").build(),null);
-            Dossier school = dossierService.addDossier(Dossier.builder().nom("school").build(),root.getId());
-            Dossier games = dossierService.addDossier(Dossier.builder().nom("games").build(),root.getId());
-            Dossier math = dossierService.addDossier(Dossier.builder().nom("math").build(),school.getId());
-            Dossier geometry = dossierService.addDossier(Dossier.builder().nom("geometry").build(),math.getId());
-            Dossier algebra = dossierService.addDossier(Dossier.builder().nom("algebra").build(),math.getId());
-            school = dossierService.renameDossier(school.getId(),"mdrasa");
-            log.info("current school name file named {}",school.getFullPath());
-            Fichier pdf = fichierService.addFichier(Fichier.builder().nom("TP1").extension("pdf").type("Document").labels(new ArrayList<>()).build(), math.getId());
-            dossierService.changerEmplacement(math.getId(),games.getId());
-            dossierService.fileTree(root.getId(),1L);
-            pdf.setTaille(2569874.);
-            Label label = Label.builder().nom("à faire").build();
-            Label label2 = Label.builder().nom("devoir").build();
-            labelService.addLabel(label);
-            labelService.addLabel(label2);
-            Categorie categorie = Categorie.builder().nom("études").build();
-            categorieService.addCategorie(categorie);
-            pdf.getLabels().add(label);
-            pdf.getLabels().add(label2);
-            pdf.setCategorie(categorie);
-            pdf = fichierService.updateFichier(pdf);
-            pdf.setEtat(ETAT.ACCEPTED);
-
-
-            log.info(pdf.toString());
         };
     }
 
