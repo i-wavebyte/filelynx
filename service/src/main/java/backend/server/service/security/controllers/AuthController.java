@@ -1,11 +1,10 @@
 package backend.server.service.security.controllers;
 
+import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
-import backend.server.service.domain.Authorisation;
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.Groupe;
+import backend.server.service.domain.*;
+import backend.server.service.enums.LogType;
 import backend.server.service.security.JwtUtils;
 import backend.server.service.security.POJOs.requests.LoginRequest;
 import backend.server.service.security.POJOs.requests.SignupRequest;
@@ -33,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,15 +47,14 @@ import java.util.stream.Collectors;
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
-
+    @Autowired
+    LogRepository logRepository;
     @Autowired
     RefreshTokenService refreshTokenService;
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     RoleRepository roleRepository;
-
     @Autowired
     PasswordEncoder encoder;
 
@@ -145,9 +144,13 @@ public class AuthController {
         compagnie.setUsedQuota(0.);
         compagnie = compagnieService.createCompagnie(compagnie);
 
+        Log logMessage = Log.builder().message("Compagnie " + user.getUsername() + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+
         // Creating a default groupe for the compagnie
         Groupe groupe = compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
-
+        logMessage = Log.builder().message("Groupe " + groupe.getNom() + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         Dossier root = new Dossier();
         root.setNom("root");
         root.setCompagnie(compagnie);
@@ -156,7 +159,8 @@ public class AuthController {
         authorisation.setDossier(root);
         root.getAuthorisations().add(authorisation);
         root = dossierService.addDossier(root, null, compagnie);
-
+        logMessage = Log.builder().message("Folder root created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         Dossier dossierGroupe = new Dossier();
         Authorisation authorisationGroupe = Authorisation.generateFullAccess();
         dossierGroupe.setNom(compagnie.getNom());
@@ -165,6 +169,8 @@ public class AuthController {
         authorisation.setDossier(dossierGroupe);
         dossierGroupe.getAuthorisations().add(authorisationGroupe);
         dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
+        logMessage = Log.builder().message("Folder "+dossierGroupe.getNom()+"created at /root").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Compagnie registered successfully!"));
     }
 

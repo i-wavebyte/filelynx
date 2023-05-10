@@ -1,6 +1,7 @@
 package backend.server.service.domain;
 
 import backend.server.service.enums.LogType;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,8 @@ public class Log {
     @Enumerated(EnumType.STRING)
     private LogType type;
     private Date date;
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.ALL) @JsonIncludeProperties({"nom"})
     private RessourceAccessor trigger;
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.ALL) @JsonIncludeProperties({"nom"})
     private Compagnie compagnie;
 }

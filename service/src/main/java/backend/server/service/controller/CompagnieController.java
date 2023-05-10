@@ -1,4 +1,4 @@
-package backend.server.service.Service.controller;
+package backend.server.service.controller;
 
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.LogRepository;
@@ -119,5 +119,13 @@ public class CompagnieController {
         quota1.setUsedQuota(compagnie.getUsedQuota());
         quota1.setQuotaLeft(compagnie.getQuota() - compagnie.getUsedQuota());
         return ResponseEntity.ok(quota1);
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getCompagnieLogs")
+    public ResponseEntity<?> getCompagnieLogs() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        return ResponseEntity.ok(compagnie.getLogs());
     }
 }
