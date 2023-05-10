@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,7 @@ public abstract class RessourceAccessor {
     @OneToMany (cascade = CascadeType.ALL,mappedBy = "ressourceAccessor")
     private List<Authorisation> authorisations = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany (cascade = CascadeType.ALL,mappedBy = "trigger") @JsonIncludeProperties({"id", "message", "type", "date", "trigger"})
     private List<Log> logs = new ArrayList<>();
 
 }
