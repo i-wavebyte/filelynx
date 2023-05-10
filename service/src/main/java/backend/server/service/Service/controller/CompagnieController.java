@@ -83,7 +83,6 @@ public class CompagnieController {
                 .build();
 
         membreService.addMembre(newMembre);
-
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " created and added to group " + membre.getGroup()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -93,11 +92,12 @@ public class CompagnieController {
     @PostMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Membre membre = membreService.getMembre(username);
         membre.setGroupe(groupeService.getGroupe(group,compagnieNom));
         membreService.updateMembre(membre);
-
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " changed group from " + membre.getGroupe() + " to" + group).type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
     }
 
@@ -105,7 +105,10 @@ public class CompagnieController {
     @PostMapping("/createGroup/{group}")
     public ResponseEntity<?> createGroup(@PathVariable String group) {
         compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
-
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Group created successfully"));
     }
 

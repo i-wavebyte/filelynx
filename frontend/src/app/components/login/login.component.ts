@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
   roles: string[] = [];
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
-
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -49,7 +48,6 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
 
   reloadPage(): void {
     window.location.reload();

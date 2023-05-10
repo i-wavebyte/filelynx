@@ -103,14 +103,16 @@ button {
 }
 
 .success{
-    color: lime;
+    /* color: lime; */
+    color: #191716;
     font-size: 1em;
     text-align: center;
 }
 
 #sign-in{
     text-decoration: none;
-    color: lime;
+    /* color: lime; */
+    color: #7e4a30;
 }
 
 a{
