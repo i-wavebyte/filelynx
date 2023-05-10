@@ -15,6 +15,7 @@ import { BoardUserComponent } from './components/board-user/board-user.component
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { EventBusService } from './_shared/event-bus.service';
+import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { EventBusService } from './_shared/event-bus.service';
     ProfileComponent,
     BoardAdminComponent,
     BoardModeratorComponent,
-    BoardUserComponent
+    BoardUserComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
