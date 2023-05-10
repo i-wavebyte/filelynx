@@ -4,11 +4,6 @@ import backend.server.service.Service.CategorieService;
 import backend.server.service.Service.DossierService;
 import backend.server.service.Service.FichierService;
 import backend.server.service.Service.LabelService;
-import backend.server.service.domain.Categorie;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.Fichier;
-import backend.server.service.domain.Label;
-import backend.server.service.enums.ETAT;
 import backend.server.service.security.entities.EROLE;
 import backend.server.service.security.entities.Role;
 import backend.server.service.security.repositories.RoleRepository;
@@ -72,5 +67,4 @@ public class ServiceApplication {
 //            log.info(pdf.toString());
         };
     }
-
 }
