@@ -53,6 +53,7 @@ public class ServiceApplication {
             school = dossierService.renameDossier(school.getId(),"mdrasa");
             log.info("current school name file named {}",school.getFullPath());
             Fichier pdf = fichierService.addFichier(Fichier.builder().nom("TP1").extension("pdf").type("Document").labels(new ArrayList<>()).build(), math.getId());
+            dossierService.changerEmplacement(math.getId(),games.getId());
             dossierService.fileTree(root.getId(),1L);
             pdf.setTaille(2569874.);
             Label label = Label.builder().nom("à faire").build();
@@ -66,6 +67,8 @@ public class ServiceApplication {
             pdf.setCategorie(categorie);
             pdf = fichierService.updateFichier(pdf);
             pdf.setEtat(ETAT.ACCEPTED);
+
+
             log.info(pdf.toString());
         };
     }
