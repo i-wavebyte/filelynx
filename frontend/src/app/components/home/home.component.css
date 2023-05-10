@@ -142,11 +142,11 @@ nav button {
 .header-items {
     padding: 60px 0;
     margin: auto;
-    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    width: 90%;
 }
 
 .header-items .item {
