@@ -100,7 +100,6 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/createGroup/{group}")
     public ResponseEntity<?> createGroup(@PathVariable String group) {

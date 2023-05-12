@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import Quota from '../domain/Quota';
 import { Observable } from 'rxjs/internal/Observable';
 import Log from '../domain/Log';
+import UserRegister from '../domain/UserRegister';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -24,5 +25,15 @@ export class CompagnieService {
     return this.http.get<Log[]>(this.baseUrl + "/getCompagnieLogs", httpOptions);
   }
 
+  addMembre(user: UserRegister): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/RegisterMembre`, user, httpOptions);
+  }
 
+  changeMemberGroup(username: string, groupe: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ChangeMemberGroup/${username}/${groupe}`, httpOptions);
+  }
+
+  createGroup(groupe: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/createGroup/${groupe}`, httpOptions);
+  }
 }
