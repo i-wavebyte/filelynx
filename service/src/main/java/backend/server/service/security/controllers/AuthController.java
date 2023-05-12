@@ -23,6 +23,7 @@ import backend.server.service.security.services.RefreshTokenService;
 import backend.server.service.security.services.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,23 +75,28 @@ public class AuthController {
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            String jwt = jwtUtils.generateJwtToken(userDetails);
 
-        String jwt = jwtUtils.generateJwtToken(userDetails);
+            List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-                userDetails.getUsername(), userDetails.getEmail(), roles));
+            return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
+                    userDetails.getUsername(), userDetails.getEmail(), roles));
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "Invalid username or password"));
+        }
     }
 
     @PostMapping("/refreshtoken")
@@ -171,7 +177,7 @@ public class AuthController {
         dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
         logMessage = Log.builder().message("Folder "+dossierGroupe.getNom()+"created at /root").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Compagnie registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse("Société enregistrée avec succès!"));
     }
 
 

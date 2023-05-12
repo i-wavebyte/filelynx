@@ -128,3 +128,7 @@ p {
   font-size: 15px;
   line-height: 18.15px;
 }
+
+.errorMessage {
+  color: red;
+}

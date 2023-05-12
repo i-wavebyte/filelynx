@@ -4,30 +4,30 @@
                 <img src="../../../assets/FileLynx logo hh.png" alt="FILELYNX logo" routerLink="/home">
         </div>
         <div class="title">
-            <h1 class="login-title">Connectez-vous pour accéder à votre espace</h1>
+            <h1 class="login-title" *ngIf="!isLoggedIn">Connectez-vous pour accéder à votre espace</h1>
         </div>
         <div class="login">
             <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-                <div class="">
+                <!-- <div class="">
                     <div class="" role="alert" *ngIf="f.submitted && isLoginFailed">
                         Échec de la connexion: {{ errorMessage }}
                     </div>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
                     <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required #username="ngModel"/>
-                    <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
+                    <div class="errorMessage" *ngIf="username.errors && f.submitted">
                         Nom d'utilisateur est requis
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" class="form-control" name="password" [(ngModel)]="form.password" minlength="6" #password="ngModel" />
+                    <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required #password="ngModel" />
                     <div class="alert" role="alert" *ngIf="password.errors && f.submitted">
-                    <div *ngIf="password.errors['required']">Mot de passe requis</div>
-                    <div *ngIf="password.errors['minlength']">
-                        Le mot de passe doit être au moins de 6 caractères
-                    </div>
+                        <div *ngIf="password.errors['required']" class="errorMessage">Mot de passe requis</div>
+                        <!-- <div *ngIf="password.errors['minlength']" class="errorMessage">
+                            Mot de passe doit comporter au moins 6 caractères
+                        </div> -->
                     </div>
                 </div>
                 <div class="form-group">
@@ -36,7 +36,7 @@
                 </div>
             </form>
             <div class="login-title" *ngIf="isLoggedIn">
-                Connexion
+                Connexion ...
             </div>
           </div>
     </div>

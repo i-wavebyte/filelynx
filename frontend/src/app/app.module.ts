@@ -16,6 +16,7 @@ import { BoardUserComponent } from './components/board-user/board-user.component
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { EventBusService } from './_shared/event-bus.service';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
+import { NgToastModule } from 'ng-angular-popup';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { DashboardComponent } from './layouts/dashboard/dashboard.component';
     DashboardComponent
   ],
   imports: [
+    NgToastModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
