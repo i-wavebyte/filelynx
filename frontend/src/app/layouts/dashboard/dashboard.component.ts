@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import Log from 'src/app/domain/Log';
 import Quota from 'src/app/domain/Quota';
 
 @Component({
@@ -9,6 +10,7 @@ import Quota from 'src/app/domain/Quota';
 })
 export class DashboardComponent implements OnInit {
   quota!: Quota;
+  logs!: Log[];
 
   constructor(private compagnieService: CompagnieService) {}
   ngOnInit(): void {
@@ -21,6 +23,17 @@ export class DashboardComponent implements OnInit {
         console.log(err);
       }
     );
+
+    this.compagnieService.getCompagnieLogs().subscribe(
+      (data) => {
+        this.logs = data;
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
   }
 
   tailleToUnit(taille: number, showUnit: boolean = true, unit: string = 'Go', precision:number): string {

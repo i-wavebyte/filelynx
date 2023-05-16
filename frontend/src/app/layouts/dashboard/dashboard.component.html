@@ -3,7 +3,7 @@
   <nav>
     <button>Tableau de bord</button>
     <button>Fichiers/Dossiers</button>
-    <button>Collaborateurs</button>
+    <button routerLink="/users">Collaborateurs</button>
   </nav>
   <div class="header-card-container">
     <div class="header-card">
@@ -15,6 +15,12 @@
     </div>
     <div class="header-card">
       <p class="header-card-title">Logs</p>
+      <table class="log">
+        <tr *ngFor="let log of logs" class="log-row">
+          <td><span class="log-type">{{log.type}} </span></td>
+          <td class="log-message">{{log.message.length>30?log.message.slice(0,30)+"...":log.message}}</td>
+        </tr>
+      </table>
     </div>
   </div>
 
