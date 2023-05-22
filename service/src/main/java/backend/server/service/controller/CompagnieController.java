@@ -53,7 +53,6 @@ public class CompagnieController {
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-
         // Check if username is already taken
         if (userRepository.existsByUsername(membre.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
