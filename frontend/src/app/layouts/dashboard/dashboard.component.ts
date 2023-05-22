@@ -26,7 +26,8 @@ export class DashboardComponent implements OnInit {
 
     this.compagnieService.getCompagnieLogs().subscribe(
       (data) => {
-        this.logs = data;
+        //get the 5 last logs
+        this.logs = data.slice(Math.max(data.length - 5, 0));
         console.log(data);
       },
       (err) => {
