@@ -1,5 +1,6 @@
 package backend.server.service.controller;
 
+import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
@@ -128,5 +129,19 @@ public class CompagnieController {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         return ResponseEntity.ok(compagnie.getLogs());
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getUsers")
+    public PageResponse<Membre> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nom") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder,
+            @RequestParam(required = false) String searchQuery,
+            @RequestParam(required = false) String groupFilter
+    ) {
+        return membreService.getMembresPage(page, size, sortBy, sortOrder, searchQuery, groupFilter);
+
     }
 }

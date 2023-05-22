@@ -40,7 +40,7 @@ public class MembreService {
         return membreRepository.findByUsername(username);
     }
 
-    public PageResponse<Membre> getMembresPage(int page, int size, String sortBy, String searchQuery, String sortOrder, String groupFilter ){
+    public PageResponse<Membre> getMembresPage(int page, int size, String sortBy, String sortOrder, String searchQuery, String groupFilter ){
 
         Sort.Direction direction = Sort.Direction.fromString(sortOrder);
         Sort sort = Sort.by(direction, sortBy);

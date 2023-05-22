@@ -19,6 +19,7 @@ import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { NgToastModule } from 'ng-angular-popup';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { UsersComponent } from './layouts/users/users.component';
+import { MembresListComponent } from './components/membres-list/membres-list.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { UsersComponent } from './layouts/users/users.component';
     BoardUserComponent,
     DashboardComponent,
     DashboardHeaderComponent,
-    UsersComponent
+    UsersComponent,
+    MembresListComponent
   ],
   imports: [
     NgToastModule,
