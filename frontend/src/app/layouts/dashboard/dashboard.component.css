@@ -120,3 +120,43 @@ nav{
 .log{
   overflow: hidden;
 }
+
+tr.log-row:hover {
+  cursor: pointer;
+}
+
+.popup {
+  width: 700px;
+  background: white;
+  border-radius: 6px;
+  border: 2px solid #FF8400; /* Add this line to set the border color and width */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  text-align: center;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+}
+
+.popup.open-popup {
+  border-radius: 6px;
+  border: 2px solid #FF8400; /* Add this line to set the border color and width */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  text-align: center;
+  visibility: visible;
+  transition: transform 0.7s, top 1s;
+}
+
+.popup.open-popup h2 {
+  margin: 20px 0;
+}
+
+.popup.open-popup p {
+  margin: 10px 0;
+}
+
+

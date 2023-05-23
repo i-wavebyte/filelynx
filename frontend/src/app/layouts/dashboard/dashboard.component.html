@@ -1,29 +1,48 @@
 <div class="dashboard">
- <div class="dashboard-header">
-  <nav>
-    <button>Tableau de bord</button>
-    <button>Fichiers/Dossiers</button>
-    <button routerLink="/users">Collaborateurs</button>
-    <button routerLink="/groups">Groupes</button>
-  </nav>
-  <div class="header-card-container">
-    <div class="header-card">
-      <p class="header-card-title">Quota</p>
-      <span class="quota">{{tailleToUnit(quota.usedQuota,false,"Go",2)}} / {{tailleToUnit(quota.quota,true,"Go",2)}}</span>
-      <div class="progress">
-        <div class="progress-value" [style.width.%]="(quota.usedQuota/quota.quota)*100"></div>
+  <div class="dashboard-header">
+    <nav>
+      <button>Tableau de bord</button>
+      <button>Fichiers/Dossiers</button>
+      <button routerLink="/users">Collaborateurs</button>
+      <button routerLink="/groups">Groupes</button>
+    </nav>
+    <div class="header-card-container">
+      <div class="header-card">
+        <p class="header-card-title">Quota</p>
+        <span class="quota">{{tailleToUnit(quota.usedQuota,false,"Go",2)}} / {{tailleToUnit(quota.quota,true,"Go",2)}}</span>
+        <div class="progress">
+          <div class="progress-value" [style.width.%]="(quota.usedQuota/quota.quota)*100"></div>
+        </div>
+      </div>
+      <div class="header-card">
+        <p class="header-card-title">Logs</p>
+        <table class="log">
+          <tr *ngFor="let log of logs" class="log-row" (click)="openPopup(log)">
+            <td><span class="log-type">{{log.type}} </span></td>
+            <td class="log-message">{{log.message.length>35?log.message.slice(0,35)+"...":log.message}}</td>
+          </tr>
+        </table>
       </div>
     </div>
-    <div class="header-card">
-      <p class="header-card-title">Logs</p>
-      <table class="log">
-        <tr *ngFor="let log of logs" class="log-row">
-          <td><span class="log-type">{{log.type}} </span></td>
-          <td class="log-message">{{log.message.length>30?log.message.slice(0,30)+"...":log.message}}</td>
-        </tr>
-      </table>
-    </div>
+
+  </div>
+</div>
+
+
+<!-- Custum Modal -->
+
+<div class="popup" [class]="popupClass" *ngIf="showModal">
+  <div class="modal-content">
+    <h2>Détails du journal</h2>
+    <p> Le: {{ selectedLog.date.toString().slice(0,10)}}</p>
+    <p>Société: {{ selectedLog.compagnie.nom}}</p>
+    <p>Type: {{selectedLog.type}}</p>
+    <p>Message: {{selectedLog.message}}</p>
+    <button (click)="hideModal()">Close</button>
   </div>
 
- </div>
 </div>
+
+
+
+

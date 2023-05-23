@@ -11,6 +11,11 @@ import Quota from 'src/app/domain/Quota';
 export class DashboardComponent implements OnInit {
   quota!: Quota;
   logs!: Log[];
+  selectedLog!: Log; 
+  showModal = false; // Flag to control the visibility of the modal
+  popupClass = 'popup';
+
+
 
   constructor(private compagnieService: CompagnieService) {}
   ngOnInit(): void {
@@ -55,4 +60,18 @@ export class DashboardComponent implements OnInit {
       return formattedTaille;
     }
   }
+
+  openPopup(log: Log): void
+  {
+      this.selectedLog = log;
+      this.showModal = true; // Open the modal
+      // alert(this.selectedLog.date.toString().slice(0, 10));
+      this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
+
+    }
+
+  hideModal(): void {
+    this.showModal = false;
+  }
+
 }

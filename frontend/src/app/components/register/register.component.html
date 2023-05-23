@@ -12,15 +12,15 @@
         L'inscription a échoué!<br />{{ errorMessage }}
       </div>
         <div class="form-group">
-          <label for="username">Nom d'utilisateur <span class="required">*</span></label>
+          <label for="username">Nom de Compagnie<span class="required">*</span></label>
           <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required minlength="3" maxlength="20" #username="ngModel"/>
           <div class="alert-danger" *ngIf="username.errors && f.submitted">
-            <div *ngIf="username.errors['required']" class="alert">Nom d'utilisateur requis</div>
+            <div *ngIf="username.errors['required']" class="alert">Nom de Compagnierequis</div>
             <div *ngIf="username.errors['minlength']" class="alert">
-              Le nom d'utilisateur doit comporter au moins 3 caractères
+              Le nom de Compagniedoit comporter au moins 3 caractères
             </div>
             <div *ngIf="username.errors['maxlength']" class="alert">
-              Le nom d'utilisateur doit comporter au maximum 20 caractères</div>
+              Le nom de Compagniedoit comporter au maximum 20 caractères</div>
           </div>
         </div>
         <div class="form-group">
