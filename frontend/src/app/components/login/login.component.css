@@ -27,6 +27,7 @@
 .logo img{
   width: 240px;
   height: 62px;
+  cursor: pointer;
 }
 
 .title {
