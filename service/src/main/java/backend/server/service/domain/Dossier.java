@@ -25,12 +25,9 @@ public class Dossier {
     @ManyToOne
     private Compagnie compagnie;
 
-
     public String getFullPath(){
         String path= "/"+nom;
         if(racine != null) path = racine.getFullPath() + path;
         return path;
     }
-
-
 }

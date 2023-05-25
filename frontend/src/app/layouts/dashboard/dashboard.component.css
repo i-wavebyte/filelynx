@@ -1,3 +1,6 @@
+.dashboard{
+  background: #F6F6F6;
+}
 .dashboard-header{
   background: rgb(247,181,55);
   background: linear-gradient(120deg, rgba(247,181,55,1) 0%, rgba(249,129,38,1) 100%);
@@ -20,6 +23,7 @@ nav button{
   border-radius: 3px;
   font-size: 0.9em;
   transition: 0.2s ease;
+  cursor: pointer;
 
 }
 
@@ -40,7 +44,9 @@ nav{
 .header-card{
   padding: 24px;
   height: 250px;
-  background-color: white;
+  /* background-color: white; */
+  background: #F6F6F6;
+
   box-shadow: 1px 20px 27px -2px rgba(0,0,0,0.15);
   -webkit-box-shadow: 1px 20px 27px -2px rgba(0,0,0,0.15);
   -moz-box-shadow: 1px 20px 27px -2px rgba(0,0,0,0.15);
@@ -61,6 +67,8 @@ nav{
   justify-items: stretch;
   align-items: stretch;
   width: 100%;
+  /* background: #F6F6F6; */
+
 }
 
 .header-card-title{
@@ -97,6 +105,18 @@ nav{
   font-weight: 500;
   padding: 2px 5px 2px 5px;
   color: #3C3C3E;
+}
+
+.blue-background {
+  background-color: rgb(201, 226, 245);
+}
+
+.green-background {
+  background-color: rgb(91, 161, 120);
+}
+
+.red-background {
+  background-color: rgb(227, 22, 22);
 }
 
 .log-row{
@@ -149,6 +169,7 @@ tr.log-row:hover {
   text-align: center;
   visibility: visible;
   transition: transform 0.7s, top 1s;
+  background: rgba(255, 132, 0, 0.1);
 }
 
 .popup.open-popup h2 {

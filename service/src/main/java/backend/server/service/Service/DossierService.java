@@ -53,7 +53,6 @@ public class DossierService {
         d= dossierRepository.save(d);
         if (ParentFolderId!=null) {
             dossierParent.getDossiers().add(d);
-
             dossierRepository.save(dossierParent);
         }
         log.info("File created at {}", d.getFullPath());

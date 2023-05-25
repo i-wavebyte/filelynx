@@ -74,4 +74,19 @@ export class DashboardComponent implements OnInit {
     this.showModal = false;
   }
 
+  getLogType(logType: string): string 
+  {
+    switch(logType)
+    {
+      case 'CREATE':
+        return 'blue-background';
+      case 'UPDATE':
+        return 'green-background';
+      case 'DELETE':
+          return 'red-background';
+      default:
+        return logType;
+    }
+  }
+
 }
