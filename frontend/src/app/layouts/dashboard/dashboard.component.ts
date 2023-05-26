@@ -14,14 +14,14 @@ export class DashboardComponent implements OnInit {
   selectedLog!: Log; 
   showModal = false; // Flag to control the visibility of the modal
   popupClass = 'popup';
-
-
+  popupBackgroundColor = '';
 
   constructor(private compagnieService: CompagnieService) {}
   ngOnInit(): void {
     this.compagnieService.getQuotaStatus().subscribe(
       (data) => {
         this.quota = data;
+        this.quota.usedQuota = 33687091200; // to handle
         console.log(data);
       },
       (err) => {
@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
       this.showModal = true; // Open the modal
       // alert(this.selectedLog.date.toString().slice(0, 10));
       this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
-
+      // this.popupBackgroundColor = this.getLogType(log.type);
     }
 
   hideModal(): void {

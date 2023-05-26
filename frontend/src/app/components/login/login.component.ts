@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, password).subscribe(
       (data) => {
-        this.toast.success({detail:"Message de réussite", summary:"La connexion est réussie", duration:2500});
+        this.toast.success({detail:"Message de réussite", summary:"Connexion réussie", duration:2500});
         this.tokenStorage.saveToken(data.token);
         this.tokenStorage.saveRefreshToken(data.refreshToken);
         this.tokenStorage.saveUser(data);

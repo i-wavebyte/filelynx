@@ -38,21 +38,17 @@ public class CompagnieController {
     private final CompagnieService compagnieService;
 
     private final PasswordEncoder encoder;
-
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
-
     private final GroupeService groupeService;
-
     private final MembreService membreService;
-
     private final LogRepository logRepository;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/RegisterMembre")
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("compagnieNom "+ compagnieNom);
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         // Check if username is already taken
         if (userRepository.existsByUsername(membre.getUsername())) {
@@ -65,14 +61,13 @@ public class CompagnieController {
         }
         // Create new user's account
         User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
-
         // Set user roles
         Set<Role> roles = new HashSet<>();
         Role CompagnieRole = roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         roles.add(CompagnieRole);
         user.setRoles(roles);
         userRepository.save(user);
-
+        System.out.println("user: "+ user);
         // Create new membre
         Membre newMembre = Membre.builder()
                 .nom(membre.getNom())
@@ -81,13 +76,24 @@ public class CompagnieController {
                 .username(membre.getUsername())
                 .groupe(groupeService.getGroupe(membre.getGroup(),compagnieNom))
                 .build();
-
+        System.out.println("membre: "+ newMembre);
         membreService.addMembre(newMembre);
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " created and added to group " + membre.getGroup()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PostMapping("/createGroup/{group}")
+    public ResponseEntity<?> createGroup(@PathVariable String group) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Groupe grp = compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
+//        System.out.println("voila le groupe retournee: "+ grp);
+        Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Group created successfully"));
+    }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
@@ -100,16 +106,7 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
     }
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/createGroup/{group}")
-    public ResponseEntity<?> createGroup(@PathVariable String group) {
-        compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Group created successfully"));
-    }
+
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getQuotaStatus")
@@ -142,19 +139,17 @@ public class CompagnieController {
             @RequestParam(required = false) String groupFilter
     ) {
         return membreService.getMembresPage(page, size, sortBy, sortOrder, searchQuery, groupFilter);
-
     }
 
-//    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-//    @GetMapping("/getGroups")
-//    public PageResponse<Membre> getAllGroups(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size,
-//            @RequestParam(defaultValue = "nom") String sortBy,
-//            @RequestParam(defaultValue = "ASC") String sortOrder,
-//            @RequestParam(required = false) String searchQuery
-//    ) {
-//        return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
-//
-//    }
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getGroups")
+    public PageResponse<Groupe> getAllGroups(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nom") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder,
+            @RequestParam(required = false) String searchQuery
+    ) {
+        return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
+    }
 }

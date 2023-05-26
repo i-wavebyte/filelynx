@@ -7,19 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 @Transactional @Slf4j
 @AllArgsConstructor
 public class MembreService {
-
     private final MembreRepository membreRepository;
-
     public Membre getMembre(Long id){
         return membreRepository.findById(id).orElseThrow(()-> new RuntimeException("Membre not found") );
     }
@@ -57,15 +53,13 @@ public class MembreService {
                     )
                     .collect(Collectors.toList());
         }
-
         if (groupFilter != null && !groupFilter.isEmpty()) {
             membres = membres.stream()
                     .filter(professor -> professor.getGroupe().getNom().equalsIgnoreCase(groupFilter))
                     .collect(Collectors.toList());
         }
-
         List<Membre> pageContent = membres.subList(start, Math.min(end, membres.size()));
+        System.out.println(pageContent);
         return new PageResponse<>(pageContent, membres.size());
     }
-
 }

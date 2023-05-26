@@ -1,6 +1,7 @@
 package backend.server.service.Service;
 
 import backend.server.service.Repository.CompagnieRepository;
+import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor @Service @Slf4j @Transactional
 public class CompagnieService {
     private final CompagnieRepository compagnieRepository;
+
+    private final GroupeRepository groupeRepository;
 
     private final GroupeService groupeService;
 
@@ -48,21 +51,20 @@ public class CompagnieService {
 
     public Groupe createGroupe(String nom, double quota){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        System.out.println("compagnie name: "+ compagnieName+" nom de groupe: "+ nom);
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, compagnieName) != null){
             throw new RuntimeException("Groupe already exists");
         }
-
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
         //get the id of the current authenticated user via the security context holder
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
+//        groupeService.addGroupe(groupe);
         return groupeService.getGroupe(nom, compagnieName);
     }
-
     public Groupe createGroupe(String nom, double quota, Long CompagnieId){
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, SecurityContextHolder.getContext().getAuthentication().getName()) != null){

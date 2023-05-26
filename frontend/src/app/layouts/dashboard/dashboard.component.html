@@ -28,23 +28,16 @@
   </div>
 </div>
 
-
 <!-- Custum Modal -->
 
-<div class="popup" [class]="popupClass" *ngIf="showModal">
+<div class="popup" [class]="popupClass" [ngClass]="popupBackgroundColor" *ngIf="showModal">
   <div class="modal-content">
     <h2>Détails du Log</h2>
     <p> Le: {{ selectedLog.date.toString().slice(0,10)}}</p>
-    <p>Trigger: {{ selectedLog.trigger.nom}}</p>
-    
     <p>Société: {{ selectedLog.compagnie.nom}}</p>
+    <p>Trigger: {{ selectedLog.trigger.nom}}</p>
     <p>Type: {{selectedLog.type}}</p>
     <p>Message: {{selectedLog.message}}</p>
     <button (click)="hideModal()">Close</button>
   </div>
-
 </div>
-
-
-
-

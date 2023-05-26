@@ -18,7 +18,7 @@ public class GroupeService {
 
     private final GroupeRepository groupeRepository;
 
-    Groupe addGroupe(Groupe groupe) {
+    public Groupe addGroupe(Groupe groupe) {
         return groupeRepository.save(groupe);
     }
 
@@ -34,37 +34,24 @@ public class GroupeService {
     void deleteGroupe(Long id) {
         groupeRepository.deleteById(id);
     }
-
     Groupe updateGroupe(Groupe groupe) {
         return groupeRepository.save(groupe);
     }
+    public PageResponse<Groupe> getGroupesPage(int page, int size, String sortBy, String sortOrder, String searchQuery ){
 
-//    public PageResponse<Groupe> getGroupesPage(int page, int size, String sortBy, String sortOrder, String searchQuery ){
-//
-//        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
-//        Sort sort = Sort.by(direction, sortBy);
-//        int start = page * size;
-//        int end = Math.min(start + size, (int) membreRepository.count());
-//        List<Membre> membres = membreRepository.findAll(sort);
-//
-//        if (searchQuery != null && !searchQuery.isEmpty()){
-//            membres = membres.stream()
-//                    .filter(membre -> membre.getUsername().toLowerCase().contains(searchQuery.toLowerCase())
-//                            || membre.getNom().toLowerCase().contains(searchQuery.toLowerCase())
-//                            || membre.getPrenom().toLowerCase().contains(searchQuery.toLowerCase())
-//                            || membre.getEmail().toLowerCase().contains(searchQuery.toLowerCase())
-//                    )
-//                    .collect(Collectors.toList());
-//        }
-//
-//        if (groupFilter != null && !groupFilter.isEmpty()) {
-//            membres = membres.stream()
-//                    .filter(professor -> professor.getGroupe().getNom().equalsIgnoreCase(groupFilter))
-//                    .collect(Collectors.toList());
-//        }
-//
-//        List<Membre> pageContent = membres.subList(start, Math.min(end, membres.size()));
-//        return new PageResponse<>(pageContent, membres.size());
-//    }
+        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
+        Sort sort = Sort.by(direction, sortBy);
+        int start = page * size;
+        int end = Math.min(start + size, (int) groupeRepository.count());
+        List<Groupe> groupes = groupeRepository.findAll(sort);
+        if (searchQuery != null && !searchQuery.isEmpty()){
+            groupes = groupes.stream()
+                    .filter(groupe -> groupe.getNom().toLowerCase().contains(searchQuery.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        List<Groupe> pageContent = groupes.subList(start, Math.min(end, groupes.size()));
+
+        return new PageResponse<>(pageContent, groupes.size());
+    }
 
 }
