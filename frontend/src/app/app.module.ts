@@ -20,6 +20,8 @@ import { NgToastModule } from 'ng-angular-popup';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { UsersComponent } from './layouts/users/users.component';
 import { MembresListComponent } from './components/membres-list/membres-list.component';
+import { GroupeListComponent } from './components/groupe-list/groupe-list.component';
+import { GroupesComponent } from './layouts/groupes/groupes.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { MembresListComponent } from './components/membres-list/membres-list.com
     DashboardComponent,
     DashboardHeaderComponent,
     UsersComponent,
-    MembresListComponent
+    MembresListComponent,
+    GroupeListComponent,
+    GroupesComponent
   ],
   imports: [
     NgToastModule,

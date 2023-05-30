@@ -14,7 +14,7 @@ public class Compagnie extends RessourceAccessor{
     private String nom;
     private Double quota;
     private Double usedQuota;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie") @JsonIncludeProperties({"nom","quota","membres"})
     private List<Groupe> groupes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
     private List<Dossier> dossiers = new ArrayList<>();

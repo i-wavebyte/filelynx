@@ -10,6 +10,7 @@ import { BoardModeratorComponent } from './components/board-moderator/board-mode
 import { BoardAdminComponent } from './components/board-admin/board-admin.component';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { UsersComponent } from './layouts/users/users.component';
+import { GroupesComponent } from './layouts/groupes/groupes.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'groups', component: GroupesComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

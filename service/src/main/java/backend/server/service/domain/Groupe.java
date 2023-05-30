@@ -1,5 +1,7 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@JsonIgnoreProperties({"authorisations","logs"})
 public class Groupe extends RessourceAccessor{
     private String nom;
     private Double quota;
-    @ManyToOne
+    @ManyToOne @JsonIncludeProperties("nom")
     private Compagnie compagnie;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupe")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupe") @JsonIncludeProperties({"nom","prenom","username","email"})
     private List<Membre> membres = new ArrayList<>();
 }

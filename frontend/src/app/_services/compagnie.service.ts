@@ -1,9 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Quota from '../domain/Quota';
 import { Observable } from 'rxjs/internal/Observable';
 import Log from '../domain/Log';
 import UserRegister from '../domain/UserRegister';
+import { PageResponse } from '../domain/PageRespone';
+import Groupe from '../domain/Groupe';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -35,5 +37,28 @@ export class CompagnieService {
 
   createGroup(groupe: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/createGroup/${groupe}`, httpOptions);
+  }
+
+  getGroupesPage(
+    page: number,
+    size: number,
+    sortBy: string,
+    sortOrder: string,
+    searchQuery: string
+  ): Observable<PageResponse<Groupe>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
+
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    return this.http.get<PageResponse<Groupe>>(
+      `${this.baseUrl}/getGroups`,
+      { params }
+    );
   }
 }
