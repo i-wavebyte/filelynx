@@ -19,10 +19,11 @@ import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { NgToastModule } from 'ng-angular-popup';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { UsersComponent } from './layouts/users/users.component';
-import { MembresListComponent } from './components/membres-list/membres-list.component';
 import { GroupeListComponent } from './components/groupe-list/groupe-list.component';
 import { GroupesComponent } from './layouts/groupes/groupes.component';
 import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
+import { AddMembreComponent } from './components/add-membre/add-membre.component';
+import { MembreListComponent } from './components/membre-list/membre-list.component';
 
 @NgModule({
   declarations: [
@@ -37,10 +38,11 @@ import { AddGroupeComponent } from './components/add-groupe/add-groupe.component
     DashboardComponent,
     DashboardHeaderComponent,
     UsersComponent,
-    MembresListComponent,
     GroupeListComponent,
     GroupesComponent,
-    AddGroupeComponent
+    AddGroupeComponent,
+    AddMembreComponent,
+    MembreListComponent
   ],
   imports: [
     NgToastModule,

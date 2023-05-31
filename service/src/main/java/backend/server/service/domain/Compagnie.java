@@ -22,4 +22,16 @@ public class Compagnie extends RessourceAccessor{
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie") @JsonIncludeProperties({"id", "message", "type", "date", "trigger"})
     private List<Log> logs = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Compagnie{" +
+                "nom='" + nom + '\'' +
+                ", quota=" + quota +
+                ", usedQuota=" + usedQuota +
+                ", dossiers=" + dossiers +
+                ", fichiers=" + fichiers +
+                ", logs=" + logs +
+                '}';
+    }
 }

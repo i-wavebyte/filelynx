@@ -6,6 +6,7 @@ import Log from '../domain/Log';
 import UserRegister from '../domain/UserRegister';
 import { PageResponse } from '../domain/PageRespone';
 import Groupe from '../domain/Groupe';
+import Membre from '../domain/Membre';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -68,5 +69,37 @@ export class CompagnieService {
       `${this.baseUrl}/getGroups`,
       { params }
     );
+  }
+
+  getMembresPage(
+    page: number,
+    size: number,
+    sortBy: string,
+    sortOrder: string,
+    searchQuery: string,
+    groupFilter: string
+  ): Observable<PageResponse<Membre>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
+
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    if (groupFilter) {
+      params = params.set('groupFilter', groupFilter);
+    }
+
+    return this.http.get<PageResponse<Membre>>(
+      `${this.baseUrl}/getUsers`,
+      { params }
+    );
+  }
+
+  getAllUniqueGroups(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/distinctGroups`);
   }
 }

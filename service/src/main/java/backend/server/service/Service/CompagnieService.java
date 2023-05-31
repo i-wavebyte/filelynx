@@ -2,6 +2,7 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.GroupeRepository;
+import backend.server.service.Repository.MembreRepository;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class CompagnieService {
     private final GroupeRepository groupeRepository;
 
     private final GroupeService groupeService;
+
+    private final MembreRepository membreRepository;
 
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
@@ -110,6 +113,10 @@ public class CompagnieService {
         grp.setNom(newName);
         // Save the updated Professor and return it
         return groupeRepository.save(grp);
+    }
+
+    public List<String> getAllUniqueSubjects() {
+        return membreRepository.findAllUniqueGroupes();
     }
 
 }

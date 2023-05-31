@@ -21,13 +21,13 @@ import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -165,5 +165,11 @@ public class CompagnieController {
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
         compagnieService.updateGroupe(groupeId, newName);
         return ResponseEntity.ok(new MessageResponse("Group updated successfully"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/distinctGroups")
+    public List<String> getAllUniqueGroupes() {
+        return compagnieService.getAllUniqueSubjects();
     }
 }

@@ -1,4 +1,5 @@
-export default interface Compagnie {
+export default interface Membre {
+  id:number;
   username: string;
   email: string;
   nom: string;
