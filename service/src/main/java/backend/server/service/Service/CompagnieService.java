@@ -2,14 +2,13 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.GroupeRepository;
+import backend.server.service.Repository.MembreRepository;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -20,6 +19,8 @@ public class CompagnieService {
     private final GroupeRepository groupeRepository;
 
     private final GroupeService groupeService;
+
+    private final MembreRepository membreRepository;
 
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
@@ -59,6 +60,9 @@ public class CompagnieService {
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
         //get the id of the current authenticated user via the security context holder
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
+        if(groupeRepository.sumQuotasByCompagnieNom(compagnieName) + quota > compagnie.getQuota()){
+            throw new RuntimeException("Quota allocation exceeded");
+        }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
@@ -73,11 +77,44 @@ public class CompagnieService {
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
 
         Compagnie compagnie = compagnieRepository.findById(CompagnieId).orElseThrow(()-> new RuntimeException("Compagnie not found") );
-
+        if(groupeRepository.sumQuotasByCompagnieNom(compagnie.getNom()) + quota > compagnie.getQuota()){
+            throw new RuntimeException("Quota allocation exceeded");
+        }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnie.getNom());
+    }
+
+    public void deleteGroupe(String nom){
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Groupe groupe = groupeRepository.findByNomAndCompagnieNom(nom, compagnieName);
+        if(groupe == null){
+            throw new RuntimeException("Groupe not found");
+        }
+        if(!(compagnieName.equals(groupe.getCompagnie().getNom()))){
+            throw new RuntimeException("Unauthorized");
+        }
+        if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+            throw new RuntimeException("Cannot delete default groupe");
+        }
+
+        log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
+        groupeRepository.delete(groupe);
+    }
+
+    public Groupe updateGroupe(Long groupeId, String newName) {
+
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieName);
+        grp.setNom(newName);
+        // Save the updated Professor and return it
+        return groupeRepository.save(grp);
+    }
+
+    public List<String> getAllUniqueSubjects() {
+        return membreRepository.findAllUniqueGroupes();
     }
 
 }

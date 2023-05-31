@@ -30,4 +30,15 @@ public class Dossier {
         if(racine != null) path = racine.getFullPath() + path;
         return path;
     }
+
+    @Override
+    public String toString() {
+        return "Dossier{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", racine=" + racine +
+                ", fichiers=" + fichiers +
+                ", dossiers=" + dossiers +
+                '}';
+    }
 }

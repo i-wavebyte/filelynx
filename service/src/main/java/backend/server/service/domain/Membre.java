@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,6 @@ public class Membre extends RessourceAccessor{
     private String email;
 
     @ManyToOne @JsonIncludeProperties("nom")
+    @JsonIgnore
     private Groupe groupe;
 }

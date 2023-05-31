@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +19,11 @@ import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { NgToastModule } from 'ng-angular-popup';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { UsersComponent } from './layouts/users/users.component';
-import { MembresListComponent } from './components/membres-list/membres-list.component';
+import { GroupeListComponent } from './components/groupe-list/groupe-list.component';
+import { GroupesComponent } from './layouts/groupes/groupes.component';
+import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
+import { AddMembreComponent } from './components/add-membre/add-membre.component';
+import { MembreListComponent } from './components/membre-list/membre-list.component';
 
 @NgModule({
   declarations: [
@@ -34,14 +38,19 @@ import { MembresListComponent } from './components/membres-list/membres-list.com
     DashboardComponent,
     DashboardHeaderComponent,
     UsersComponent,
-    MembresListComponent
+    GroupeListComponent,
+    GroupesComponent,
+    AddGroupeComponent,
+    AddMembreComponent,
+    MembreListComponent
   ],
   imports: [
     NgToastModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

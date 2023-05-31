@@ -10,6 +10,9 @@ import { BoardModeratorComponent } from './components/board-moderator/board-mode
 import { BoardAdminComponent } from './components/board-admin/board-admin.component';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { UsersComponent } from './layouts/users/users.component';
+import { GroupesComponent } from './layouts/groupes/groupes.component';
+import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
+import { AddMembreComponent } from './components/add-membre/add-membre.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -21,6 +24,10 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'groups', component: GroupesComponent ,
+  children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
+  { path: 'collaborateurs', component: GroupesComponent ,
+  children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

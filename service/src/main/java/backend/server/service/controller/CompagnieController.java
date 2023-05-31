@@ -21,13 +21,13 @@ import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -90,10 +90,12 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
 
+        compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
         Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Group created successfully"));
     }
+
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
@@ -151,5 +153,25 @@ public class CompagnieController {
             @RequestParam(required = false) String searchQuery
     ) {
         return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteGroupe/{group}")
+    public ResponseEntity<?> deleteGroup(@PathVariable String group) {
+        compagnieService.deleteGroupe(group);
+        return ResponseEntity.ok(new MessageResponse("Group deleted successfully"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateGroupe/{groupeId}/{newName}")
+    public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
+        compagnieService.updateGroupe(groupeId, newName);
+        return ResponseEntity.ok(new MessageResponse("Group updated successfully"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/distinctGroups")
+    public List<String> getAllUniqueGroupes() {
+        return compagnieService.getAllUniqueSubjects();
     }
 }
