@@ -19,6 +19,7 @@ import backend.server.service.security.entities.User;
 import backend.server.service.security.repositories.RoleRepository;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,12 +89,17 @@ public class CompagnieController {
     public ResponseEntity<?> createGroup(@PathVariable String group) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-//        compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
-        compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
-        Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-//        System.out.println("\ngroup: " + group + " \n");
-        return ResponseEntity.ok(new MessageResponse("Group created successfully"));
+        try
+        {
+            compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
+            Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("Group created successfully"));
+        }
+        catch(RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
