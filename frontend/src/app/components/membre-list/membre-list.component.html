@@ -1,8 +1,8 @@
 <div class="bg"></div>
-<h2>Professors List</h2>
+<h2>Collaborateurs</h2>
 <div class="professors-list-container">
     <div class="filters">
-        <input [(ngModel)]="searchValue" (input)="onSearch()" placeholder="Search by name, CIN, email or phone" />
+        <input [(ngModel)]="searchValue" (input)="onSearch()" placeholder="Recherche par nom, prenom, email" />
         <select [(ngModel)]="selectedGroupe" (ngModelChange)="onSubjectFilterChange($event)">
             <option value="">Groupes</option>
             <option *ngFor="let groupe of groups" [value]="groupe">
@@ -10,21 +10,20 @@
             </option>
         </select>
         <select [(ngModel)]="nameOrder" (ngModelChange)="onNameOrderChange($event)">
-            <option value="">Order by name</option>
-            <option value="ASC">Name A-Z</option>
-            <option value="DESC">Name Z-A</option>
+            <option value="">Ordre par nom</option>
+            <option value="ASC">Nom A-Z</option>
+            <option value="DESC">Nom Z-A</option>
         </select>
         <button routerLink="add-professor" class="add-prof">+ Add professor</button>
     </div>
     <table>
         <thead>
             <tr>
-                <th>Name</th>
-                <th>CIN</th>
-                <th>SUBJECT</th>
-                <th>EMAIL</th>
-                <th>PHONE</th>
-                <th>STUDENTS</th>
+                <th>Nom d'utilisateur</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Email</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
