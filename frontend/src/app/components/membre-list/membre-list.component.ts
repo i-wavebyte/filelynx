@@ -33,7 +33,7 @@ export class MembreListComponent implements OnInit{
         .getMembresPage(
             this.page,
             this.pageSize,
-            'name',
+            'nom',
             this.nameOrder,
             this.searchValue,
             this.selectedGroupe
