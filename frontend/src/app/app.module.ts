@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +22,7 @@ import { UsersComponent } from './layouts/users/users.component';
 import { MembresListComponent } from './components/membres-list/membres-list.component';
 import { GroupeListComponent } from './components/groupe-list/groupe-list.component';
 import { GroupesComponent } from './layouts/groupes/groupes.component';
+import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
 
 @NgModule({
   declarations: [
@@ -38,14 +39,16 @@ import { GroupesComponent } from './layouts/groupes/groupes.component';
     UsersComponent,
     MembresListComponent,
     GroupeListComponent,
-    GroupesComponent
+    GroupesComponent,
+    AddGroupeComponent
   ],
   imports: [
     NgToastModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

@@ -152,4 +152,18 @@ public class CompagnieController {
     ) {
         return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteGroupe/{group}")
+    public ResponseEntity<?> deleteGroup(@PathVariable String group) {
+        compagnieService.deleteGroupe(group);
+        return ResponseEntity.ok(new MessageResponse("Group deleted successfully"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateGroupe/{groupeId}/{newName}")
+    public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
+        compagnieService.updateGroupe(groupeId, newName);
+        return ResponseEntity.ok(new MessageResponse("Group updated successfully"));
+    }
 }

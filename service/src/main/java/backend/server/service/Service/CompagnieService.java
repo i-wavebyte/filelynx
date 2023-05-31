@@ -59,6 +59,9 @@ public class CompagnieService {
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
         //get the id of the current authenticated user via the security context holder
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
+        if(groupeRepository.sumQuotasByCompagnieNom(compagnieName) + quota > compagnie.getQuota()){
+            throw new RuntimeException("Quota allocation exceeded");
+        }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
@@ -73,11 +76,40 @@ public class CompagnieService {
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
 
         Compagnie compagnie = compagnieRepository.findById(CompagnieId).orElseThrow(()-> new RuntimeException("Compagnie not found") );
-
+        if(groupeRepository.sumQuotasByCompagnieNom(compagnie.getNom()) + quota > compagnie.getQuota()){
+            throw new RuntimeException("Quota allocation exceeded");
+        }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnie.getNom());
+    }
+
+    public void deleteGroupe(String nom){
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Groupe groupe = groupeRepository.findByNomAndCompagnieNom(nom, compagnieName);
+        if(groupe == null){
+            throw new RuntimeException("Groupe not found");
+        }
+        if(!(compagnieName.equals(groupe.getCompagnie().getNom()))){
+            throw new RuntimeException("Unauthorized");
+        }
+        if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+            throw new RuntimeException("Cannot delete default groupe");
+        }
+
+        log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
+        groupeRepository.delete(groupe);
+    }
+
+    public Groupe updateGroupe(Long groupeId, String newName) {
+
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieName);
+        grp.setNom(newName);
+        // Save the updated Professor and return it
+        return groupeRepository.save(grp);
     }
 
 }

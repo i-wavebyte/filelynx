@@ -39,6 +39,14 @@ export class CompagnieService {
     return this.http.post<any>(`${this.baseUrl}/createGroup/${groupe}`, httpOptions);
   }
 
+  deleteGroupe(groupe: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/deleteGroupe/${groupe}`, httpOptions);
+  }
+
+  updateGroupe(groupeId: number,newName: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateGroupe/${groupeId}/${newName}`, httpOptions);
+  }
+
   getGroupesPage(
     page: number,
     size: number,

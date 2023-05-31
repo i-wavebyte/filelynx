@@ -22,3 +22,7 @@
 .nav-item:hover{
   opacity: 1;
 }
+
+body{
+  background-color: #F7F1F3!important;
+}

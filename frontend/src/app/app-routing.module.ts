@@ -11,6 +11,7 @@ import { BoardAdminComponent } from './components/board-admin/board-admin.compon
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { UsersComponent } from './layouts/users/users.component';
 import { GroupesComponent } from './layouts/groupes/groupes.component';
+import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -22,7 +23,8 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'users', component: UsersComponent },
-  { path: 'groups', component: GroupesComponent },
+  { path: 'groups', component: GroupesComponent ,
+  children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
