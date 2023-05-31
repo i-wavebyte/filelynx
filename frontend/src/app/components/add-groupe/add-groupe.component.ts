@@ -31,8 +31,9 @@ export class AddGroupeComponent implements OnInit {
   onSubmit() {
     if (this.addGroupeForm.valid) {
       const newGroupe: Groupe = this.addGroupeForm.value;
-      this.compagnieService.createGroup(newGroupe.nom).subscribe((professor) => {
-        console.log('Professor added successfully', professor);
+      console.log("here i am \n");
+      this.compagnieService.createGroup(newGroupe.nom).subscribe((data) => {
+        console.log('Groupe added successfully', data);
         this.addGroupeForm.reset();
         this.router.navigate(['/groups'], { replaceUrl: true, queryParams: { reload: true } });
       });

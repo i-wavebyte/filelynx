@@ -88,11 +88,11 @@ public class CompagnieController {
     public ResponseEntity<?> createGroup(@PathVariable String group) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
-
+//        compagnieService.createGroupe(group, 1024.*1024.*1024.*5);
         compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
         Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
+//        System.out.println("\ngroup: " + group + " \n");
         return ResponseEntity.ok(new MessageResponse("Group created successfully"));
     }
 
