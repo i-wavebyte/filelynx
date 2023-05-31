@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface MembreRepository extends JpaRepository<Membre, Long> {
     Membre findByUsername(String username);
-    @Query("SELECT DISTINCT m.groupe FROM Membre m")
-    List<String> findAllUniqueGroupes();
+
 }

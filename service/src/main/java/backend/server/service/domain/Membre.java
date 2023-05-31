@@ -17,6 +17,5 @@ public class Membre extends RessourceAccessor{
     private String email;
 
     @ManyToOne @JsonIncludeProperties("nom")
-    @JsonIgnore
     private Groupe groupe;
 }

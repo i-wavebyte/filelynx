@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface GroupeRepository extends JpaRepository<Groupe, Long> {
     // find a group by its name and the name of the company it belongs to
     Groupe findByNomAndCompagnieNom(String nom, String compagnieNom);
@@ -13,4 +15,6 @@ public interface GroupeRepository extends JpaRepository<Groupe, Long> {
     Double sumQuotasByCompagnieNom(@Param("compagnieNom") String compagnieNom);
     Groupe findByNom(String nom);
     Groupe findByIdAndCompagnieNom(Long id, String compagnieNom);
+    @Query("SELECT DISTINCT g.nom from Groupe g WHERE g.compagnie.nom = :compagnieNom")
+    List<String> findAllUniqueGroupes(@Param("compagnieNom") String compagnieNom);
 }

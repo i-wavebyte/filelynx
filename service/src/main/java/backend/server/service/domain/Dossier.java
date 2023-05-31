@@ -31,14 +31,4 @@ public class Dossier {
         return path;
     }
 
-    @Override
-    public String toString() {
-        return "Dossier{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", racine=" + racine +
-                ", fichiers=" + fichiers +
-                ", dossiers=" + dossiers +
-                '}';
-    }
 }

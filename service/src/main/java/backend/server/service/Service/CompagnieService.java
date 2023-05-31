@@ -114,7 +114,8 @@ public class CompagnieService {
     }
 
     public List<String> getAllUniqueSubjects() {
-        return membreRepository.findAllUniqueGroupes();
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return groupeRepository.findAllUniqueGroupes(compagnieName);
     }
 
 }
