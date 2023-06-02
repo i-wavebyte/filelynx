@@ -23,10 +23,10 @@ const routes: Routes = [
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'users', component: UsersComponent },
+  // { path: 'users', component: UsersComponent },
   { path: 'groups', component: GroupesComponent ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
-  { path: 'collaborateurs', component: GroupesComponent ,
+  { path: 'users', component: UsersComponent ,
   children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

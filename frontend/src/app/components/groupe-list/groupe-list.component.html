@@ -27,7 +27,6 @@
                         <button class="info">?</button>
                         <input class="table-data" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
                     </div>
-
                 </td>
                 <td>
                     <input class="table-data" [value]="tailleToUnit(groupe.quota,true,'Go',2)" disabled/>
@@ -35,7 +34,6 @@
                 <td>
                     <input class="table-data" [(ngModel)]="groupe.membres.length" disabled/>
                 </td>
-
                 <td class="actions">
                     <!-- <button (click)="onEditProfessor(professor)" class="edit">Edit</button>
                     <button (click)="onDeleteProfessor(professor.id)" class="delete">Delete</button> -->

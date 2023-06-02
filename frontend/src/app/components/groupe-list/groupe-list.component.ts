@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageResponse } from 'src/app/domain/PageRespone';
 import Groupe from 'src/app/domain/Groupe';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import { NgToastModule, NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-groupe-list',
@@ -22,10 +23,11 @@ export class GroupeListComponent implements OnInit,OnChanges {
     private compagnieService: CompagnieService,
     private router: Router,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toast: NgToastService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
+    console.log(changes);
 
   }
 
@@ -33,12 +35,8 @@ export class GroupeListComponent implements OnInit,OnChanges {
     this.loadGroupes();
     this.route.queryParams.subscribe(params => {
       if (params['reload']) {
-
           console.log('reload');
-
           this.loadGroupes();
-
-
       }
     });
   }
@@ -64,7 +62,6 @@ export class GroupeListComponent implements OnInit,OnChanges {
 
   loadGroupes(): void {
     console.log("test");
-
     this.compagnieService
       .getGroupesPage(
         this.page,
@@ -75,7 +72,6 @@ export class GroupeListComponent implements OnInit,OnChanges {
       )
       .subscribe(
         (response: PageResponse<Groupe>) => {
-
           this.groups = response.content.map((groupe) => {groupe.nom = this.titleCase(groupe.nom); return groupe;});
           this.filteredGroups = this.groups;
           this.totalGroups = response.totalElements;
@@ -90,12 +86,9 @@ export class GroupeListComponent implements OnInit,OnChanges {
     this.nameOrder = order;
     this.page=0;
     this.loadGroupes();
-
   }
 
-
   onSubjectFilterChange(subject: string): void {
-
     this.page=0;
     this.loadGroupes();
   }
@@ -114,7 +107,6 @@ export class GroupeListComponent implements OnInit,OnChanges {
 
   nextPage(): void {
     console.log('nextPage');
-
     if ((this.page + 1) * this.pageSize < this.totalGroups) {
       this.page++;
       this.loadGroupes();
@@ -124,10 +116,12 @@ export class GroupeListComponent implements OnInit,OnChanges {
   onDeleteGroupe(groupeNom : string){
     this.compagnieService.deleteGroupe(groupeNom).subscribe(
       (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
         console.log(data);
         this.loadGroupes();
       },
       (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
         console.log(err);
       }
     );
@@ -136,10 +130,12 @@ export class GroupeListComponent implements OnInit,OnChanges {
   onUpdateGroupe(groupeId : number, newName : string){
     this.compagnieService.updateGroupe(groupeId,newName).subscribe(
       (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
         console.log(data);
         this.loadGroupes();
       },
       (err) => {
+        this.toast.success({detail:"Message de réussite", summary:"Error While Trying To Update Group", duration: 3000});
         console.log(err);
       }
     );

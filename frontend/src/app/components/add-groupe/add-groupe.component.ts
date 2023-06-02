@@ -5,7 +5,6 @@ import { CompagnieService } from 'src/app/_services/compagnie.service';
 import Groupe from 'src/app/domain/Groupe';
 import { NgToastModule, NgToastService } from 'ng-angular-popup';
 
-
 @Component({
   selector: 'app-add-groupe',
   templateUrl: './add-groupe.component.html',
@@ -26,6 +25,7 @@ export class AddGroupeComponent implements OnInit {
   ngOnInit(): void {}
 
   createForm() {
+    console.log("here's the add groupForm variable ",this.addGroupeForm);
     this.addGroupeForm = this.fb.group({
       nom: ['', Validators.required],
     });
@@ -34,15 +34,15 @@ export class AddGroupeComponent implements OnInit {
   onSubmit() {
     if (this.addGroupeForm.valid) {
       const newGroupe: Groupe = this.addGroupeForm.value;
-      console.log("here i am \n");
       this.compagnieService.createGroup(newGroupe.nom).subscribe((data) => {
-        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 2500})
-        console.log('Groupe added successfully', data);
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000})
         this.addGroupeForm.reset();
-        this.router.navigate(['/groups'], { replaceUrl: true, queryParams: { reload: true } });
+        this.router.navigate(['/groups']);
       },
       (err) => {
         this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
+        this.addGroupeForm.reset();
+        this.router.navigate(['/groups']);
       }
       );
     }

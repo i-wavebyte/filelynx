@@ -43,6 +43,7 @@ export class MembreListComponent implements OnInit{
                 this.membres = response.content;
                 this.filteredMembres = response.content;
                 this.totalMembres = response.totalElements;
+                console.log(response);
             },
             (error) => {
                 console.error('Error fetching professors:', error);

@@ -66,7 +66,6 @@ public class CompagnieService {
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
         compagnieRepository.save(compagnie);
-//        groupeService.addGroupe(groupe);
         return groupeService.getGroupe(nom, compagnieName);
     }
     public Groupe createGroupe(String nom, double quota, Long CompagnieId){
@@ -96,6 +95,7 @@ public class CompagnieService {
             throw new RuntimeException("Unauthorized");
         }
         if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+            System.out.println("here i can't delete the groupe");
             throw new RuntimeException("Cannot delete default groupe");
         }
 

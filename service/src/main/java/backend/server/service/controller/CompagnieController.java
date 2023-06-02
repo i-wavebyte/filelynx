@@ -77,7 +77,6 @@ public class CompagnieController {
                 .username(membre.getUsername())
                 .groupe(groupeService.getGroupe(membre.getGroup(),compagnieNom))
                 .build();
-        System.out.println("membre: "+ newMembre);
         membreService.addMembre(newMembre);
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " created and added to group " + membre.getGroup()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
@@ -101,7 +100,6 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
@@ -114,7 +112,6 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
     }
-
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getQuotaStatus")
@@ -164,8 +161,14 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
-        compagnieService.deleteGroupe(group);
-        return ResponseEntity.ok(new MessageResponse("Group deleted successfully"));
+        try {
+            compagnieService.deleteGroupe(group);
+            return ResponseEntity.ok(new MessageResponse("Group deleted successfully"));
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
