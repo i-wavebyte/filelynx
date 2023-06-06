@@ -113,7 +113,7 @@ public class CompagnieService {
         return groupeRepository.save(grp);
     }
 
-    public List<String> getAllUniqueSubjects() {
+    public List<String> getAllUniqueGroups() {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         return groupeRepository.findAllUniqueGroupes(compagnieName);
     }

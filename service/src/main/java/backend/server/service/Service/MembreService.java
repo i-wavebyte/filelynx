@@ -6,6 +6,7 @@ import backend.server.service.domain.Membre;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -38,11 +39,12 @@ public class MembreService {
 
     public PageResponse<Membre> getMembresPage(int page, int size, String sortBy, String sortOrder, String searchQuery, String groupFilter ){
 
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Sort.Direction direction = Sort.Direction.fromString(sortOrder);
         Sort sort = Sort.by(direction, sortBy);
         int start = page * size;
         int end = Math.min(start + size, (int) membreRepository.count());
-        List<Membre> membres = membreRepository.findAll(sort);
+        List<Membre> membres = membreRepository.findAllByCompagnieNom(compagnieName,sort);
 
         if (searchQuery != null && !searchQuery.isEmpty()){
             membres = membres.stream()

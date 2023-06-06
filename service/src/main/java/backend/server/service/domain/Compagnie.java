@@ -14,7 +14,8 @@ public class Compagnie extends RessourceAccessor{
     private String nom;
     private Double quota;
     private Double usedQuota;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie") @JsonIncludeProperties({"nom","quota","membres"})
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie", fetch = FetchType.LAZY) @JsonIncludeProperties({"nom","quota","membres"})
     private List<Groupe> groupes = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
     private List<Dossier> dossiers = new ArrayList<>();
@@ -23,5 +24,9 @@ public class Compagnie extends RessourceAccessor{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie") @JsonIncludeProperties({"id", "message", "type", "date", "trigger"})
     private List<Log> logs = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return nom;
+    }
 
 }

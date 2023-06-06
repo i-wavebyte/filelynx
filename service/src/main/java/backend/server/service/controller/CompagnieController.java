@@ -2,6 +2,7 @@ package backend.server.service.controller;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
+import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
@@ -14,30 +15,27 @@ import backend.server.service.enums.LogType;
 import backend.server.service.payloads.RegisterUserRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.entities.EROLE;
-import backend.server.service.security.entities.Role;
 import backend.server.service.security.entities.User;
 import backend.server.service.security.repositories.RoleRepository;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/compagnie")
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class CompagnieController {
     private final CompagnieService compagnieService;
-
+    private final CompagnieRepository compagnieRepository;
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -45,42 +43,56 @@ public class CompagnieController {
     private final MembreService membreService;
     private final LogRepository logRepository;
 
+    /**
+     * Ajoute un nouveau membre à la compagnie actuelle.
+     *
+     * @param membre Les informations du membre à ajouter.
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/RegisterMembre")
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("compagnieNom "+ compagnieNom);
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        // Check if username is already taken
+        Compagnie compagnie = compagnieRepository.findByNom(compagnieNom);
+
+        // Vérifier si la compagnie existe
+        if(compagnie == null){
+            String messageErreur = "Erreur : Compagnie introuvable !";
+            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
+        }
+        // Vérifier si le nom d'utilisateur est disponible
         if (userRepository.existsByUsername(membre.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
+            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
+        }
+        // Vérifier si l'adresse email est disponible
+        if (userRepository.existsByEmail(membre.getEmail())) {
+            String messageErreur = "Erreur : L'adresse email '" + membre.getEmail() + "' est déjà utilisée !";
+            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
 
-        // Check if email is already in use
-        if (userRepository.existsByEmail(membre.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-        }
-        // Create new user's account
+        // Créer un nouvel utilisateur avec le rôle ROLE_USER
         User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
-        // Set user roles
-        Set<Role> roles = new HashSet<>();
-        Role CompagnieRole = roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(CompagnieRole);
-        user.setRoles(roles);
+        user.setRoles(Collections.singleton(roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Erreur : Rôle introuvable."))));
         userRepository.save(user);
-        System.out.println("user: "+ user);
-        // Create new membre
+
+        // Ajouter le nouveau membre à la base de données
         Membre newMembre = Membre.builder()
                 .nom(membre.getNom())
                 .prenom(membre.getPrenom())
                 .email(membre.getEmail())
                 .username(membre.getUsername())
-                .groupe(groupeService.getGroupe(membre.getGroup(),compagnieNom))
+                .groupe(groupeService.getGroupe(membre.getGroupe(),compagnieNom))
+                .compagnie(compagnie)
                 .build();
         membreService.addMembre(newMembre);
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " created and added to group " + membre.getGroup()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+
+        // Ajouter un message de log pour l'ajout du nouveau membre
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+
+        // Retourner une réponse HTTP avec un message de réussite
+        return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès !"));
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -181,6 +193,6 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {
-        return compagnieService.getAllUniqueSubjects();
+        return compagnieService.getAllUniqueGroups();
     }
 }

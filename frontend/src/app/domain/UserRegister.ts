@@ -3,6 +3,6 @@ export default interface UserRegister {
      nom: string;
      prenom: string;
      email: string;
-     group: string;
+     groupe: string;
      password: string;
 }

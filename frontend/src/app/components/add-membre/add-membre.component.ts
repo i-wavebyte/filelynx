@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import Groupe from 'src/app/domain/Groupe';
 import Membre from 'src/app/domain/Membre';
 import UserRegister from 'src/app/domain/UserRegister';
 
@@ -13,7 +14,7 @@ import UserRegister from 'src/app/domain/UserRegister';
 })
 export class AddMembreComponent implements OnInit{
   addMemberForm!: FormGroup;
-
+  groupes!: String[];
   constructor(
     private fb: FormBuilder,
     private compagnieService: CompagnieService,
@@ -23,7 +24,12 @@ export class AddMembreComponent implements OnInit{
     this.createForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.compagnieService.getAllUniqueGroups().subscribe((data) => {
+      this.groupes = data;
+      console.log("groupes",this.groupes);
+    });
+  }
 
   createForm() {
     this.addMemberForm = this.fb.group({
@@ -31,7 +37,7 @@ export class AddMembreComponent implements OnInit{
       email: ['', Validators.required],
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
-      group: ['', Validators.required],
+      groupe: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
