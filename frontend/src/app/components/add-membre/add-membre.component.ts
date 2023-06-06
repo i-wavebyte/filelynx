@@ -42,7 +42,7 @@ export class AddMembreComponent implements OnInit{
       this.compagnieService.addMembre(newMember).subscribe((data) => {
         console.log('Member added successfully', data);
         this.addMemberForm.reset();
-        this.router.navigate(['/users']);
+        this.router.navigate(['/users'], { replaceUrl: true, queryParams: {reload: true}});
       });
     }
   }

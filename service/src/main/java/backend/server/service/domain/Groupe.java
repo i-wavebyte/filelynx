@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,9 @@ public class Groupe extends RessourceAccessor{
     private Compagnie compagnie;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupe") @JsonIncludeProperties({"nom","prenom","username","email"})
     private List<Membre> membres = new ArrayList<>();
+
+    @JsonIgnore
+    public Compagnie getCompagnie() {
+        return compagnie;
+    }
 }

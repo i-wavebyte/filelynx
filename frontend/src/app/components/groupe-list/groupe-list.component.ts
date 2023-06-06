@@ -27,7 +27,7 @@ export class GroupeListComponent implements OnInit,OnChanges {
     private toast: NgToastService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    console.log(changes)
 
   }
 
@@ -35,7 +35,9 @@ export class GroupeListComponent implements OnInit,OnChanges {
     this.loadGroupes();
     this.route.queryParams.subscribe(params => {
       if (params['reload']) {
+
           console.log('reload');
+
           this.loadGroupes();
       }
     });

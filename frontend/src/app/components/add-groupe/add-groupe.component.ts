@@ -37,12 +37,12 @@ export class AddGroupeComponent implements OnInit {
       this.compagnieService.createGroup(newGroupe.nom).subscribe((data) => {
         this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000})
         this.addGroupeForm.reset();
-        this.router.navigate(['/groups']);
+        this.router.navigate(['/groups'], { replaceUrl: true, queryParams: { reload: true } });
       },
       (err) => {
         this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
         this.addGroupeForm.reset();
-        this.router.navigate(['/groups']);
+        this.router.navigate(['/groups'], { replaceUrl: true, queryParams: { reload: true } });
       }
       );
     }
