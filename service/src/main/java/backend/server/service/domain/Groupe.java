@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +21,9 @@ import java.util.List;
 public class Groupe extends RessourceAccessor{
     private String nom;
     private Double quota;
-    @ManyToOne @JsonIncludeProperties("nom")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Compagnie compagnie;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupe") @JsonIncludeProperties({"nom","prenom","username","email"})
     private List<Membre> membres = new ArrayList<>();
@@ -30,5 +31,10 @@ public class Groupe extends RessourceAccessor{
     @JsonIgnore
     public Compagnie getCompagnie() {
         return compagnie;
+    }
+
+    @Override
+    public String toString() {
+        return nom;
     }
 }

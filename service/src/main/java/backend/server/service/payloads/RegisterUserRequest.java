@@ -10,6 +10,6 @@ public class RegisterUserRequest {
     String nom;
     String prenom;
     String email;
-    String group;
+    String Groupe;
     String password;
 }

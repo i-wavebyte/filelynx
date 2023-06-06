@@ -21,10 +21,13 @@
                 <label for="prenom">Prénom</label>
                 <input type="text" id="prenom" formControlName="prenom" required />
             </div>
-            <div>
-                <label for="group">Groupe</label>
-                <input type="text" id="group" formControlName="group" required />
-            </div>
+            <div *ngIf="groupes">
+              <label for="groupe">Groupe</label>
+              <select id="groupe" formControlName="groupe" required>
+                <option value="">Groupes</option>
+                  <option *ngFor="let groupe of groupes" [value]="groupe">{{ groupe }}</option>
+              </select>
+          </div>
             <div>
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" formControlName="password" required />

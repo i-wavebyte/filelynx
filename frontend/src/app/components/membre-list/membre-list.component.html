@@ -23,6 +23,7 @@
                 <th>Prenom </th>
                 <th>Nom</th>
                 <th>Email</th>
+                <th>Groupe</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -45,6 +46,9 @@
                 <td>
                     <input class="table-data" [(ngModel)]="membre.email" />
                 </td>
+                <td>
+                  <input class="table-data" [(ngModel)]="membre.groupe.nom" />
+              </td>
                 <td class="actions">
                     <button class="edit">Edit</button>
                     <button class="delete">Delete</button>

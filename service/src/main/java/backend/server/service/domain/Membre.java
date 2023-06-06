@@ -15,7 +15,8 @@ public class Membre extends RessourceAccessor{
     private String nom;
     private String prenom;
     private String email;
-
     @ManyToOne @JsonIncludeProperties("nom")
     private Groupe groupe;
+    @ManyToOne @JsonIncludeProperties({"nom","id"})
+    private Compagnie compagnie;
 }

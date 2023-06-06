@@ -7,6 +7,7 @@ import backend.server.service.domain.Membre;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +24,7 @@ public class GroupeService {
     }
 
     public Groupe getGroupe(String nom, String compagnieNom) {
+        log.info("nom: "+ nom + " compagnieNom: "+ compagnieNom);
         return groupeRepository.findByNomAndCompagnieNom(nom, compagnieNom);
     }
 
@@ -39,11 +41,12 @@ public class GroupeService {
     }
     public PageResponse<Groupe> getGroupesPage(int page, int size, String sortBy, String sortOrder, String searchQuery ){
 
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Sort.Direction direction = Sort.Direction.fromString(sortOrder);
         Sort sort = Sort.by(direction, sortBy);
         int start = page * size;
         int end = Math.min(start + size, (int) groupeRepository.count());
-        List<Groupe> groupes = groupeRepository.findAll(sort);
+        List<Groupe> groupes = groupeRepository.findAllByCompagnieNom(compagnieName,sort);
         if (searchQuery != null && !searchQuery.isEmpty()){
             groupes = groupes.stream()
                     .filter(groupe -> groupe.getNom().toLowerCase().contains(searchQuery.toLowerCase()))

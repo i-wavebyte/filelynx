@@ -11,7 +11,7 @@ import Quota from 'src/app/domain/Quota';
 export class DashboardComponent implements OnInit {
   quota!: Quota;
   logs!: Log[];
-  selectedLog!: Log; 
+  selectedLog!: Log;
   showModal = false; // Flag to control the visibility of the modal
   popupClass = 'popup';
   popupBackgroundColor = '';
@@ -21,7 +21,6 @@ export class DashboardComponent implements OnInit {
     this.compagnieService.getQuotaStatus().subscribe(
       (data) => {
         this.quota = data;
-        this.quota.usedQuota = 33687091200; // to handle
         console.log(data);
       },
       (err) => {
@@ -74,7 +73,7 @@ export class DashboardComponent implements OnInit {
     this.showModal = false;
   }
 
-  getLogType(logType: string): string 
+  getLogType(logType: string): string
   {
     switch(logType)
     {

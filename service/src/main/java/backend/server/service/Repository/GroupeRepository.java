@@ -17,4 +17,6 @@ public interface GroupeRepository extends JpaRepository<Groupe, Long> {
     Groupe findByIdAndCompagnieNom(Long id, String compagnieNom);
     @Query("SELECT DISTINCT g.nom from Groupe g WHERE g.compagnie.nom = :compagnieNom")
     List<String> findAllUniqueGroupes(@Param("compagnieNom") String compagnieNom);
+    //find all groups of a company, accepts a Sort object to sort the results
+    List<Groupe> findAllByCompagnieNom(String compagnieNom, org.springframework.data.domain.Sort sort);
 }
