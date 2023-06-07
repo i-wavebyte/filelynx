@@ -3,6 +3,7 @@ package backend.server.service.controller;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.CompagnieRepository;
+import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
@@ -40,6 +41,7 @@ public class CompagnieController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final GroupeService groupeService;
+    private final GroupeRepository groupeRepository;
     private final MembreService membreService;
     private final LogRepository logRepository;
 
@@ -173,8 +175,13 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         try {
             compagnieService.deleteGroupe(group);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société" + compagnieNom).type(LogType.DELETE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
             return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès"));
         }
         catch (RuntimeException e)
@@ -186,8 +193,13 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteMembre/{membreId}/{username}")
     public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         try {
             compagnieService.deleteMembre(membreId, username);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société" + compagnieNom).type(LogType.DELETE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
             return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès"));
         }
         catch (RuntimeException e)
@@ -198,7 +210,14 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateGroupe/{groupeId}/{newName}")
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieNom);
+        String nom = grp.getNom();
         compagnieService.updateGroupe(groupeId, newName);
+        // Ajouter un message de log pour l'ajout du nouveau membre
+        Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Groupe mis à jour avec succès"));
     }
 
@@ -206,7 +225,12 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        String username= membre.getUsername();
         compagnieService.updateMembre(membre);
+        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
     }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
