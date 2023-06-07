@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import Membre from 'src/app/domain/Membre';
 import { PageResponse } from 'src/app/domain/PageRespone';
@@ -21,10 +21,20 @@ export class MembreListComponent implements OnInit{
   pageSize: number = 10;
   totalMembres!: number;
 
-  constructor(private compagnieService: CompagnieService, private router: Router) {}
+  constructor(private compagnieService: CompagnieService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['reload']) {
+        
+        console.log('reload');
+        this.loadMembres();
+
+          this.loadGroupes();
+      }
+    });
     this.loadMembres();
+
     this.loadGroupes();
   }
 

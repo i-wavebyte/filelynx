@@ -95,10 +95,8 @@ public class CompagnieService {
             throw new RuntimeException("Unauthorized");
         }
         if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
-            System.out.println("here i can't delete the groupe");
             throw new RuntimeException("Cannot delete default groupe");
         }
-
         log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
         groupeRepository.delete(groupe);
     }

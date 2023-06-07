@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +25,9 @@ import { GroupesComponent } from './layouts/groupes/groupes.component';
 import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
 import { AddMembreComponent } from './components/add-membre/add-membre.component';
 import { MembreListComponent } from './components/membre-list/membre-list.component';
+import { LogsComponent } from './layouts/logs/logs.component';
+import { LogListComponent } from './components/log-list/log-list.component';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +46,9 @@ import { MembreListComponent } from './components/membre-list/membre-list.compon
     GroupesComponent,
     AddGroupeComponent,
     AddMembreComponent,
-    MembreListComponent
+    MembreListComponent,
+    LogsComponent,
+    LogListComponent
   ],
   imports: [
     NgToastModule,
@@ -50,7 +56,8 @@ import { MembreListComponent } from './components/membre-list/membre-list.compon
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

@@ -25,8 +25,14 @@ export class LoginComponent implements OnInit {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
       console.log("this caused the routing");
+      if (this.roles.includes('ROLE_COMPAGNIE'))
+      {
+        this.router.navigate(['/dashboard']);
+        console.table(this.roles);
+      }
+      else
+        this.router.navigate(['/userdashboard']);
 
-      this.router.navigate(['/dashboard']);
     }
   }
 

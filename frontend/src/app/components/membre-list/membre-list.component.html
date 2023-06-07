@@ -32,10 +32,8 @@
                 <td>
                     <div class="name-info">
                         <button (click)="onInfoProfessor(membre.id)" class="info">?</button>
-                    <input class="table-data" [(ngModel)]="membre.username" />
-
+                        <input class="table-data" [(ngModel)]="membre.username" />
                     </div>
-
                 </td>
                 <td>
                     <input class="table-data" [(ngModel)]="membre.prenom" />
@@ -48,7 +46,7 @@
                 </td>
                 <td>
                   <input class="table-data" [(ngModel)]="membre.groupe.nom" />
-              </td>
+                </td>
                 <td class="actions">
                     <button class="edit">Edit</button>
                     <button class="delete">Delete</button>

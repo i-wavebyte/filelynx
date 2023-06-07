@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
-import Groupe from 'src/app/domain/Groupe';
-import Membre from 'src/app/domain/Membre';
 import UserRegister from 'src/app/domain/UserRegister';
 
 @Component({
@@ -46,9 +44,15 @@ export class AddMembreComponent implements OnInit{
     if (this.addMemberForm.valid) {
       const newMember: UserRegister = this.addMemberForm.value;
       this.compagnieService.addMembre(newMember).subscribe((data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000})
         console.log('Member added successfully', data);
         this.addMemberForm.reset();
         this.router.navigate(['/users'], { replaceUrl: true, queryParams: {reload: true}});
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
+        this.addMemberForm.reset();
+        this.router.navigate(['/users'], { replaceUrl: true, queryParams: { reload: true } });
       });
     }
   }

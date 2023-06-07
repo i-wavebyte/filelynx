@@ -13,6 +13,7 @@ import { UsersComponent } from './layouts/users/users.component';
 import { GroupesComponent } from './layouts/groupes/groupes.component';
 import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
 import { AddMembreComponent } from './components/add-membre/add-membre.component';
+import { LogsComponent } from './layouts/logs/logs.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -23,6 +24,9 @@ const routes: Routes = [
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'log', component: LogsComponent },
+  // { path: 'logs', component: DashboardComponent },
+  // { path: 'userdashboard', component: UserDashboardComponent },
   // { path: 'users', component: UsersComponent },
   { path: 'groups', component: GroupesComponent ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},

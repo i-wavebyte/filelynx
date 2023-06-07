@@ -21,9 +21,7 @@ export class GroupeListComponent implements OnInit,OnChanges {
 
   constructor(
     private compagnieService: CompagnieService,
-    private router: Router,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef,
     private toast: NgToastService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {

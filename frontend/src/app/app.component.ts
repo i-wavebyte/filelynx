@@ -51,6 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.roles = [];
     this.showAdminBoard = false;
     this.showModeratorBoard = false;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 }
