@@ -45,11 +45,11 @@
                     <input class="table-data" [(ngModel)]="membre.email" />
                 </td>
                 <td>
-                  <input class="table-data" [(ngModel)]="membre.groupe.nom" />
+                  <p class="table-data" [(ngModel)]="membre.groupe.nom" >{{membre.groupe.nom}} </p>
                 </td>
                 <td class="actions">
-                    <button class="edit">Edit</button>
-                    <button class="delete">Delete</button>
+                    <button (click)="onUpdateMembre(membre)" class="edit">Edit</button>
+                    <button (click)="onDeleteMembre(membre.id, membre.username)" class="delete">Delete</button>
                 </td>
             </tr>
         </tbody>

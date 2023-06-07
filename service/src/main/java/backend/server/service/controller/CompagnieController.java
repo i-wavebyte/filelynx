@@ -122,7 +122,7 @@ public class CompagnieController {
         membreService.updateMembre(membre);
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " changed group from " + membre.getGroupe() + " to" + group).type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("User group changed successfully to " + group));
+        return ResponseEntity.ok(new MessageResponse("Le groupe d'utilisateurs a bien été remplacé par " + group));
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -175,7 +175,7 @@ public class CompagnieController {
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
         try {
             compagnieService.deleteGroupe(group);
-            return ResponseEntity.ok(new MessageResponse("Group deleted successfully"));
+            return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès"));
         }
         catch (RuntimeException e)
         {
@@ -184,12 +184,31 @@ public class CompagnieController {
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteMembre/{membreId}/{username}")
+    public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {
+        try {
+            compagnieService.deleteMembre(membreId, username);
+            return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès"));
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateGroupe/{groupeId}/{newName}")
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
         compagnieService.updateGroupe(groupeId, newName);
-        return ResponseEntity.ok(new MessageResponse("Group updated successfully"));
+        return ResponseEntity.ok(new MessageResponse("Groupe mis à jour avec succès"));
     }
 
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateMembre")
+    public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
+        compagnieService.updateMembre(membre);
+        return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
+    }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {

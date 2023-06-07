@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import Membre from 'src/app/domain/Membre';
 import { PageResponse } from 'src/app/domain/PageRespone';
@@ -21,7 +22,8 @@ export class MembreListComponent implements OnInit{
   pageSize: number = 10;
   totalMembres!: number;
 
-  constructor(private compagnieService: CompagnieService, private router: Router, private route: ActivatedRoute) {}
+    
+    constructor(private compagnieService: CompagnieService, private router: Router, private route: ActivatedRoute, private toast: NgToastService ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -106,6 +108,31 @@ nextPage(): void {
   }
 }
 
+onUpdateMembre(membre: Membre)
+{
+  this.compagnieService.updateMembre(membre).subscribe((data) => {
+    this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+    console.log(data);
+    this.loadMembres();
+  },
+  (err) => {
+    this.toast.error({detail:"Message d'erreur", summary:"Erreur lors de la tentative de mise à jour de Membre", duration: 3000});
+  })
+}
+
+
+onDeleteMembre(membreId: number, username: string)
+{
+  this.compagnieService.deleteMembre(membreId, username).subscribe((response) => {
+    this.toast.success({detail:"Message de réussite", summary: response.message, duration: 3000});
+    console.log(response);
+    this.loadMembres();
+  },
+  (err) => {
+    this.toast.error({detail:"Message d'erreur", summary:"Erreur lors de la tentative de suppression du membre", duration: 3000});
+
+  })
+}
 // onEditProfessor(membre: Membre): void {
 //   this.compagnieService.updateProfessor(membre.id, membre).subscribe(
 //     (updatedProfessor) => {

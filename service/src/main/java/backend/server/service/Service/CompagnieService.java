@@ -5,12 +5,14 @@ import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.MembreRepository;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
+import backend.server.service.domain.Membre;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor @Service @Slf4j @Transactional
 public class CompagnieService {
@@ -101,6 +103,7 @@ public class CompagnieService {
         groupeRepository.delete(groupe);
     }
 
+
     public Groupe updateGroupe(Long groupeId, String newName) {
 
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -109,6 +112,38 @@ public class CompagnieService {
         grp.setNom(newName);
         // Save the updated Professor and return it
         return groupeRepository.save(grp);
+    }
+
+    public void deleteMembre(Long membreId, String username){
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Membre membre = membreRepository.findByUsername(username);
+        if(membre == null){
+            throw new RuntimeException("Membre introuvable");
+        }
+        if(!(compagnieName.equals(membre.getCompagnie().getNom()))){
+            throw new RuntimeException("Non autorisé");
+        }
+        log.info("membre name: "+membre.getNom()+" compagnie name: "+membre.getCompagnie().getNom());
+        membreRepository.deleteById(membreId);
+    }
+    public Membre updateMembre(Membre membre) {
+        Optional<Membre> optionalExistingMembre = membreRepository.findById(membre.getId());
+
+        if (optionalExistingMembre.isPresent()) {
+            Membre existingMembre = optionalExistingMembre.get();
+
+            // Update the desired fields
+            existingMembre.setNom(membre.getNom());
+            existingMembre.setPrenom(membre.getPrenom());
+            existingMembre.setEmail(membre.getEmail());
+            existingMembre.setUsername(membre.getUsername());
+
+            // Save the updated entity back to the database
+            Membre updatedMembre = membreRepository.save(existingMembre);
+            return updatedMembre;
+        } else {
+            throw new RuntimeException("membre introuvable");
+        }
     }
 
     public List<String> getAllUniqueGroups() {
