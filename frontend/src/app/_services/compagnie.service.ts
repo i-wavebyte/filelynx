@@ -56,6 +56,14 @@ export class CompagnieService {
     return this.http.delete<any>(`${this.baseUrl}/deleteMembre/${membreId}/${username}`, httpOptions);
   }
 
+  getLogsPage(page: number, size: number, sortBy: string): Observable<PageResponse<Log>> {
+    let params = new HttpParams().set('page', page.toString()).set('size', size.toString()).set('sortBy', sortBy.toString());
+    return this.http.get<PageResponse<Log>>(
+      `${this.baseUrl}/getLogsPagination`,
+      { params }
+    );
+  }
+
   getGroupesPage(
     page: number,
     size: number,

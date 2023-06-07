@@ -7,6 +7,7 @@ import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.GroupeService;
+import backend.server.service.Service.LogService;
 import backend.server.service.Service.MembreService;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
@@ -44,6 +45,7 @@ public class CompagnieController {
     private final GroupeRepository groupeRepository;
     private final MembreService membreService;
     private final LogRepository logRepository;
+    private final LogService logService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -148,6 +150,17 @@ public class CompagnieController {
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getLogsPagination")
+    public  PageResponse<Log> getAllLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy
+    )
+    {
+        System.out.println("page , size, sortBy: "+ page +"\n" + size +"\n" + sortBy +"\n");
+        return logService.getLogsPage(page, size, sortBy);
+    }
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getUsers")
     public PageResponse<Membre> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -159,7 +172,6 @@ public class CompagnieController {
     ) {
         return membreService.getMembresPage(page, size, sortBy, sortOrder, searchQuery, groupFilter);
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getGroups")
     public PageResponse<Groupe> getAllGroups(
@@ -171,7 +183,6 @@ public class CompagnieController {
     ) {
         return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
@@ -189,7 +200,6 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteMembre/{membreId}/{username}")
     public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import Log from 'src/app/domain/Log';
+import { PageResponse } from 'src/app/domain/PageRespone';
 
 
 @Component({
@@ -11,6 +12,13 @@ import Log from 'src/app/domain/Log';
 export class LogListComponent implements OnInit {
 
 logs: Log[] = [];
+filteredLogs: Log[] = [];
+searchValue: string = '';
+nameOrder: string = '';
+page: number = 0;
+pageSize: number = 10;
+totalLogs!: number;
+
   
 constructor(private compagnieService: CompagnieService){}
   ngOnInit(): void {
@@ -18,11 +26,39 @@ constructor(private compagnieService: CompagnieService){}
   this.loadLogs();
 }
 
-loadLogs(): void{
-  this.compagnieService.getCompagnieLogs().subscribe((response) => {
-    console.table(response);
-    this.logs=response;
-  });
+// loadLogs(): void{
+//   this.compagnieService.getCompagnieLogs().subscribe((response) => {
+//     console.table(response);
+//     this.logs=response;
+//   });
+// }
 
+loadLogs(): void{
+  this.compagnieService.getLogsPage(
+    this.page,
+    this.pageSize,
+    'date',
+    
+  ).subscribe((response: PageResponse<Log>) => {
+    this.logs = response.content;
+    console.log("logs: ", this.logs);
+    this.filteredLogs = this.logs;
+    this.totalLogs = response.totalElements;
+  });
+}
+
+prevPage(): void {
+  if (this.page > 0) {
+    this.page--;
+    this.loadLogs();
+  }
+}
+
+nextPage(): void {
+  console.log('nextPage');
+  if ((this.page + 1) * this.pageSize < this.totalLogs) {
+    this.page++;
+    this.loadLogs();
+  }
 }
 }

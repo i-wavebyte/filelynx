@@ -38,22 +38,18 @@
                 <td>
                     <p>{{ log.date | date | slice:0:11 }}</p>
                 </td>
-                <!-- <td class="actions">
-                    <button (click)="onUpdateGroupe(groupe.id,groupe.nom)" class="edit">Edit</button>
-                    <button (click)="onDeleteGroupe(groupe.nom)" class="delete">Delete</button>
-                </td> -->
             </tr>
         </tbody>
     </table>
-    <!-- <div class="pagination">
+    <div class="pagination">
         <button (click)="prevPage()" [disabled]="page === 0" class="pagination-button">&laquo;</button>
         <span class="current-page">{{ page + 1 }}</span>
         <button
             class="pagination-button"
             (click)="nextPage()"
-            [disabled]="(page + 1) * pageSize >= totalGroups"
+            [disabled]="(page + 1) * pageSize >= totalLogs"
         >&raquo;
         </button>
-    </div> -->
+    </div>
 </div>
 <router-outlet></router-outlet>

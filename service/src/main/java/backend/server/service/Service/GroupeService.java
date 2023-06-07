@@ -53,7 +53,6 @@ public class GroupeService {
                     .collect(Collectors.toList());
         }
         List<Groupe> pageContent = groupes.subList(start, Math.min(end, groupes.size()));
-
         return new PageResponse<>(pageContent, groupes.size());
     }
 

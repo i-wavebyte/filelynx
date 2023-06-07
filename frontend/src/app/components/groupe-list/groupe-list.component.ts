@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageResponse } from 'src/app/domain/PageRespone';
 import Groupe from 'src/app/domain/Groupe';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
-import { NgToastModule, NgToastService } from 'ng-angular-popup';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-groupe-list',
@@ -25,8 +25,7 @@ export class GroupeListComponent implements OnInit,OnChanges {
     private toast: NgToastService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
-
+    console.log(changes);
   }
 
   ngOnInit(): void {
@@ -61,7 +60,8 @@ export class GroupeListComponent implements OnInit,OnChanges {
   }
 
   loadGroupes(): void {
-    console.log("test");
+    console.log("this search value: ", this.searchValue);
+    // console.log("this search value: ", this.sortBy);
     this.compagnieService
       .getGroupesPage(
         this.page,
