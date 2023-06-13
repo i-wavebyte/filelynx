@@ -15,13 +15,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@RequiredArgsConstructor @Service @Transactional @Slf4j
+@RequiredArgsConstructor @Service @Slf4j
 public class FichierService {
-    @Autowired
     private FichierRepository fichierRepository;
-    @Autowired
     private DossierRepository dossierRepository;
-    @Autowired
     private CategorieService categorieService;
 
     public Fichier addFichier(Fichier f, Long ParentFolderId)

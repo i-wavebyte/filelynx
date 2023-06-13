@@ -157,7 +157,6 @@ public class CompagnieController {
             @RequestParam(defaultValue = "date") String sortBy
     )
     {
-        System.out.println("page , size, sortBy: "+ page +"\n" + size +"\n" + sortBy +"\n");
         return logService.getLogsPage(page, size, sortBy);
     }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")

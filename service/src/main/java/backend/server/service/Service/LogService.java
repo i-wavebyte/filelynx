@@ -19,7 +19,7 @@ public class LogService {
     private final LogRepository logRepository;
     public PageResponse<Log> getLogsPage(int page, int size, String sortBy) {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Sort sort = Sort.by(sortBy);
+        Sort sort = Sort.by(Sort.Order.desc(sortBy));
         int start = page * size;
         int end = Math.min(start+size, (int) logRepository.count());
         List<Log> logs = logRepository.findAllByCompagnieNom(compagnieName, sort);

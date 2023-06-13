@@ -7,26 +7,25 @@ import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class DossierService {
-    @Autowired
+
     private DossierRepository dossierRepository;
-    @Autowired
+
+    public DossierService(DossierRepository dossierRepository) {
+        this.dossierRepository = dossierRepository;
+    }
+
     private FichierRepository fichierRepository;
-    @Autowired
     private FichierService fichierService;
-    @Autowired
     private CompagnieService compagnieService;
     public Dossier addDossier(Dossier d, Long ParentFolderId)
     {

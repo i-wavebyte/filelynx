@@ -26,19 +26,11 @@ constructor(private compagnieService: CompagnieService){}
   this.loadLogs();
 }
 
-// loadLogs(): void{
-//   this.compagnieService.getCompagnieLogs().subscribe((response) => {
-//     console.table(response);
-//     this.logs=response;
-//   });
-// }
-
 loadLogs(): void{
   this.compagnieService.getLogsPage(
     this.page,
     this.pageSize,
     'date',
-    
   ).subscribe((response: PageResponse<Log>) => {
     this.logs = response.content;
     console.log("logs: ", this.logs);
