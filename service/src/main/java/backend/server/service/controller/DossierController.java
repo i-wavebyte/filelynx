@@ -19,8 +19,8 @@ public class DossierController {
     private DossierService dossierService;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/add")
-    public void addDossier(Dossier d, Long parentFolderId) {
+    @PostMapping("/admin/add/{parentFolderId}")
+    public void addDossier(@RequestBody Dossier d,@PathVariable Long parentFolderId) {
         System.out.println("heeere  :  "+d +"\n");
 
         System.out.println("heeere  :  "+parentFolderId +"\n");
@@ -29,31 +29,31 @@ public class DossierController {
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/delete")
-    public void deleteDossier(Long dossierId) {
+    public void deleteDossier(@RequestBody Long dossierId) {
         dossierService.delete(dossierId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/rename")
-    public void renameDossier(Long dossierId, String name) {
+    @PostMapping("/admin/rename/{dossierId}")
+    public void renameDossier(@PathVariable Long dossierId,@RequestBody String name) {
         dossierService.renameDossier(dossierId, name);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/changerEmplacement")
-    public void changerEmplacement(Long dossierId, Long targetFolderId) {
+    @PostMapping("/admin/changerEmplacement/{dossierId}")
+    public void changerEmplacement(@PathVariable Long dossierId,@RequestBody Long targetFolderId) {
         dossierService.changerEmplacement(dossierId, targetFolderId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/getChildrenFiles")
-    public List<Dossier> getChildrenDossiers(Long dossierId) {
+    public List<Dossier> getChildrenDossiers(@RequestBody Long dossierId) {
         return dossierService.getChildrenDossiers(dossierId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/get")
-    public Dossier getDossier(Long dossierId) {
+    public Dossier getDossier(@RequestBody Long dossierId) {
         return dossierService.getDossier(dossierId);
     }
 
