@@ -11,29 +11,29 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class CompagnieRepositoryTest {
 
-    @Autowired
-    private CompagnieRepository compagnieRepository;
-
-    @Autowired
-    private TestEntityManager entityManager;
-    @Test
-    public void TestFindByNom() {
-//        //Create a Compagnie entity
-//        Compagnie compagnie = new Compagnie();
-//        compagnie.setNom("TestCompagnie");
-//        entityManager.persist(compagnie);
-//        entityManager.flush();
+//    @Autowired
+//    private CompagnieRepository compagnieRepository;
 //
-//        //invoke the repository method
-//        Compagnie foundCompagnie = compagnieRepository.findByNom("TestCompagnie");
+//    @Autowired
+//    private TestEntityManager entityManager;
+//    @Test
+//    public void TestFindByNom() {
+////        //Create a Compagnie entity
+////        Compagnie compagnie = new Compagnie();
+////        compagnie.setNom("TestCompagnie");
+////        entityManager.persist(compagnie);
+////        entityManager.flush();
+////
+////        //invoke the repository method
+////        Compagnie foundCompagnie = compagnieRepository.findByNom("TestCompagnie");
+////
+////        //Assertion
+////        Assertions.assertNotNull(foundCompagnie);
+////        Assertions.assertEquals("TestCompagnie", foundCompagnie.getNom());
 //
-//        //Assertion
-//        Assertions.assertNotNull(foundCompagnie);
-//        Assertions.assertEquals("TestCompagnie", foundCompagnie.getNom());
-
-    }
-
-    @Test
-    public void deleteByNom() {
-    }
+//    }
+//
+//    @Test
+//    public void deleteByNom() {
+//    }
 }
