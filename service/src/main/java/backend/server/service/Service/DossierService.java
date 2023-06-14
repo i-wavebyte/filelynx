@@ -126,4 +126,14 @@ public class DossierService {
         return dossierRepository.save(dossier);
     }
 
+    public List<Dossier> getChildrenDossiers(Long dossierId){
+
+        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        return dossier.getDossiers();
+
+    }
+
+    public Dossier getDossier(Long dossierId) {
+        return dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
+    }
 }

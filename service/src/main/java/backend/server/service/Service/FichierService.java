@@ -87,4 +87,9 @@ public class FichierService {
         return fichierRepository.save(file);
     }
 
+    public List<Fichier> getFichiersByParent(Long parentId){
+        Dossier dossier = dossierRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Folder not found"));
+        return dossier.getFichiers();
+    }
+
 }

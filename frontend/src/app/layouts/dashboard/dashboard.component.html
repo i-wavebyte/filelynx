@@ -2,7 +2,7 @@
   <div class="dashboard-header">
     <nav>
       <button>Tableau de bord</button>
-      <button>Fichiers/Dossiers</button>
+      <button routerLink="/files">Fichiers/Dossiers</button>
       <button routerLink="/users">Collaborateurs</button>
       <button routerLink="/groups">Groupes</button>
     </nav>
@@ -22,7 +22,7 @@
         <table class="log">
           <tr *ngFor="let log of logs" class="log-row" (click)="openPopup(log)">
             <td><span class="log-type" [ngClass]="getLogType(log.type)">{{log.type}} </span></td>
-            <td class="log-message">{{log.message.length>35?log.message.slice(0,35)+"...":log.message}}</td>
+            <td class="log-message">{{log.message.length>30?log.message.slice(0,30)+"...":log.message}}</td>
           </tr>
         </table>
       </div>

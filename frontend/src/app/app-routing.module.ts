@@ -14,6 +14,7 @@ import { GroupesComponent } from './layouts/groupes/groupes.component';
 import { AddGroupeComponent } from './components/add-groupe/add-groupe.component';
 import { AddMembreComponent } from './components/add-membre/add-membre.component';
 import { LogsComponent } from './layouts/logs/logs.component';
+import { FilesComponent } from './layouts/files/files.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -32,7 +33,9 @@ const routes: Routes = [
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
   { path: 'users', component: UsersComponent ,
   children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {path : "files", component : FilesComponent}
+
 ];
 
 @NgModule({
