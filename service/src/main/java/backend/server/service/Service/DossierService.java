@@ -7,6 +7,7 @@ import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +19,18 @@ import java.util.List;
 @Slf4j
 public class DossierService {
 
-    private DossierRepository dossierRepository;
+    private final DossierRepository dossierRepository;
 
-    public DossierService(DossierRepository dossierRepository) {
-        this.dossierRepository = dossierRepository;
-    }
 
     private FichierRepository fichierRepository;
     private FichierService fichierService;
+    @Autowired
     private CompagnieService compagnieService;
     public Dossier addDossier(Dossier d, Long ParentFolderId)
     {
         Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+//        System.out.println("dossier parrent: "+ dossierParent);
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
         d= dossierRepository.save(d);

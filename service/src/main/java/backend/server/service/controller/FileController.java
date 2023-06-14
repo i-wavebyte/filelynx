@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/file")
+@RequestMapping("/api/v1/fichier")
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 public class FileController {
 
-    @Autowired
     private FichierService fichierService;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")

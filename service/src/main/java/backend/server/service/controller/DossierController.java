@@ -20,19 +20,22 @@ public class DossierController {
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add")
-    public void addFile(Dossier d, Long parentFolderId) {
+    public void addDossier(Dossier d, Long parentFolderId) {
+        System.out.println("heeere  :  "+d +"\n");
+
+        System.out.println("heeere  :  "+parentFolderId +"\n");
         dossierService.addDossier(d, parentFolderId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/delete")
-    public void deleteFile(Long dossierId) {
+    public void deleteDossier(Long dossierId) {
         dossierService.delete(dossierId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename")
-    public void renameFile(Long dossierId, String name) {
+    public void renameDossier(Long dossierId, String name) {
         dossierService.renameDossier(dossierId, name);
     }
 
@@ -44,13 +47,13 @@ public class DossierController {
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/getChildrenFiles")
-    public List<Dossier> getChildrenFiles(Long dossierId) {
+    public List<Dossier> getChildrenDossiers(Long dossierId) {
         return dossierService.getChildrenDossiers(dossierId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/get")
-    public Dossier getFile(Long dossierId) {
+    public Dossier getDossier(Long dossierId) {
         return dossierService.getDossier(dossierId);
     }
 
