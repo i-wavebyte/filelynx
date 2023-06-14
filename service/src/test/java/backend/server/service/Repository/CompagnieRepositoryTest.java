@@ -1,5 +1,7 @@
 package backend.server.service.Repository;
 
+import backend.server.service.domain.Compagnie;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,18 +20,18 @@ class CompagnieRepositoryTest {
     private TestEntityManager entityManager;
     @Test
     public void TestFindByNom() {
-//        //Create a Compagnie entity
-//        Compagnie compagnie = new Compagnie();
-//        compagnie.setNom("TestCompagnie");
-//        entityManager.persist(compagnie);
-//        entityManager.flush();
-//
-//        //invoke the repository method
-//        Compagnie foundCompagnie = compagnieRepository.findByNom("TestCompagnie");
-//
-//        //Assertion
-//        Assertions.assertNotNull(foundCompagnie);
-//        Assertions.assertEquals("TestCompagnie", foundCompagnie.getNom());
+        //Create a Compagnie entity
+        Compagnie compagnie = new Compagnie();
+        compagnie.setNom("TestCompagnie");
+        entityManager.persist(compagnie);
+        entityManager.flush();
+
+        //invoke the repository method
+        Compagnie foundCompagnie = compagnieRepository.findByNom("TestCompagnie");
+
+        //Assertion
+        Assertions.assertNotNull(foundCompagnie);
+        Assertions.assertEquals("TestCompagnie", foundCompagnie.getNom());
 
     }
 
