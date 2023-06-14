@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/file")
+@RequestMapping("/api/v1/dossier")
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 public class DossierController {
 
-    @Autowired
     private DossierService dossierService;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -50,7 +49,7 @@ public class DossierController {
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/get")
-    public Dossier getFile(Long dossierId) {
+    public Dossier getDossier(Long dossierId) {
         return dossierService.getDossier(dossierId);
     }
 

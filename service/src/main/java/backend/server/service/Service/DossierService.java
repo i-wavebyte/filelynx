@@ -18,11 +18,8 @@ import java.util.List;
 @Slf4j
 public class DossierService {
 
-    private DossierRepository dossierRepository;
+    private final DossierRepository dossierRepository;
 
-    public DossierService(DossierRepository dossierRepository) {
-        this.dossierRepository = dossierRepository;
-    }
 
     private FichierRepository fichierRepository;
     private FichierService fichierService;
