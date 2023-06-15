@@ -17,8 +17,11 @@ import java.util.List;
 
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService {
+    @Autowired
     private FichierRepository fichierRepository;
+    @Autowired
     private DossierRepository dossierRepository;
+    @Autowired
     private CategorieService categorieService;
 
     public Fichier addFichier(Fichier f, Long ParentFolderId)
