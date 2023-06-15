@@ -21,8 +21,10 @@ public class DossierService {
 
     private final DossierRepository dossierRepository;
 
-
+    @Autowired
     private FichierRepository fichierRepository;
+
+    @Autowired
     private FichierService fichierService;
     @Autowired
     private CompagnieService compagnieService;
@@ -30,7 +32,6 @@ public class DossierService {
     {
         Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-//        System.out.println("dossier parrent: "+ dossierParent);
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
         d= dossierRepository.save(d);
@@ -127,10 +128,9 @@ public class DossierService {
     }
 
     public List<Dossier> getChildrenDossiers(Long dossierId){
-
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        System.out.println("here's the folder: "+ dossier);
         return dossier.getDossiers();
-
     }
 
     public Dossier getDossier(Long dossierId) {

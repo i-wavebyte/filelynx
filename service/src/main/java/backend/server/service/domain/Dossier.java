@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,11 @@ public class Dossier {
         String path= "/"+nom;
         if(racine != null) path = racine.getFullPath() + path;
         return path;
+    }
+
+    @Override
+    public String toString() {
+        return nom;
     }
 
 }

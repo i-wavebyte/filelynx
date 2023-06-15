@@ -4,7 +4,9 @@ package backend.server.service.controller;
 import backend.server.service.Service.DossierService;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
+import backend.server.service.security.POJOs.responses.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,40 +22,42 @@ public class DossierController {
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
-    public void addDossier(@RequestBody Dossier d,@PathVariable Long parentFolderId) {
-        System.out.println("heeere  :  "+d +"\n");
-
-        System.out.println("heeere  :  "+parentFolderId +"\n");
+    public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
         dossierService.addDossier(d, parentFolderId);
+        return ResponseEntity.ok(new MessageResponse("dossier ajouté avec succès!"));
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/delete")
-    public void deleteDossier(@RequestBody Long dossierId) {
+    @PostMapping("/admin/delete/{dossierId}")
+    public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
         dossierService.delete(dossierId);
+        return ResponseEntity.ok(new MessageResponse("dossier supprimé avec succès!"));
+
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename/{dossierId}")
-    public void renameDossier(@PathVariable Long dossierId,@RequestBody String name) {
+    public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
         dossierService.renameDossier(dossierId, name);
+        return ResponseEntity.ok(new MessageResponse("dossier renommé avec succès!"));
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/changerEmplacement/{dossierId}")
-    public void changerEmplacement(@PathVariable Long dossierId,@RequestBody Long targetFolderId) {
+    public ResponseEntity<?> changerEmplacement(@PathVariable Long dossierId,@RequestParam Long targetFolderId) {
         dossierService.changerEmplacement(dossierId, targetFolderId);
+        return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du dossier réussie!"));
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @GetMapping("/admin/getChildrenFiles")
-    public List<Dossier> getChildrenDossiers(@RequestBody Long dossierId) {
+    @GetMapping("/admin/getChildrenFolders/{dossierId}")
+    public List<Dossier> getChildrenDossiers(@PathVariable Long dossierId) {
         return dossierService.getChildrenDossiers(dossierId);
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @GetMapping("/admin/get")
-    public Dossier getDossier(@RequestBody Long dossierId) {
+    @GetMapping("/admin/get/{dossierId}")
+    public Dossier getDossier(@PathVariable Long dossierId) {
         return dossierService.getDossier(dossierId);
     }
 
