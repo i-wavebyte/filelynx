@@ -18,4 +18,6 @@ public interface IDossierService {
     Dossier changerEmplacement(Long dossierId,Long dossierCibleId );
     List<Dossier> getChildrenDossiers(Long dossierId);
     Dossier getDossier(Long dossierId);
+
+    Dossier getRootDossier();
 }
