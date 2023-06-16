@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.CategorieRepository;
 import backend.server.service.domain.Categorie;
+import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,13 @@ public class CategorieService implements ICategorieService{
 
     @Autowired
     private CategorieRepository categorieRepository;
-
+    @Autowired
+    private ICompagnieService compagnieService;
     public Categorie addCategorie(Categorie cat)
     {
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieName);
+        cat.setCompagnie(compagnie);
         return categorieRepository.save(cat);
     }
 

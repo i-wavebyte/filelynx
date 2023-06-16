@@ -17,6 +17,8 @@ import { LogsComponent } from './layouts/logs/logs.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
 import { MetadataComponent } from './layouts/metadata/metadata.component';
+import { AddLabelComponent } from './components/add-label/add-label.component';
+import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -38,7 +40,10 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {path : "files", component : FilesComponent,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
-  { path: 'metadata', component: MetadataComponent },
+  { path: 'metadata', component: MetadataComponent ,
+  children: [{ path: "add-label", component: AddLabelComponent },
+  { path: "add-categorie", component: AddCategorieComponent }
+]}
 
 ];
 

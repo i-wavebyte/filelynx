@@ -166,4 +166,13 @@ export class CompagnieService {
   getAllUniqueGroups(): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/distinctGroups`);
   }
+
+  addLabel(label: Label): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/addLabel`, label, httpOptions);
+  }
+
+  addCategorie(categorie: Categorie): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/addCategorie`, categorie, httpOptions);
+  }
+
 }
