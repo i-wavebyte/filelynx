@@ -42,13 +42,6 @@ public class Fichier {
 
     public String toString(){
         String str = "\nFichier: "+nom+"."+extension+" ("+type+")";
-        str += " - "+tailleToHighestUnit();
-        str += " - "+etat.toString();
-        str += " - "+categorie.getNom();
-        str += "\n"+labels.size()+" labels:";
-        for (Label l: labels) {
-            str += "\n\t-"+l.getNom();
-        }
 
         return str;
     }
