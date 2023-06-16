@@ -30,8 +30,13 @@
           </div>
             <div>
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" formControlName="password" required />
-            </div>
+                <input type="password" id="password" formControlName="password" minlength="6" required />
+                <div *ngIf="addMemberForm.get('password')?.invalid && (addMemberForm.get('password')?.dirty || addMemberForm.get('password')?.touched)">
+                  <div *ngIf="addMemberForm.get('password')?.errors?.['minlength']">
+                    Password must be at least 6 characters long.
+                  </div>
+                </div>
+              </div>
             <button type="submit" [disabled]="!addMemberForm.valid" class="add-button">
               j'ajoute le membre
             </button>
