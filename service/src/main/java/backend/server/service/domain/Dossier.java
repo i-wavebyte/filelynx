@@ -17,13 +17,13 @@ public class Dossier {
     private Long id;
     private String nom;
     @ManyToOne
-    @JsonIncludeProperties({"id","nom","racine"})
+    @JsonIncludeProperties({"id","nom"})
     private Dossier racine;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
-    @JsonIncludeProperties({"id","nom","extension","type","taille","racine","etat"})
+    @JsonIncludeProperties({"id","nom","extension","type","taille","etat"})
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
-    @JsonIncludeProperties({"id","nom","racine"})
+    @JsonIncludeProperties({"id","nom"})
     private List<Dossier> dossiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL , mappedBy = "dossier")
     private List<Authorisation> authorisations = new ArrayList<>();

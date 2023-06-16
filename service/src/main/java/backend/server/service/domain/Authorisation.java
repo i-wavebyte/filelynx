@@ -1,6 +1,7 @@
 package backend.server.service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Authorisation {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    @JsonIncludeProperties({"id","nom"})
     private Dossier dossier;
     private boolean lecture;
     private boolean ecriture;
@@ -27,6 +29,7 @@ public class Authorisation {
     private boolean upload;
     private boolean creationDossier;
     @ManyToOne
+    @JsonIncludeProperties({"id"})
     @JoinColumn(name = "ressource_accessor_id")
     private RessourceAccessor ressourceAccessor;
 

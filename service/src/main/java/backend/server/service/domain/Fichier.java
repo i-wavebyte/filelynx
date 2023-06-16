@@ -26,11 +26,13 @@ public class Fichier {
     private String type;
     private Double taille;
     @ManyToOne
-    @JsonIncludeProperties({"id","nom","racine"})
+    @JsonIncludeProperties({"id","nom"})
     private Dossier racine;
     @ManyToOne
+    @JsonIncludeProperties({"id","nom"})
     private Categorie categorie;
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIncludeProperties({"id","nom"})
     private List<Label> labels = new ArrayList<>();
     @Enumerated (value = EnumType.STRING)
     private ETAT etat;
@@ -40,6 +42,7 @@ public class Fichier {
         return path;
     }
     @ManyToOne
+    @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
 
     public String toString(){
