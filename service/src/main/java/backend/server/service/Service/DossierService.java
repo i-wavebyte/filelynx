@@ -130,7 +130,7 @@ public class DossierService implements IDossierService {
 
     public List<Dossier> getChildrenDossiers(Long dossierId){
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
-        System.out.println("here's the folder: "+ dossier);
+//        System.out.println("here's the folder: "+ dossier);
         return dossier.getDossiers();
     }
 
