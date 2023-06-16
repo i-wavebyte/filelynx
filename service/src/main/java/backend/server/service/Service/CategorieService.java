@@ -30,9 +30,9 @@ public class CategorieService implements ICategorieService{
         return categorieRepository.save(cat);
     }
 
-    public void deleteCategorie(Categorie cat)
+    public void deleteCategorie(Long categorieId)
     {
-        categorieRepository.delete(cat);
+        categorieRepository.deleteById(categorieId);
     }
 
     public Categorie updateCategorie(Categorie cat)

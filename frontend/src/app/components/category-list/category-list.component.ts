@@ -114,33 +114,34 @@ export class CategoryListComponent implements OnInit,OnChanges {
     }
   }
 
-  // onDeleteGroupe(categorieNom : string){
-  //   this.compagnieService.deleteGroupe(categorieNom).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadCategories();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onDeleteCategory(categorieId: number){
+    console.log(categorieId);
+    this.compagnieService.deleteCategory(categorieId).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadCategories();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
-  // onUpdateGroupe(catagorieId : number, newName : string){
-  //   this.compagnieService.updateGroupe(catagorieId,newName).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadCategories();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onUpdateCategorie(cat: Categorie){
+    this.compagnieService.updateCategorie(cat).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadCategories();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
   titleCase(value: string): string {
     if (!value) return value;

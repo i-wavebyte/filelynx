@@ -22,7 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 @RestController
@@ -244,6 +243,30 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateCategorie")
+    public ResponseEntity<?> updateCategorie(@RequestBody Categorie cat) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        System.out.println("wesh wselna l hna");
+        categorieService.updateCategorie(cat);
+//        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+//        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Categorie mis à jour avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteCategorie/{categorieId}")
+    public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        System.out.println("wesh wselna l hna");
+        categorieService.deleteCategorie(categorieId);
+//        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+//        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
+    }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {
@@ -253,7 +276,7 @@ public class CompagnieController {
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
@@ -265,7 +288,7 @@ public class CompagnieController {
     @GetMapping("/getLabels")
     public PageResponse<Label> getAllLabels(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
