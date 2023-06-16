@@ -69,6 +69,15 @@
     font-size: 0.9em;
   }
   
+  select {
+    border-radius: 4px;
+    border: 1px solid #c6ced6;
+    width: 326px;
+    padding: 13px;
+    outline: none;
+    font-size: 0.9em;
+  }
+
   .add-button {
     right: 24px;
     padding: 8px;
