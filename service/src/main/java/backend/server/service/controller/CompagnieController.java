@@ -249,7 +249,6 @@ public class CompagnieController {
     public List<String> getAllUniqueGroupes() {
         return compagnieService.getAllUniqueGroups();
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
@@ -273,7 +272,6 @@ public class CompagnieController {
     ) {
         return labelService.getLabelsPage(page, size, sortBy, sortOrder, searchQuery);
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addLabel")
     public ResponseEntity<?> addLabel(@RequestBody Label label) {
@@ -291,7 +289,6 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addCategorie")
     public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {

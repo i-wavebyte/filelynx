@@ -33,7 +33,6 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
   { path: 'userdashboard', component: UserDashboardComponent,  },
-
   { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },
   { path: 'groups', component: GroupesComponent , canActivate: [AuthGuard] ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
@@ -42,7 +41,6 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {path : "files", component : FilesComponent, canActivate: [AuthGuard] ,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
-
   {path : "files", component : FilesComponent,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
   { path: 'metadata', component: MetadataComponent },
