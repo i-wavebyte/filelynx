@@ -16,9 +16,14 @@ import { AddMembreComponent } from './components/add-membre/add-membre.component
 import { LogsComponent } from './layouts/logs/logs.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
+
+import { AuthGuard } from './_services/authguard.service';
+import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
+
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
+
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -28,22 +33,25 @@ const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'log', component: LogsComponent },
-  // { path: 'logs', component: DashboardComponent },
-  // { path: 'userdashboard', component: UserDashboardComponent },
-  // { path: 'users', component: UsersComponent },
-  { path: 'groups', component: GroupesComponent ,
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
+  { path: 'userdashboard', component: UserDashboardComponent,  },
+
+  { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },
+  { path: 'groups', component: GroupesComponent , canActivate: [AuthGuard] ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
-  { path: 'users', component: UsersComponent ,
+  { path: 'users', component: UsersComponent , canActivate: [AuthGuard] ,
   children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {path : "files", component : FilesComponent, canActivate: [AuthGuard] ,
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
+
   {path : "files", component : FilesComponent,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent }
 ]}
+
 
 ];
 

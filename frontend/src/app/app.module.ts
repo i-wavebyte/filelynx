@@ -29,11 +29,16 @@ import { LogsComponent } from './layouts/logs/logs.component';
 import { LogListComponent } from './components/log-list/log-list.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
+
+import { AuthGuard } from './_services/authguard.service';
+import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
+
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { LabelListComponent } from './components/label-list/label-list.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
+
 
 
 @NgModule({
@@ -58,6 +63,8 @@ import { AddCategorieComponent } from './components/add-categorie/add-categorie.
     LogListComponent,
     FilesComponent,
     AddFileComponent,
+
+    UserDashboardComponent,
     MetadataComponent,
     LabelListComponent,
     CategoryListComponent,
@@ -73,7 +80,7 @@ import { AddCategorieComponent } from './components/add-categorie/add-categorie.
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

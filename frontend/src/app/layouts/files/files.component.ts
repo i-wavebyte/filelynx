@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FolderService } from 'src/app/_services/folder.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Dossier from 'src/app/domain/Dossier';
 
 @Component({
@@ -9,10 +11,21 @@ import Dossier from 'src/app/domain/Dossier';
 })
 export class FilesComponent implements OnInit{
   currentFolder:Dossier | null = null;
+  roles: string[] = [];
 
-  constructor(private folderService:FolderService) {}
+  constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.loadFolders();
+    this.route.queryParams.subscribe(params => {
+      if (params['reload']) {
+          console.log('reload');
+          this.loadFolders();
+      }
+    });
+  }
+
+  loadFolders(): void{
     if(this.currentFolder == null){
       this.folderService.getRootFolderAsAdmin().subscribe(
         (data) => {

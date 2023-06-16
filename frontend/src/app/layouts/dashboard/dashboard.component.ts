@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Log from 'src/app/domain/Log';
 import Quota from 'src/app/domain/Quota';
 
@@ -15,8 +17,10 @@ export class DashboardComponent implements OnInit {
   showModal = false; // Flag to control the visibility of the modal
   popupClass = 'popup';
   popupBackgroundColor = '';
+  roles: string[] = [];
 
-  constructor(private compagnieService: CompagnieService) {}
+
+  constructor(private compagnieService: CompagnieService, private tokenStorage: TokenStorageService, private router: Router) {}
   ngOnInit(): void {
     this.compagnieService.getQuotaStatus().subscribe(
       (data) => {

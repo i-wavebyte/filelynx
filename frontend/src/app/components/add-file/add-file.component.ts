@@ -15,7 +15,6 @@ export class AddFileComponent implements OnInit{
   //I want to put the id here on init
   currentFolder!: number;
 
-
   constructor(
     private fb: FormBuilder,
     private folderService: FolderService,
