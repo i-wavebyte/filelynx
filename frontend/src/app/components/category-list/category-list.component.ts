@@ -76,6 +76,7 @@ export class CategoryListComponent implements OnInit,OnChanges {
           this.categories = response.content.map((categorie) => {categorie.nom = this.titleCase(categorie.nom); return categorie;});
           this.filteredCategories = this.categories;
           this.totalCategories = response.totalElements;
+          console.log(this.filteredCategories);
         },
         (error) => {
           console.error('Error fetching categries:', error);

@@ -79,6 +79,4 @@ public class CategorieService implements ICategorieService{
         List<Categorie> pageContent = categories.subList(start, Math.min(end, categories.size()));
         return new PageResponse<>(pageContent, categories.size());
     }
-
-
 }
