@@ -1,6 +1,7 @@
 package backend.server.service.domain;
 
 import backend.server.service.enums.ETAT;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Fichier {
     private String type;
     private Double taille;
     @ManyToOne
+    @JsonIncludeProperties({"id","nom","racine"})
     private Dossier racine;
     @ManyToOne
     private Categorie categorie;
