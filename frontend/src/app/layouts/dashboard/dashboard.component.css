@@ -118,12 +118,15 @@ nav{
 }
 
 .log-type{
+  display: inline-block;
   font-size: 0.8em;
   background-color: #E2E2E2;
   border-radius: 3px;
-  font-weight: 500;
+  font-weight: 400;
   padding: 2px 5px 2px 5px;
   color: #3C3C3E;
+  width: 70px;
+  text-align: center;
 }
 
 .log-row{

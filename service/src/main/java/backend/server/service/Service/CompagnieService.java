@@ -14,44 +14,49 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor @Service @Slf4j @Transactional
-public class CompagnieService {
-    private final CompagnieRepository compagnieRepository;
+ @Service @Slf4j @Transactional
+public class CompagnieService implements ICompagnieService{
+     private final GroupeRepository groupeRepository;
+     private final MembreRepository membreRepository;
+     private final CompagnieRepository compagnieRepository;
 
-    private final GroupeRepository groupeRepository;
+     private final GroupeService groupeService;
 
-    private final GroupeService groupeService;
-
-    private final MembreRepository membreRepository;
-
+     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, GroupeService groupeService){
+          this.compagnieRepository = compagnieRepository;
+          this.groupeRepository = groupeRepository;
+          this.membreRepository = membreRepository;
+          this.groupeService = groupeService;
+     }
+     @Override
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
     }
-
+    @Override
     public Compagnie getCompagnie(String nom){
         return compagnieRepository.findByNom(nom);
     }
-
+    @Override
     public List<Compagnie> getAllCompagnies(){
         return compagnieRepository.findAll();
     }
-
+    @Override
     public Compagnie createCompagnie(Compagnie compagnie){
         return compagnieRepository.save(compagnie);
     }
-
+    @Override
     public Compagnie updateCompagnie(Compagnie compagnie){
         return compagnieRepository.save(compagnie);
     }
-
+    @Override
     public void deleteCompagnie(Long id){
         compagnieRepository.deleteById(id);
     }
-
+    @Override
     public void deleteCompagnie(String nom){
         compagnieRepository.deleteByNom(nom);
     }
-
+    @Override
     public Groupe createGroupe(String nom, double quota){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("compagnie name: "+ compagnieName+" nom de groupe: "+ nom);
@@ -70,6 +75,7 @@ public class CompagnieService {
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnieName);
     }
+    @Override
     public Groupe createGroupe(String nom, double quota, Long CompagnieId){
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, SecurityContextHolder.getContext().getAuthentication().getName()) != null){
@@ -86,34 +92,36 @@ public class CompagnieService {
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnie.getNom());
     }
-
+    @Override
     public void deleteGroupe(String nom){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Groupe groupe = groupeRepository.findByNomAndCompagnieNom(nom, compagnieName);
         if(groupe == null){
-            throw new RuntimeException("Groupe not found");
+            throw new RuntimeException("Groupe non trouvé");
         }
         if(!(compagnieName.equals(groupe.getCompagnie().getNom()))){
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Non autorisé");
         }
         if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
-            throw new RuntimeException("Cannot delete default groupe");
+            throw new RuntimeException("Impossible de supprimer le groupe par défaut");
         }
         log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
         groupeRepository.delete(groupe);
     }
-
-
+    @Override
     public Groupe updateGroupe(Long groupeId, String newName) {
 
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieName);
+        if(grp.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+            throw new RuntimeException("Impossible de modifier le groupe par défaut");
+        }
         grp.setNom(newName);
         // Save the updated Professor and return it
         return groupeRepository.save(grp);
     }
-
+    @Override
     public void deleteMembre(Long membreId, String username){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Membre membre = membreRepository.findByUsername(username);
@@ -126,6 +134,7 @@ public class CompagnieService {
         log.info("membre name: "+membre.getNom()+" compagnie name: "+membre.getCompagnie().getNom());
         membreRepository.deleteById(membreId);
     }
+    @Override
     public Membre updateMembre(Membre membre) {
         Optional<Membre> optionalExistingMembre = membreRepository.findById(membre.getId());
 
@@ -145,7 +154,7 @@ public class CompagnieService {
             throw new RuntimeException("membre introuvable");
         }
     }
-
+    @Override
     public List<String> getAllUniqueGroups() {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         return groupeRepository.findAllUniqueGroupes(compagnieName);

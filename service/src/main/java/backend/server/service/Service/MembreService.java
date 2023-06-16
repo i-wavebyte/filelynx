@@ -14,29 +14,33 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional @Slf4j
-@AllArgsConstructor
-public class MembreService {
+public class MembreService implements IMembreService {
     private final MembreRepository membreRepository;
+
+    public MembreService(MembreRepository membreRepository) {
+        this.membreRepository = membreRepository;
+    }
+    @Override
     public Membre getMembre(Long id){
         return membreRepository.findById(id).orElseThrow(()-> new RuntimeException("Membre not found") );
     }
-
+    @Override
     public Membre addMembre(Membre membre){
         return membreRepository.save(membre);
     }
-
+    @Override
     public Membre updateMembre(Membre membre){
         return membreRepository.save(membre);
     }
-
+    @Override
     public void deleteMembre(Long id){
         membreRepository.deleteById(id);
     }
-
+    @Override
     public Membre getMembre(String username){
         return membreRepository.findByUsername(username);
     }
-
+    @Override
     public PageResponse<Membre> getMembresPage(int page, int size, String sortBy, String sortOrder, String searchQuery, String groupFilter ){
 
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();

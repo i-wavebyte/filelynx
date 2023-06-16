@@ -77,11 +77,11 @@ export class DashboardComponent implements OnInit {
   {
     switch(logType)
     {
-      case 'CREATE':
+      case 'CRÉER':
         return 'blue-background';
-      case 'UPDATE':
+      case 'MODIFIER':
         return 'green-background';
-      case 'DELETE':
+      case 'SUPPRIMER':
           return 'red-background';
       default:
         return logType;

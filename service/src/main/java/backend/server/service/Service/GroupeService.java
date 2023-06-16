@@ -14,31 +14,39 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service @Transactional @Slf4j @RequiredArgsConstructor
-public class GroupeService {
+@Service @Transactional @Slf4j
+public class GroupeService implements IGroupeService{
 
     private final GroupeRepository groupeRepository;
 
+    public GroupeService(GroupeRepository groupeRepository) {
+        this.groupeRepository = groupeRepository;
+    }
+    @Override
     public Groupe addGroupe(Groupe groupe) {
         return groupeRepository.save(groupe);
     }
 
+    @Override
     public Groupe getGroupe(String nom, String compagnieNom) {
         log.info("nom: "+ nom + " compagnieNom: "+ compagnieNom);
         return groupeRepository.findByNomAndCompagnieNom(nom, compagnieNom);
     }
-
+    @Override
     public Groupe getGroupe(Long id) {
         return groupeRepository.findById(id).orElse(null);
     }
 
-
-    void deleteGroupe(Long id) {
+    @Override
+    public void deleteGroupe(Long id) {
         groupeRepository.deleteById(id);
     }
-    Groupe updateGroupe(Groupe groupe) {
+
+    @Override
+    public Groupe updateGroupe(Groupe groupe) {
         return groupeRepository.save(groupe);
     }
+   @Override
     public PageResponse<Groupe> getGroupesPage(int page, int size, String sortBy, String sortOrder, String searchQuery ){
 
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();

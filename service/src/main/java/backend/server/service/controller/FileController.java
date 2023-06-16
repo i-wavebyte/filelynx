@@ -1,6 +1,7 @@
 package backend.server.service.controller;
 
 import backend.server.service.Service.FichierService;
+import backend.server.service.Service.IFichierService;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.security.POJOs.responses.MessageResponse;
@@ -18,7 +19,7 @@ import java.util.List;
 public class FileController {
 
     @Autowired
-    private FichierService fichierService;
+    private IFichierService fichierService;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")

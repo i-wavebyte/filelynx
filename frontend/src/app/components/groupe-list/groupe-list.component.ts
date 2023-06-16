@@ -135,7 +135,7 @@ export class GroupeListComponent implements OnInit,OnChanges {
         this.loadGroupes();
       },
       (err) => {
-        this.toast.error({detail:"Message d'erreur", summary:"Erreur lors de la tentative de mise à jour de Groupe", duration: 3000});
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
         console.log(err);
       }
     );

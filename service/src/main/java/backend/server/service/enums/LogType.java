@@ -1,5 +1,5 @@
 package backend.server.service.enums;
 
 public enum LogType {
-    CREATE, UPDATE, DELETE, READ, DOWNLOAD, UPLOAD, ERROR, MOVE
+    CRÉER, MODIFIER, SUPPRIMER, READ, DOWNLOAD, UPLOAD, ERROR, MOVE
 }

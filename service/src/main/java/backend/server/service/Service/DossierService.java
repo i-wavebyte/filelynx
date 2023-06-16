@@ -17,8 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class DossierService {
+public class DossierService implements IDossierService {
 
+    @Autowired
     private final DossierRepository dossierRepository;
 
     @Autowired

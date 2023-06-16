@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor @Service @Slf4j
-public class FichierService {
+public class FichierService implements IFichierService{
     @Autowired
     private FichierRepository fichierRepository;
     @Autowired
@@ -24,6 +24,7 @@ public class FichierService {
     @Autowired
     private CategorieService categorieService;
 
+    @Override
     public Fichier addFichier(Fichier f, Long ParentFolderId)
     {
         Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
@@ -39,24 +40,25 @@ public class FichierService {
         return f;
     }
 
+    @Override
     public void deleteFichier(Long fichierId)
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
         fichierRepository.delete(file);
     }
-
+    @Override
     public Fichier rename(Long fichierId, String name)
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
         file.setNom(name);
         return fichierRepository.save(file);
     }
-
+    @Override
     public Fichier updateFichier(Fichier f)
     {
         return fichierRepository.save(f);
     }
-
+    @Override
     public Fichier changerEmplacement(Long fichierId,Long dossierCibleId )
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
@@ -64,32 +66,32 @@ public class FichierService {
         file.setRacine(dossierCible);
         return fichierRepository.save(file);
     }
-
+    @Override
     public Fichier getFichier(Long id)
     {
         return fichierRepository.findById(id).orElseThrow(()-> new RuntimeException("File not found"));
     }
-
+    @Override
     public Fichier updateEtat(Long fichierId, ETAT etat)
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
         file.setEtat(etat);
         return fichierRepository.save(file);
     }
-
+    @Override
     public Fichier changeCategory(Long fichierId,Long categorieId){
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
         Categorie categorie = categorieService.getCategorie(categorieId);
         file.setCategorie(categorie);
         return fichierRepository.save(file);
     }
-
+    @Override
     public Fichier updateLabels(Long fichierId, List<Label> labels){
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
         file.setLabels(labels);
         return fichierRepository.save(file);
     }
-
+    @Override
     public List<Fichier> getFichiersByParent(Long parentId){
         Dossier dossier = dossierRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Folder not found"));
         return dossier.getFichiers();

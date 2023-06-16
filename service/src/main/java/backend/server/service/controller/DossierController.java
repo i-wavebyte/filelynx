@@ -2,6 +2,7 @@ package backend.server.service.controller;
 
 
 import backend.server.service.Service.DossierService;
+import backend.server.service.Service.IDossierService;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.security.POJOs.responses.MessageResponse;
@@ -18,7 +19,7 @@ import java.util.List;
 public class DossierController {
 
     @Autowired
-    private DossierService dossierService;
+    private IDossierService dossierService;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")

@@ -5,10 +5,7 @@ import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.LogRepository;
-import backend.server.service.Service.CompagnieService;
-import backend.server.service.Service.GroupeService;
-import backend.server.service.Service.LogService;
-import backend.server.service.Service.MembreService;
+import backend.server.service.Service.*;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Log;
@@ -36,16 +33,16 @@ import java.util.*;
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 @RequiredArgsConstructor @Slf4j
 public class CompagnieController {
-    private final CompagnieService compagnieService;
+    private final ICompagnieService compagnieService;
     private final CompagnieRepository compagnieRepository;
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final GroupeService groupeService;
+    private final IGroupeService groupeService;
     private final GroupeRepository groupeRepository;
-    private final MembreService membreService;
+    private final IMembreService membreService;
     private final LogRepository logRepository;
-    private final LogService logService;
+    private final ILogService logService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -92,7 +89,7 @@ public class CompagnieController {
         membreService.addMembre(newMembre);
 
         // Ajouter un message de log pour l'ajout du nouveau membre
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
 
         // Retourner une réponse HTTP avec un message de réussite
@@ -107,9 +104,9 @@ public class CompagnieController {
         try
         {
             compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
-            Log logMessage = Log.builder().message("Group " + group + " created").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            Log logMessage = Log.builder().message("Groupe " + group + " créé").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Group created successfully"));
+            return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès"));
         }
         catch(RuntimeException e)
         {
@@ -124,7 +121,7 @@ public class CompagnieController {
         Membre membre = membreService.getMembre(username);
         membre.setGroupe(groupeService.getGroupe(group,compagnieNom));
         membreService.updateMembre(membre);
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " changed group from " + membre.getGroupe() + " to" + group).type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " changed group from " + membre.getGroupe() + " to" + group).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Le groupe d'utilisateurs a bien été remplacé par " + group));
     }
@@ -190,7 +187,7 @@ public class CompagnieController {
         try {
             compagnieService.deleteGroupe(group);
             // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société" + compagnieNom).type(LogType.DELETE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société" + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
             return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès"));
         }
@@ -207,7 +204,7 @@ public class CompagnieController {
         try {
             compagnieService.deleteMembre(membreId, username);
             // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société" + compagnieNom).type(LogType.DELETE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société" + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
             return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès"));
         }
@@ -223,11 +220,17 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieNom);
         String nom = grp.getNom();
-        compagnieService.updateGroupe(groupeId, newName);
-        // Ajouter un message de log pour l'ajout du nouveau membre
-        Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Groupe mis à jour avec succès"));
+        try{
+            compagnieService.updateGroupe(groupeId, newName);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("Groupe mis à jour avec succès"));
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 
@@ -238,7 +241,7 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         String username= membre.getUsername();
         compagnieService.updateMembre(membre);
-        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.UPDATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
     }

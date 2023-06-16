@@ -141,12 +141,12 @@ public class AuthController {
         compagnie.setUsedQuota(0.);
         compagnie = compagnieService.createCompagnie(compagnie);
 
-        Log logMessage = Log.builder().message("Société " + user.getUsername() + " créée").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Société " + user.getUsername() + " créée").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
 
         // Creating a default groupe for the compagnie
         Groupe groupe = compagnieService.createGroupe(compagnie.getNom(), 1024.*1024.*1024.*5, compagnie.getId());
-        logMessage = Log.builder().message("Groupe " + groupe.getNom() + " créée").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logMessage = Log.builder().message("Groupe " + groupe.getNom() + " créée").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         Dossier root = new Dossier();
         root.setNom("root");
@@ -156,7 +156,7 @@ public class AuthController {
         authorisation.setDossier(root);
         root.getAuthorisations().add(authorisation);
         root = dossierService.addDossier(root, null, compagnie);
-        logMessage = Log.builder().message("Dossier root créée").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logMessage = Log.builder().message("Dossier root créée").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         Dossier dossierGroupe = new Dossier();
         Authorisation authorisationGroupe = Authorisation.generateFullAccess();
@@ -166,7 +166,7 @@ public class AuthController {
         authorisation.setDossier(dossierGroupe);
         dossierGroupe.getAuthorisations().add(authorisationGroupe);
         dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
-        logMessage = Log.builder().message("Dossier "+dossierGroupe.getNom()+" créée dans /root").type(LogType.CREATE).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logMessage = Log.builder().message("Dossier "+dossierGroupe.getNom()+" créée dans /root").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Société enregistrée avec succès!"));
     }

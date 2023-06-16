@@ -21,7 +21,7 @@
         </div>
         <table class="log">
           <tr *ngFor="let log of logs" class="log-row" (click)="openPopup(log)">
-            <td><span class="log-type" [ngClass]="getLogType(log.type)">{{log.type}} </span></td>
+            <td><span class="log-type" [ngClass]="getLogType(log.type)">{{log.type.length>6?log.type.slice(0,6)+"..":log.type}} </span></td>
             <td class="log-message">{{log.message.length>30?log.message.slice(0,30)+"...":log.message}}</td>
           </tr>
         </table>
