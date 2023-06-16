@@ -10,4 +10,5 @@ public interface IGroupeService {
     void deleteGroupe(Long id);
     Groupe updateGroupe(Groupe groupe);
     PageResponse<Groupe> getGroupesPage(int page, int size, String sortBy, String sortOrder, String searchQuery );
+
 }

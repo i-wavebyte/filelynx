@@ -7,6 +7,8 @@ import UserRegister from '../domain/UserRegister';
 import { PageResponse } from '../domain/PageRespone';
 import Groupe from '../domain/Groupe';
 import Membre from '../domain/Membre';
+import Label from '../domain/Label';
+import Categorie from '../domain/Categorie';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -83,6 +85,52 @@ export class CompagnieService {
 
     return this.http.get<PageResponse<Groupe>>(
       `${this.baseUrl}/getGroups`,
+      { params }
+    );
+  }
+
+  getLabelsPage(
+    page: number,
+    size: number,
+    sortBy: string,
+    sortOrder: string,
+    searchQuery: string
+  ): Observable<PageResponse<Label>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
+
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    return this.http.get<PageResponse<Label>>(
+      `${this.baseUrl}/getLabels`,
+      { params }
+    );
+  }
+
+  getCategoriesPage(
+    page: number,
+    size: number,
+    sortBy: string,
+    sortOrder: string,
+    searchQuery: string
+  ): Observable<PageResponse<Categorie>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
+
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    return this.http.get<PageResponse<Categorie>>(
+      `${this.baseUrl}/getCategories`,
       { params }
     );
   }

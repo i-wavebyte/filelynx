@@ -16,8 +16,12 @@ import { AddMembreComponent } from './components/add-membre/add-membre.component
 import { LogsComponent } from './layouts/logs/logs.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
+
 import { AuthGuard } from './_services/authguard.service';
 import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
+
+import { MetadataComponent } from './layouts/metadata/metadata.component';
+
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -37,7 +41,12 @@ const routes: Routes = [
   children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {path : "files", component : FilesComponent, canActivate: [AuthGuard] ,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]}
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
+
+  {path : "files", component : FilesComponent,
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
+  { path: 'metadata', component: MetadataComponent },
+
 
 ];
 

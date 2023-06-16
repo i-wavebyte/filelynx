@@ -6,10 +6,7 @@ import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.*;
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Groupe;
-import backend.server.service.domain.Log;
-import backend.server.service.domain.Membre;
+import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
 import backend.server.service.payloads.RegisterUserRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
@@ -43,6 +40,8 @@ public class CompagnieController {
     private final IMembreService membreService;
     private final LogRepository logRepository;
     private final ILogService logService;
+    private final ICategorieService categorieService;
+    private final ILabelService labelService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -249,5 +248,65 @@ public class CompagnieController {
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {
         return compagnieService.getAllUniqueGroups();
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getCategories")
+    public PageResponse<Categorie> getCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nom") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder,
+            @RequestParam(required = false) String searchQuery
+    ) {
+        return categorieService.getCategoriesPage(page, size, sortBy, sortOrder, searchQuery);
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getLabels")
+    public PageResponse<Label> getAllLabels(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nom") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder,
+            @RequestParam(required = false) String searchQuery
+    ) {
+        return labelService.getLabelsPage(page, size, sortBy, sortOrder, searchQuery);
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PostMapping("/addLabel")
+    public ResponseEntity<?> addLabel(@RequestBody Label label) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        try {
+            labelService.addLabel(label);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Label " + label.getNom() + " ajouté.").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("Label ajouté avec succès"));
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PostMapping("/addCategorie")
+    public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        try {
+            categorieService.addCategorie(categorie);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Catégorie " + categorie.getNom() + " ajoutée.").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("Catégorie ajoutée avec succès"));
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
