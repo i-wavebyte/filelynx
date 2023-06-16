@@ -21,6 +21,8 @@ import { AuthGuard } from './_services/authguard.service';
 import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
 
 import { MetadataComponent } from './layouts/metadata/metadata.component';
+import { AddLabelComponent } from './components/add-label/add-label.component';
+import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 
 
 const routes: Routes = [
@@ -43,7 +45,10 @@ const routes: Routes = [
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
   {path : "files", component : FilesComponent,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
-  { path: 'metadata', component: MetadataComponent },
+  { path: 'metadata', component: MetadataComponent ,
+  children: [{ path: "add-label", component: AddLabelComponent },
+  { path: "add-categorie", component: AddCategorieComponent }
+]}
 
 
 ];

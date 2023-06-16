@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.LabelRepository;
 import backend.server.service.domain.Categorie;
+import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Label;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,14 @@ public class LabelService implements ILabelService{
 
     @Autowired
     private LabelRepository labelRepository;
+    @Autowired
+    private ICompagnieService compagnieService;
 
     public Label addLabel(Label label)
     {
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieName);
+        label.setCompagnie(compagnie);
         return labelRepository.save(label);
     }
 

@@ -36,6 +36,8 @@ import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { LabelListComponent } from './components/label-list/label-list.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
+import { AddLabelComponent } from './components/add-label/add-label.component';
+import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 
 
 
@@ -65,7 +67,9 @@ import { CategoryListComponent } from './components/category-list/category-list.
     UserDashboardComponent,
     MetadataComponent,
     LabelListComponent,
-    CategoryListComponent
+    CategoryListComponent,
+    AddLabelComponent,
+    AddCategorieComponent
   ],
   imports: [
     NgToastModule,
