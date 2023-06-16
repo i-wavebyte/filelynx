@@ -14,7 +14,6 @@
     <table>
         <thead>
             <tr>
-                <th>Société</th>
                 <th>Déclencheur</th>
                 <th>Type</th>
                 <th>Message</th>
@@ -23,9 +22,6 @@
         </thead>
         <tbody>
             <tr *ngFor="let log of logs">
-                <td>
-                    <p>{{ log.compagnie.nom ? log.compagnie.nom.charAt(0).toUpperCase() + log.compagnie.nom.slice(1) : '' }}</p>
-                </td>
                 <td>
                     <p>{{ log.trigger.nom ? log.trigger.nom.charAt(0).toUpperCase() + log.trigger.nom.slice(1) : '' }}</p>
                 </td>

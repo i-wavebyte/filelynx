@@ -16,7 +16,7 @@ tr:last-child td {
 th {
   color: #757575;
   font-size: 12px !important;
-    width: 22%;
+    /* width: 22%; */
 }
 
 input {
