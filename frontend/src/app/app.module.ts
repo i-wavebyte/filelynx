@@ -29,6 +29,8 @@ import { LogsComponent } from './layouts/logs/logs.component';
 import { LogListComponent } from './components/log-list/log-list.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
+import { AuthGuard } from './_services/authguard.service';
+import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
 
 
 @NgModule({
@@ -52,7 +54,8 @@ import { AddFileComponent } from './components/add-file/add-file.component';
     LogsComponent,
     LogListComponent,
     FilesComponent,
-    AddFileComponent
+    AddFileComponent,
+    UserDashboardComponent
   ],
   imports: [
     NgToastModule,
@@ -63,7 +66,7 @@ import { AddFileComponent } from './components/add-file/add-file.component';
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
