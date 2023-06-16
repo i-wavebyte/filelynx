@@ -31,8 +31,16 @@ public class DossierService implements IDossierService {
     private CompagnieService compagnieService;
     public Dossier addDossier(Dossier d, Long ParentFolderId)
     {
-        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+
+        List<Dossier> dossiers = compagnie.getDossiers();
+        for (Dossier dossier: dossiers)
+        {
+            if (dossier.getNom().equals(d.getNom()))
+                throw new RuntimeException("Dossier: "+d.getNom()+" existe déjà");
+        }
+        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
         d= dossierRepository.save(d);
@@ -44,9 +52,15 @@ public class DossierService implements IDossierService {
         log.info("File created at {}", d.getFullPath());
         return d;
     }
-
     public Dossier addDossier(Dossier d, Long ParentFolderId, Compagnie compagnie)
     {
+
+        List<Dossier> dossiers = compagnie.getDossiers();
+        for (Dossier dossier: dossiers)
+        {
+            if (dossier.getNom().equals(d.getNom()))
+                throw new RuntimeException("Dossier: "+d.getNom()+" existe déjà");
+        }
         Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
 
         d.setCompagnie(compagnie);
@@ -62,7 +76,16 @@ public class DossierService implements IDossierService {
 
     public Dossier renameDossier(Long DossierId,String name)
     {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Dossier dossier = dossierRepository.findById(DossierId).orElseThrow(()-> new RuntimeException("Folder not found"));
+
+        List<Dossier> dossiers = compagnie.getDossiers();
+        for (Dossier d: dossiers)
+        {
+            if (d.getNom().equals(name))
+                throw new RuntimeException("Dossier: "+name+" existe déjà");
+        }
         dossier.setNom(name);
         for(Dossier d : dossier.getDossiers())
         {

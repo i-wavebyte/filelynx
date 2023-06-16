@@ -204,7 +204,7 @@ public class CompagnieController {
         try {
             compagnieService.deleteMembre(membreId, username);
             // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société" + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
             return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès"));
         }

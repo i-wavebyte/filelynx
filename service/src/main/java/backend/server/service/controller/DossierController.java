@@ -1,16 +1,24 @@
 package backend.server.service.controller;
 
 
+import backend.server.service.Repository.LogRepository;
+import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
 import backend.server.service.Service.IDossierService;
+import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
+import backend.server.service.domain.Log;
+import backend.server.service.enums.LogType;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,11 +29,27 @@ public class DossierController {
     @Autowired
     private IDossierService dossierService;
 
+    @Autowired
+    private CompagnieService compagnieService;
+
+    @Autowired
+    private LogRepository logRepository;
+
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
-        dossierService.addDossier(d, parentFolderId);
-        return ResponseEntity.ok(new MessageResponse("dossier ajouté avec succès!"));
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        try {
+            dossierService.addDossier(d, parentFolderId);
+            Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("dossier ajouté avec succès!"));
+        }
+        catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -45,8 +69,17 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename/{dossierId}")
     public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
-        dossierService.renameDossier(dossierId, name);
-        return ResponseEntity.ok(new MessageResponse("dossier renommé avec succès!"));
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        try{
+            dossierService.renameDossier(dossierId, name);
+            Log logMessage = Log.builder().message("Dossier "+name+" ajouté à la société "+compagnieNom).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return ResponseEntity.ok(new MessageResponse("dossier renommé avec succès!"));
+        }
+        catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -67,7 +100,4 @@ public class DossierController {
     public Dossier getDossier(@PathVariable Long dossierId) {
         return dossierService.getDossier(dossierId);
     }
-
-
-
 }
