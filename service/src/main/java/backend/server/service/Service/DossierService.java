@@ -160,4 +160,10 @@ public class DossierService implements IDossierService {
     public Dossier getDossier(Long dossierId) {
         return dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
     }
+
+    @Override
+    public Dossier getRootDossier() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        return dossierRepository.findByCompagnieNomAndRacineIsNull(compagnieNom);
+    }
 }

@@ -53,6 +53,12 @@ public class DossierController {
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/admin/getRoot")
+    public Dossier getRoot() {
+        return dossierService.getRootDossier();
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
         dossierService.delete(dossierId);

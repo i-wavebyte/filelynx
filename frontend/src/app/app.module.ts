@@ -28,6 +28,7 @@ import { MembreListComponent } from './components/membre-list/membre-list.compon
 import { LogsComponent } from './layouts/logs/logs.component';
 import { LogListComponent } from './components/log-list/log-list.component';
 import { FilesComponent } from './layouts/files/files.component';
+import { AddFileComponent } from './components/add-file/add-file.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { FilesComponent } from './layouts/files/files.component';
     MembreListComponent,
     LogsComponent,
     LogListComponent,
-    FilesComponent
+    FilesComponent,
+    AddFileComponent
   ],
   imports: [
     NgToastModule,
