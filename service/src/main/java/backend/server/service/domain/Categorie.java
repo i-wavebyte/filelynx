@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,13 @@ public class Categorie {
     private String nom;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categorie")
     private List<Fichier> fichiers = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIncludeProperties({"id","nom"})
+    private Compagnie compagnie;
+
+    public String toString(){
+        String str = "\nCategorie: "+nom;
+
+        return str;
+    }
 }

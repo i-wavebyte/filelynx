@@ -24,6 +24,12 @@ public class Compagnie extends RessourceAccessor{
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie") @JsonIncludeProperties({"id", "message", "type", "date", "trigger"})
     private List<Log> logs = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    @JsonIncludeProperties({"id","nom"})
+    private List<Categorie> categories = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compagnie")
+    @JsonIncludeProperties({"id","nom"})
+    private List<Label> labels = new ArrayList<>();
 
     @JsonIgnore
     public List<Groupe> getGroupes() {

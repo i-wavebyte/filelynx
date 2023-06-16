@@ -29,6 +29,9 @@ import { LogsComponent } from './layouts/logs/logs.component';
 import { LogListComponent } from './components/log-list/log-list.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
+import { MetadataComponent } from './layouts/metadata/metadata.component';
+import { LabelListComponent } from './components/label-list/label-list.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
 
 
 @NgModule({
@@ -52,7 +55,10 @@ import { AddFileComponent } from './components/add-file/add-file.component';
     LogsComponent,
     LogListComponent,
     FilesComponent,
-    AddFileComponent
+    AddFileComponent,
+    MetadataComponent,
+    LabelListComponent,
+    CategoryListComponent
   ],
   imports: [
     NgToastModule,
