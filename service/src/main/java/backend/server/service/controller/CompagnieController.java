@@ -2,6 +2,7 @@ package backend.server.service.controller;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
+import backend.server.service.Repository.CategorieRepository;
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.LogRepository;
@@ -38,6 +39,7 @@ public class CompagnieController {
     private final GroupeRepository groupeRepository;
     private final IMembreService membreService;
     private final LogRepository logRepository;
+    private final CategorieRepository categorieRepository;
     private final ILogService logService;
     private final ICategorieService categorieService;
     private final ILabelService labelService;
@@ -245,14 +247,15 @@ public class CompagnieController {
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PutMapping("/updateCategorie")
-    public ResponseEntity<?> updateCategorie(@RequestBody Categorie cat) {
+    @PutMapping("/updateCategorie/{categorieId}/{newName}")
+    public ResponseEntity<?> updateCategorie(@PathVariable Long categorieId, @PathVariable String newName ) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        System.out.println("wesh wselna l hna");
-        categorieService.updateCategorie(cat);
-//        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-//        logRepository.save(logMessage);
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
+        categorieService.updateCategorie(categorieId, newName);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Categorie mis à jour avec succès"));
     }
 
@@ -261,10 +264,11 @@ public class CompagnieController {
     public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        System.out.println("wesh wselna l hna");
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
         categorieService.deleteCategorie(categorieId);
-//        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-//        logRepository.save(logMessage);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
     }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service @Slf4j @Transactional
@@ -38,6 +39,15 @@ public class CategorieService implements ICategorieService{
     public Categorie updateCategorie(Categorie cat)
     {
         return categorieRepository.save(cat);
+    }
+
+    public Categorie updateCategorie(Long categorieId, String newName)
+    {
+           Optional<Categorie> optCat = categorieRepository.findById(categorieId);
+           Categorie cat = optCat.get();
+           cat.setNom(newName);
+        System.out.println("new categorie: "+cat);
+           return categorieRepository.save(cat);
     }
 
     public List<Categorie> getAllCategories()

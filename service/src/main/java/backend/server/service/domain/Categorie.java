@@ -28,7 +28,6 @@ public class Categorie {
 
     public String toString(){
         String str = "\nCategorie: "+nom;
-
         return str;
     }
 }

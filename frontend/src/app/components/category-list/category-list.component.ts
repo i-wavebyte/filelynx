@@ -131,7 +131,8 @@ export class CategoryListComponent implements OnInit,OnChanges {
   }
 
   onUpdateCategorie(cat: Categorie){
-    this.compagnieService.updateCategorie(cat).subscribe(
+    console.log("catId: ", cat.id, " cat NewName: ", cat.nom);
+    this.compagnieService.updateCategorie(cat.id, cat.nom).subscribe(
       (data) => {
         this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
         console.log(data);

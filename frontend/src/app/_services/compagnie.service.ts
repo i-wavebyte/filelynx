@@ -35,9 +35,8 @@ export class CompagnieService {
     return this.http.delete<any>(`${this.baseUrl}/deleteCategorie/${categorieId}`, httpOptions);
   }
 
-  updateCategorie(cat: Categorie): Observable<any> {
-    return this.http.put<any>(this.baseUrl + "/updateCategorie", httpOptions);
-
+  updateCategorie(catId: number,catName: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateCategorie/${catId}/${catName}`, httpOptions);
   }
 
   getCompagnieLogs(): Observable<Log[]> {
