@@ -23,6 +23,7 @@ public class LabelService implements ILabelService{
     @Autowired
     private ICompagnieService compagnieService;
 
+    @Override
     public Label addLabel(Label label)
     {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -30,22 +31,26 @@ public class LabelService implements ILabelService{
         label.setCompagnie(compagnie);
         return labelRepository.save(label);
     }
-
-    public void deleteLabel(Label label)
+    @Override
+    public void deleteLabel(Long labelId)
     {
-        labelRepository.delete(label);
+        labelRepository.deleteById(labelId);
     }
-
-    public Label updateLabel(Label label)
+    @Override
+    public Label updateLabel(Long labelId, String newName)
     {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
+        label.setNom(newName);
         return labelRepository.save(label);
     }
-
+    @Override
     public List<Label> getAllLabels()
     {
         return labelRepository.findAll();
     }
 
+    @Override
     public Label getLabel(Long id)
     {
         return labelRepository.findById(id).orElseThrow(()-> new RuntimeException("Label not found"));

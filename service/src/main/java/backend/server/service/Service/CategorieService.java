@@ -46,7 +46,6 @@ public class CategorieService implements ICategorieService{
            Optional<Categorie> optCat = categorieRepository.findById(categorieId);
            Categorie cat = optCat.get();
            cat.setNom(newName);
-        System.out.println("new categorie: "+cat);
            return categorieRepository.save(cat);
     }
 

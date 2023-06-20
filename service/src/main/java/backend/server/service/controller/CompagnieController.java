@@ -2,10 +2,7 @@ package backend.server.service.controller;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
-import backend.server.service.Repository.CategorieRepository;
-import backend.server.service.Repository.CompagnieRepository;
-import backend.server.service.Repository.GroupeRepository;
-import backend.server.service.Repository.LogRepository;
+import backend.server.service.Repository.*;
 import backend.server.service.Service.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
@@ -40,6 +37,7 @@ public class CompagnieController {
     private final IMembreService membreService;
     private final LogRepository logRepository;
     private final CategorieRepository categorieRepository;
+    private final LabelRepository labelRepository;
     private final ILogService logService;
     private final ICategorieService categorieService;
     private final ILabelService labelService;
@@ -233,7 +231,6 @@ public class CompagnieController {
         }
     }
 
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
@@ -270,6 +267,32 @@ public class CompagnieController {
         Log logMessage = Log.builder().message("Catégorie " + categorieName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateLabel/{labelId}/{newName}")
+    public ResponseEntity<?> updateLabel(@PathVariable Long labelId, @PathVariable String newName ) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
+        String labelName = label.getNom();
+        labelService.updateLabel(labelId, newName);
+        Log logMessage = Log.builder().message("Étiquete " + labelName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Étiquete mis à jour avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteLabel/{labelId}")
+    public ResponseEntity<?> deleteLabel(@PathVariable Long labelId) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
+        String labelName = label.getNom();
+        labelService.deleteLabel(labelId);
+        Log logMessage = Log.builder().message("Étiquete " + labelName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Étiquete supprimé avec succès"));
     }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")

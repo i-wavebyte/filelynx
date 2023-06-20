@@ -114,33 +114,34 @@ export class LabelListComponent implements OnInit,OnChanges {
     }
   }
 
-  // onDeleteGroupe(groupeNom : string){
-  //   this.compagnieService.deleteGroupe(groupeNom).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadGroupes();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onDeleteLabel(labelId : number){
+    console.log("labelId: ", labelId);
+    this.compagnieService.deleteLabel(labelId).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadLabels();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
-  // onUpdateGroupe(groupeId : number, newName : string){
-  //   this.compagnieService.updateGroupe(groupeId,newName).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadGroupes();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onUpdateLabel(labelId : number, labelName: string){
+    this.compagnieService.updateLabel(labelId, labelName).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadLabels();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
   titleCase(value: string): string {
     if (!value) return value;

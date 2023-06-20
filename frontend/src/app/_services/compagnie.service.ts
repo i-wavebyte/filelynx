@@ -22,8 +22,11 @@ export class CompagnieService {
 
 
 
+
   private baseUrl = 'http://localhost:8080/api/v1/compagnie';
   constructor(private http: HttpClient) {}
+
+
 
   getQuotaStatus():Observable<Quota> {
     return this.http.get<Quota>(this.baseUrl + "/getQuotaStatus", httpOptions);
@@ -37,6 +40,16 @@ export class CompagnieService {
 
   updateCategorie(catId: number,catName: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/updateCategorie/${catId}/${catName}`, httpOptions);
+  }
+
+  updateLabel(labelId: number, labelName: string): Observable<any>{
+    return this.http.put<any>(`${this.baseUrl}/updateLabel/${labelId}/${labelName}`, httpOptions);
+
+  }
+  
+  deleteLabel(labelId: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/deleteLabel/${labelId}`, httpOptions);
+
   }
 
   getCompagnieLogs(): Observable<Log[]> {
