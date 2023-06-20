@@ -60,8 +60,6 @@ export class HelperService {
         }).then((result) => {
             if (result.value)
             {
-
-
                 // Call your backend service endpoint here
                 this.dossierService.deleteFolder(folderId).subscribe(
                 (response) => {
