@@ -59,11 +59,11 @@ public class DossierController {
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/delete/{dossierId}")
+    @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
+        System.out.println("dossierId: "+ dossierId);
         dossierService.delete(dossierId);
         return ResponseEntity.ok(new MessageResponse("dossier supprimé avec succès!"));
-
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")

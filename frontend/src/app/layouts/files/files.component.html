@@ -15,9 +15,7 @@
           <h3 *ngIf="currentFolder?.racine!==null" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">return</h3>
           <h3 class="return-btn" [routerLink]="['/files/upload', currentFolder?.id]">Télécharger</h3>
           <h3 class="return-btn" [routerLink]="['/files/add-folder', currentFolder?.id]">+ Dossier</h3>
-
         </div>
-
       </div>
       <div class="explorer">
         <div *ngIf="currentFolder?.dossiers?.length==0" class="folder-empty">
@@ -31,21 +29,25 @@
           </div>
           <div class="file-button-collection">
             <div class="settings-button">
-              <img class="settings-icon" src="../../../assets/services.240x256.png" alt="">
+              <img class="settings-icon" src="../../../assets/services.240x256.png" alt="" (click)="openPopup(folder)">
             </div>
             <div class="settings-button">
-              <img class="settings-icon" src="../../../assets/full-trash.194x256.png" alt="">
+              <img class="settings-icon" src="../../../assets/full-trash.194x256.png" alt="" (click)="deletePopup(folder)">
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
-
   </div>
-
-
   </div>
 </div>
+<!-- Custum Modal -->
+<div class="popup" [class]="popupClass"  *ngIf="showModal">
+  <div class="modal-content">
+
+    <button (click)="hideModal()">fermer</button>
+    <!-- <button (click)="hideModal()">Supprimer</button> -->
+  </div>
+</div>
+<!-- <div class="overlay" *ngIf="showModal"></div> -->
 <router-outlet></router-outlet>

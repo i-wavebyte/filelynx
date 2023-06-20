@@ -68,9 +68,9 @@ export class DashboardComponent implements OnInit {
   {
       this.selectedLog = log;
       this.showModal = true; // Open the modal
-      // alert(this.selectedLog.date.toString().slice(0, 10));
+
       this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
-      // this.popupBackgroundColor = this.getLogType(log.type);
+
     }
 
   hideModal(): void {

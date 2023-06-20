@@ -148,7 +148,7 @@ public class CompagnieController {
     @GetMapping("/getLogsPagination")
     public  PageResponse<Log> getAllLogs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "7") int size,
             @RequestParam(defaultValue = "date") String sortBy
     )
     {
@@ -303,7 +303,7 @@ public class CompagnieController {
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
@@ -315,7 +315,7 @@ public class CompagnieController {
     @GetMapping("/getLabels")
     public PageResponse<Label> getAllLabels(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
