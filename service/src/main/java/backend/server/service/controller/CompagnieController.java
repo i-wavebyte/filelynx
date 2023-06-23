@@ -41,6 +41,7 @@ public class CompagnieController {
     private final ILogService logService;
     private final ICategorieService categorieService;
     private final ILabelService labelService;
+    private final IDossierService dossierService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -104,6 +105,11 @@ public class CompagnieController {
             compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
             Log logMessage = Log.builder().message("Groupe " + group + " créé").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
+            Dossier dossier = new Dossier();
+            dossier.setNom(group);
+            dossier.setCompagnie(compagnie);
+            dossier.setGroupRoot(true);
+            dossierService.addDossier(dossier,dossierService.getRootDossier().getId());
             return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès"));
         }
         catch(RuntimeException e)

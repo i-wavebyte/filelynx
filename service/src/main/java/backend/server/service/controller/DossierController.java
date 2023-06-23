@@ -41,6 +41,9 @@ public class DossierController {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         try {
+            if(dossierService.getRootDossier().getId() == parentFolderId){
+                return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas ajouter un dossier à la racine"));
+            }
             dossierService.addDossier(d, parentFolderId);
             Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
@@ -61,6 +64,12 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
+        if(dossierService.getRootDossier().getId() == dossierId){
+            return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas supprimer la racine"));
+        }
+        if(dossierService.getDossier(dossierId).isGroupRoot()){
+            return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas supprimer un dossier racine de groupe"));
+        }   
         System.out.println("dossierId: "+ dossierId);
         dossierService.delete(dossierId);
         return ResponseEntity.ok(new MessageResponse("dossier supprimé avec succès!"));
