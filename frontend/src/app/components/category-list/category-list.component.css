@@ -1,6 +1,6 @@
 th,
 td {
-  height: 64px;
+  height: 32px;
   border-bottom: 1px solid #eceff1;
   color: #262f40;
   font-weight: 400;
@@ -17,9 +17,12 @@ th {
   color: #757575;
   font-size: 12px !important;
 }
+.table-data{
+  background-color: rgba(0, 0,0, 0);
+}
+
 
 input {
-  background-color: white;
   border-radius: 4px;
   border: 1px solid #c6ced6;
   width: 200px;
@@ -43,7 +46,7 @@ select {
 }
 .professors-list-container {
   width: 100%;
-  margin: 24px;
+  margin: 10px;
   box-sizing: border-box;
   box-shadow: 0px 4px 4px -4px rgba(24, 24, 28, 0.02);
   filter: drop-shadow(0px 1px 2px rgba(24, 24, 28, 0.00));
@@ -64,7 +67,6 @@ table {
 }
 
 .bg {
-  background-color: #f7f1f3 !important;
   position: absolute;
   top: 0;
   left: 0;
