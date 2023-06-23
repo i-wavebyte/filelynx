@@ -19,17 +19,15 @@ public class Categorie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String nom;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categorie")
     private List<Fichier> fichiers = new ArrayList<>();
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
 
     public String toString(){
         String str = "\nCategorie: "+nom;
-
         return str;
     }
 }

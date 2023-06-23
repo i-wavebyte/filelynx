@@ -76,6 +76,7 @@ export class CategoryListComponent implements OnInit,OnChanges {
           this.categories = response.content.map((categorie) => {categorie.nom = this.titleCase(categorie.nom); return categorie;});
           this.filteredCategories = this.categories;
           this.totalCategories = response.totalElements;
+          console.log(this.filteredCategories);
         },
         (error) => {
           console.error('Error fetching categries:', error);
@@ -114,33 +115,35 @@ export class CategoryListComponent implements OnInit,OnChanges {
     }
   }
 
-  // onDeleteGroupe(categorieNom : string){
-  //   this.compagnieService.deleteGroupe(categorieNom).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadCategories();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onDeleteCategory(categorieId: number){
+    console.log(categorieId);
+    this.compagnieService.deleteCategory(categorieId).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadCategories();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
-  // onUpdateGroupe(catagorieId : number, newName : string){
-  //   this.compagnieService.updateGroupe(catagorieId,newName).subscribe(
-  //     (data) => {
-  //       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
-  //       console.log(data);
-  //       this.loadCategories();
-  //     },
-  //     (err) => {
-  //       this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  onUpdateCategorie(cat: Categorie){
+    console.log("catId: ", cat.id, " cat NewName: ", cat.nom);
+    this.compagnieService.updateCategorie(cat.id, cat.nom).subscribe(
+      (data) => {
+        this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
+        console.log(data);
+        this.loadCategories();
+      },
+      (err) => {
+        this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});
+        console.log(err);
+      }
+    );
+  }
 
   titleCase(value: string): string {
     if (!value) return value;

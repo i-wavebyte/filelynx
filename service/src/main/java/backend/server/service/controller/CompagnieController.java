@@ -2,9 +2,7 @@ package backend.server.service.controller;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
-import backend.server.service.Repository.CompagnieRepository;
-import backend.server.service.Repository.GroupeRepository;
-import backend.server.service.Repository.LogRepository;
+import backend.server.service.Repository.*;
 import backend.server.service.Service.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
@@ -22,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 @RestController
@@ -39,6 +36,8 @@ public class CompagnieController {
     private final GroupeRepository groupeRepository;
     private final IMembreService membreService;
     private final LogRepository logRepository;
+    private final CategorieRepository categorieRepository;
+    private final LabelRepository labelRepository;
     private final ILogService logService;
     private final ICategorieService categorieService;
     private final ILabelService labelService;
@@ -149,7 +148,7 @@ public class CompagnieController {
     @GetMapping("/getLogsPagination")
     public  PageResponse<Log> getAllLogs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "7") int size,
             @RequestParam(defaultValue = "date") String sortBy
     )
     {
@@ -232,7 +231,6 @@ public class CompagnieController {
         }
     }
 
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
@@ -244,17 +242,68 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateCategorie/{categorieId}/{newName}")
+    public ResponseEntity<?> updateCategorie(@PathVariable Long categorieId, @PathVariable String newName ) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
+        categorieService.updateCategorie(categorieId, newName);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Categorie mis à jour avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteCategorie/{categorieId}")
+    public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
+        categorieService.deleteCategorie(categorieId);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateLabel/{labelId}/{newName}")
+    public ResponseEntity<?> updateLabel(@PathVariable Long labelId, @PathVariable String newName ) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
+        String labelName = label.getNom();
+        labelService.updateLabel(labelId, newName);
+        Log logMessage = Log.builder().message("Étiquete " + labelName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Étiquete mis à jour avec succès"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @DeleteMapping("/deleteLabel/{labelId}")
+    public ResponseEntity<?> deleteLabel(@PathVariable Long labelId) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
+        String labelName = label.getNom();
+        labelService.deleteLabel(labelId);
+        Log logMessage = Log.builder().message("Étiquete " + labelName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return ResponseEntity.ok(new MessageResponse("Étiquete supprimé avec succès"));
+    }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {
         return compagnieService.getAllUniqueGroups();
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
@@ -266,14 +315,13 @@ public class CompagnieController {
     @GetMapping("/getLabels")
     public PageResponse<Label> getAllLabels(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
     ) {
         return labelService.getLabelsPage(page, size, sortBy, sortOrder, searchQuery);
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addLabel")
     public ResponseEntity<?> addLabel(@RequestBody Label label) {
@@ -291,7 +339,6 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addCategorie")
     public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {

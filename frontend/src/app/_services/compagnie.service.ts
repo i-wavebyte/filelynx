@@ -9,6 +9,7 @@ import Groupe from '../domain/Groupe';
 import Membre from '../domain/Membre';
 import Label from '../domain/Label';
 import Categorie from '../domain/Categorie';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -19,11 +20,36 @@ const httpOptions = {
 
 export class CompagnieService {
 
+
+
+
   private baseUrl = 'http://localhost:8080/api/v1/compagnie';
   constructor(private http: HttpClient) {}
 
+
+
   getQuotaStatus():Observable<Quota> {
     return this.http.get<Quota>(this.baseUrl + "/getQuotaStatus", httpOptions);
+  }
+
+  deleteCategory(categorieId: number): Observable<any>{
+    console.log(categorieId);
+
+    return this.http.delete<any>(`${this.baseUrl}/deleteCategorie/${categorieId}`, httpOptions);
+  }
+
+  updateCategorie(catId: number,catName: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateCategorie/${catId}/${catName}`, httpOptions);
+  }
+
+  updateLabel(labelId: number, labelName: string): Observable<any>{
+    return this.http.put<any>(`${this.baseUrl}/updateLabel/${labelId}/${labelName}`, httpOptions);
+
+  }
+  
+  deleteLabel(labelId: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/deleteLabel/${labelId}`, httpOptions);
+
   }
 
   getCompagnieLogs(): Observable<Log[]> {

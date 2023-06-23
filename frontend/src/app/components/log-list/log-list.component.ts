@@ -16,7 +16,7 @@ filteredLogs: Log[] = [];
 searchValue: string = '';
 nameOrder: string = '';
 page: number = 0;
-pageSize: number = 10;
+pageSize: number = 7;
 totalLogs!: number;
 
   

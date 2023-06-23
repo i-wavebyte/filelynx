@@ -23,7 +23,7 @@ public class Label {
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "labels")
     @JsonIncludeProperties({"id","nom","taille","extension"})
     private List<Fichier> fichiers = new ArrayList<>();
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
 

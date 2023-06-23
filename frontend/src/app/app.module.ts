@@ -38,6 +38,8 @@ import { LabelListComponent } from './components/label-list/label-list.component
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
+import { DeleteFolderComponent } from './components/delete-folder/delete-folder.component';
+import { HelperService } from './_services/helper.service';
 
 
 
@@ -69,7 +71,8 @@ import { AddCategorieComponent } from './components/add-categorie/add-categorie.
     LabelListComponent,
     CategoryListComponent,
     AddLabelComponent,
-    AddCategorieComponent
+    AddCategorieComponent,
+    DeleteFolderComponent
   ],
   imports: [
     NgToastModule,
@@ -80,7 +83,7 @@ import { AddCategorieComponent } from './components/add-categorie/add-categorie.
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [authInterceptorProviders, AuthGuard],
+  providers: [authInterceptorProviders, AuthGuard, HelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
