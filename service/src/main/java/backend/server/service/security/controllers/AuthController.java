@@ -162,6 +162,7 @@ public class AuthController {
         Authorisation authorisationGroupe = Authorisation.generateFullAccess();
         dossierGroupe.setNom(compagnie.getNom());
         dossierGroupe.setRacine(root);
+        dossierGroupe.setGroupRoot(true);
         authorisation.setRessourceAccessor(groupe);
         authorisation.setDossier(dossierGroupe);
         dossierGroupe.getAuthorisations().add(authorisationGroupe);

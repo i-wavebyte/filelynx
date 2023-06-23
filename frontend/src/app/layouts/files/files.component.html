@@ -22,8 +22,8 @@
           <img src="../../../assets/high-priority.256x256.png" class="folder-icon" alt="">
           <p>Le dossier est vide</p>
         </div>
-        <div *ngFor="let folder of currentFolder?.dossiers" class="file-or-folder" (click)="onFolderClick(folder)">
-          <div >
+        <div *ngFor="let folder of currentFolder?.dossiers" class="file-or-folder">
+          <div (click)="onFolderClick(folder)">
             <img src="../../../assets/folder.256x204.png" alt="" class="folder-icon">
             <p>{{folder.nom}}</p>
           </div>
