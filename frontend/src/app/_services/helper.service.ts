@@ -70,7 +70,8 @@ export class HelperService {
                     console.log('Data deleted successfully');
                 }, 
                 (err) => {
-                    this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
+                    console.log(err);
+                    this.toast.error({detail:"Message d'erreur", summary:err.error.message, duration:3000});
                 }) 
             }
         });

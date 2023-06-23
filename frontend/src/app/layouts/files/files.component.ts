@@ -80,6 +80,7 @@ export class FilesComponent implements OnInit{
       this.folderService.getFolderByIdAsAdmin(folder?.id).subscribe(
         (data) => {
           newFolder = data;
+          console.log(data);
           console.log("dossiers: ", newFolder.dossiers.length);
           this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1, folder.id);
         }
