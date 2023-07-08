@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FolderService } from 'src/app/_services/folder.service';
 import { HelperService } from 'src/app/_services/helper.service';
@@ -18,7 +19,7 @@ export class FilesComponent implements OnInit{
   showModal= false;
   popupClass= 'popup';
 
-  constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private _helper: HelperService) {}
+  constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private location: Location, private _helper: HelperService) {}
 
   ngOnInit(): void {
     this.loadFolders();
@@ -31,7 +32,7 @@ export class FilesComponent implements OnInit{
   }
 
   loadFolders(): void{
-    // if(this.currentFolder == null){
+    if(this.currentFolder == null){
       this.folderService.getRootFolderAsAdmin().subscribe(
         (data) => {
           this.currentFolder = data;
@@ -41,7 +42,7 @@ export class FilesComponent implements OnInit{
           console.log(err);
         }
       );
-    // }
+    }
   }
 
   onFolderClick(folder:Dossier){
@@ -49,6 +50,9 @@ export class FilesComponent implements OnInit{
       (data) => {
         this.currentFolder = data;
         console.log(data);
+        // this.router.navigate(['/files', folder.id]);
+        this.location.replaceState(`/files/${folder.id}`);
+
       }
     );
   }
@@ -67,13 +71,15 @@ export class FilesComponent implements OnInit{
       this.folderService.getFolderByIdAsAdmin(folder?.id).subscribe(
         (data) => {
           completeFolder = data;
+
           console.log(completeFolder);
+          this.location.replaceState(`/files/${folder.id}`);
         }
       );
       }
+
     deletePopup(folder: Dossier): void
     {
-
       var newFolder: Dossier;
       var message1 = "êtes-vous sûr de vouloir supprimer ce dossier ?";
       var message2 = "êtes-vous sûr de vouloir supprimer ce dossier ?\n (Dossier non vide)! "
@@ -83,6 +89,8 @@ export class FilesComponent implements OnInit{
           console.log(data);
           console.log("dossiers: ", newFolder.dossiers.length);
           this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1, folder.id);
+        this.currentFolder = data;
+
         }
       );
     }

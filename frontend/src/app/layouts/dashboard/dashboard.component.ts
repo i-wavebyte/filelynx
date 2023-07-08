@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit {
     this.compagnieService.getQuotaStatus().subscribe(
       (data) => {
         this.quota = data;
-        console.log(data);
       },
       (err) => {
         console.log(err);

@@ -40,6 +40,7 @@ import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 import { DeleteFolderComponent } from './components/delete-folder/delete-folder.component';
 import { HelperService } from './_services/helper.service';
+import { MembersettingComponent } from './components/membersetting/membersetting.component';
 
 
 
@@ -72,7 +73,8 @@ import { HelperService } from './_services/helper.service';
     CategoryListComponent,
     AddLabelComponent,
     AddCategorieComponent,
-    DeleteFolderComponent
+    DeleteFolderComponent,
+    MembersettingComponent
   ],
   imports: [
     NgToastModule,

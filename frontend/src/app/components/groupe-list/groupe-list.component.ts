@@ -16,7 +16,7 @@ export class GroupeListComponent implements OnInit,OnChanges {
   searchValue: string = '';
   nameOrder: string = '';
   page: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 5;
   totalGroups!: number;
 
   constructor(

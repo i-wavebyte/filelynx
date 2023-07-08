@@ -23,6 +23,7 @@ import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
+import { MembersettingComponent } from './components/membersetting/membersetting.component';
 
 
 const routes: Routes = [
@@ -39,7 +40,10 @@ const routes: Routes = [
   { path: 'groups', component: GroupesComponent , canActivate: [AuthGuard] ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
   { path: 'users', component: UsersComponent , canActivate: [AuthGuard] ,
-  children: [{ path: 'add-collaborateur', component: AddMembreComponent }],},
+  children: [
+    { path: 'add-collaborateur', component: AddMembreComponent },
+   { path: 'details/:profId', component: MembersettingComponent }]
+  },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {path : "files", component : FilesComponent, canActivate: [AuthGuard] ,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},

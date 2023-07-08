@@ -96,7 +96,9 @@ prevPage(): void {
 }
 
 onInfoProfessor(profId: number): void {
-  this.router.navigate(['/details', profId]);
+  console.log(profId);
+
+  this.router.navigate(['users/details/', profId]);
 }
 
 nextPage(): void {

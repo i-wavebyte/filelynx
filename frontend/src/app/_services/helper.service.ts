@@ -2,12 +2,13 @@ import {Injectable} from "@angular/core";
 import swal from 'sweetalert2';
 import { DossierService } from "./dossier.service";
 import { NgToastService } from "ng-angular-popup";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class HelperService {
 
-    constructor(private dossierService: DossierService , private toast: NgToastService
-    ) { }
+    constructor(private dossierService: DossierService , private toast: NgToastService,
+        private router:Router) { }
 
     showLoading() {
         swal.showLoading();
@@ -64,10 +65,12 @@ export class HelperService {
                 this.dossierService.deleteFolder(folderId).subscribe(
                 (response) => {
                     console.log(response.message);
-                    this.toast.success({detail:"Message de réussite", summary: response.message, duration: 3000})
-
+                    this.toast.success({detail:"Message de réussite", summary: response.message, duration: 3000});
+                    console.log(response);
+                    
                     // Handle success response
                     console.log('Data deleted successfully');
+                    // this.router.navigate(['/files']);
                 }, 
                 (err) => {
                     console.log(err);

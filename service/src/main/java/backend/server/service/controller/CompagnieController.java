@@ -176,7 +176,7 @@ public class CompagnieController {
     @GetMapping("/getGroups")
     public PageResponse<Groupe> getAllGroups(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
