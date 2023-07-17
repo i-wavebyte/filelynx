@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FolderService } from 'src/app/_services/folder.service';
 import { HelperService } from 'src/app/_services/helper.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
@@ -88,9 +88,8 @@ export class FilesComponent implements OnInit{
           newFolder = data;
           console.log(data);
           console.log("dossiers: ", newFolder.dossiers.length);
-          this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1, folder.id);
-        this.currentFolder = data;
-
+          this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1,"", folder.id, 0);
+          this.currentFolder = data;
         }
       );
     }
@@ -98,7 +97,9 @@ export class FilesComponent implements OnInit{
     openPopup(folder: Dossier){
       this.selectedFolder = folder;
       this.showModal = true; // Open the modal
-      this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
+      // this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
+      this.router.navigate(['files/details'], { queryParams: { folderId: folder.id } });
+
     }
 
     hideModal(): void {

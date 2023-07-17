@@ -31,7 +31,7 @@
             <tr *ngFor="let membre of filteredMembres">
                 <td>
                     <div class="name-info">
-                        <button (click)="onInfoProfessor(membre.id)" class="info">?</button>
+                        <button (click)="onInfoProfessor(membre)" class="info">?</button>
                         <input class="table-data" [(ngModel)]="membre.username" />
                     </div>
                 </td>

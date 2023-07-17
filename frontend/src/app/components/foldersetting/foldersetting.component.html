@@ -1,0 +1,61 @@
+  <div class="popup-bg" >
+    <div class="popup-content">
+      <h3>Paramètres de dossier</h3>
+      <div class="row1">
+        <div class="left-side">
+          <div class="label-container">
+              <label for="name">Nom</label>
+              <div class="rectangle">
+                <p>Omnishore</p>
+              </div>
+          </div>
+          <div class="label-container">
+              <label for="name">Collaborateur</label>
+              <div class="row">
+                <select class="sele">
+                  <option value="">Collaborateur</option>
+                </select>
+                <button>+</button>
+              </div>
+          </div>
+        </div>
+        <div class="right-side">
+          <div class="label-container">
+            <label for="name">Emplacement</label>
+            <div class="rectangle"><p>/root/Omnishore</p></div>
+          </div>
+          <div class="label-container">
+            <label for="name">Groupe</label>
+            <div class="row">
+              <select class="sele">
+                <option value="">Groupe</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="left-side">
+          <div class="checkbox-container">
+            <div *ngFor="let checkbox of checkboxes" class="checkbox-item">
+              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked">
+              <label [for]="'checkbox-' + checkbox.id">{{ checkbox.description }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="right-side">
+          <div class="checkbox-container">
+            <div *ngFor="let checkbox of checkboxes" class="checkbox-item">
+              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked">
+              <label [for]="'checkbox-' + checkbox.id">{{ checkbox.description }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row3">
+        <button class="annuler" routerLink=".." >annuler</button>
+        <button class="enregistrer">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+  

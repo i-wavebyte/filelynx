@@ -6,12 +6,13 @@
             <div class="status">Active</div>
         </div>
         <div class="nom">
-            <p>Nom d'utilisateur <span>diaeHajib</span></p>
+            <p>Nom d'utilisateur <span>{{collaborateur.username}}</span></p>
         </div>
         <div class="groupe-line">
             <label for="groupe">Groupe</label>
             <select id="groupe">
-                <option value="">Groupes</option>
+                <option  value="">{{collaborateur.groupe.nom}}</option>
+                <option *ngFor="let groupe of groupes" value="">{{groupe}}</option>
 
               <!-- Options for groups -->
             </select>

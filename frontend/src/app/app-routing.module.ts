@@ -24,6 +24,7 @@ import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 import { MembersettingComponent } from './components/membersetting/membersetting.component';
+import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
 
 
 const routes: Routes = [
@@ -45,10 +46,9 @@ const routes: Routes = [
    { path: 'details/:profId', component: MembersettingComponent }]
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  {path : "files", component : FilesComponent, canActivate: [AuthGuard] ,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
+
   {path : "files", component : FilesComponent,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }]},
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "details", component: FoldersettingComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent }

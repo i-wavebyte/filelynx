@@ -6,6 +6,7 @@ import backend.server.service.Repository.MembreRepository;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
+import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,8 @@ import java.util.Optional;
 public class CompagnieService implements ICompagnieService{
      private final GroupeRepository groupeRepository;
      private final MembreRepository membreRepository;
+
+     private  UserRepository userRepository;
      private final CompagnieRepository compagnieRepository;
 
      private final GroupeService groupeService;
@@ -133,6 +136,7 @@ public class CompagnieService implements ICompagnieService{
         }
         log.info("membre name: "+membre.getNom()+" compagnie name: "+membre.getCompagnie().getNom());
         membreRepository.deleteById(membreId);
+//        userRepository.deleteByUsername(username);
     }
     @Override
     public Membre updateMembre(Membre membre) {

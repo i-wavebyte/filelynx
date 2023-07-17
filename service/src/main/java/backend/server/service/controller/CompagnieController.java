@@ -54,7 +54,6 @@ public class CompagnieController {
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieRepository.findByNom(compagnieNom);
-
         // Vérifier si la compagnie existe
         if(compagnie == null){
             String messageErreur = "Erreur : Compagnie introuvable !";
@@ -62,14 +61,17 @@ public class CompagnieController {
         }
         // Vérifier si le nom d'utilisateur est disponible
         if (userRepository.existsByUsername(membre.getUsername())) {
+            System.out.println("existsByUsername");
             String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
         // Vérifier si l'adresse email est disponible
         if (userRepository.existsByEmail(membre.getEmail())) {
+            System.out.println("existsByEmail");
             String messageErreur = "Erreur : L'adresse email '" + membre.getEmail() + "' est déjà utilisée !";
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
+        System.out.println(membre);
 
         // Créer un nouvel utilisateur avec le rôle ROLE_USER
         User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
@@ -85,8 +87,7 @@ public class CompagnieController {
                 .groupe(groupeService.getGroupe(membre.getGroupe(),compagnieNom))
                 .compagnie(compagnie)
                 .build();
-        membreService.addMembre(newMembre);
-
+        Membre m = membreService.addMembre(newMembre);
         // Ajouter un message de log pour l'ajout du nouveau membre
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);

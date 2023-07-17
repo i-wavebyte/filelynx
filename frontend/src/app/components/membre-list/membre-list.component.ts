@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import { HelperService } from 'src/app/_services/helper.service';
 import Membre from 'src/app/domain/Membre';
 import { PageResponse } from 'src/app/domain/PageRespone';
 
@@ -23,7 +24,7 @@ export class MembreListComponent implements OnInit{
   totalMembres!: number;
 
     
-    constructor(private compagnieService: CompagnieService, private router: Router, private route: ActivatedRoute, private toast: NgToastService ) {}
+    constructor(private compagnieService: CompagnieService, private router: Router, private route: ActivatedRoute, private toast: NgToastService, private _helper: HelperService ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -95,10 +96,11 @@ prevPage(): void {
   }
 }
 
-onInfoProfessor(profId: number): void {
-  console.log(profId);
-
-  this.router.navigate(['users/details/', profId]);
+onInfoProfessor(membre: Membre): void {
+  console.log(membre);
+  this.router.navigate(['users/details/', membre.id] ,{
+    queryParams: { membreData: JSON.stringify(membre) }
+  });
 }
 
 nextPage(): void {
@@ -122,45 +124,12 @@ onUpdateMembre(membre: Membre)
   })
 }
 
-
 onDeleteMembre(membreId: number, username: string)
 {
-  this.compagnieService.deleteMembre(membreId, username).subscribe((response) => {
-    this.toast.success({detail:"Message de réussite", summary: response.message, duration: 3000});
-    console.log(response);
-    this.loadMembres();
-  },
-  (err) => {
-    this.toast.error({detail:"Message d'erreur", summary:"Erreur lors de la tentative de suppression du membre", duration: 3000});
-
-  })
+  var message1 = "êtes-vous sûr de vouloir supprimer le collaborateur ?";
+  this._helper.show("", message1,username, membreId, 1).then((result) => {
+    if (result == 0)
+      this.loadMembres();
+  });
 }
-// onEditProfessor(membre: Membre): void {
-//   this.compagnieService.updateProfessor(membre.id, membre).subscribe(
-//     (updatedProfessor) => {
-//       console.log('Professor updated:', updatedProfessor);
-//     },
-//     (error) => {
-//       console.error('Error updating professor:', error);
-//     }
-//   );
-// }
-
-// onDeleteProfessor(profId: number): void {
-//   this.professorService.deleteProfessor(profId).subscribe(
-//     () => {
-//       this.professors = this.professors.filter(
-//         (professor) => professor.id !== profId
-//       );
-//       this.filteredProfessors = this.filteredProfessors.filter(
-//         (professor) => professor.id !== profId
-//       );
-//       console.log('Professor deleted:', profId);
-//       this.loadProfessors();
-//     },
-//     (error) => {
-//       console.error('Error deleting professor:', error);
-//     }
-//   );
-// }
 }

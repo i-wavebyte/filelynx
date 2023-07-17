@@ -28,6 +28,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Boolean existsByUsername(String username);
 
+    void deleteByUsername(String username);
+
     /**
      * Checks if a user with the given email exists in the database
      *

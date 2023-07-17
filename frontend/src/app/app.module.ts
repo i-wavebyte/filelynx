@@ -41,6 +41,7 @@ import { AddCategorieComponent } from './components/add-categorie/add-categorie.
 import { DeleteFolderComponent } from './components/delete-folder/delete-folder.component';
 import { HelperService } from './_services/helper.service';
 import { MembersettingComponent } from './components/membersetting/membersetting.component';
+import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
 
 
 
@@ -74,7 +75,8 @@ import { MembersettingComponent } from './components/membersetting/membersetting
     AddLabelComponent,
     AddCategorieComponent,
     DeleteFolderComponent,
-    MembersettingComponent
+    MembersettingComponent,
+    FoldersettingComponent
   ],
   imports: [
     NgToastModule,
