@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FolderService } from 'src/app/_services/folder.service';
@@ -19,9 +19,11 @@ export class FilesComponent implements OnInit{
   showModal= false;
   popupClass= 'popup';
 
-  constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private location: Location, private _helper: HelperService) {}
+  constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private location: Location, private _helper: HelperService,
+    private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    console.log(this.currentFolder);
     this.loadFolders();
     this.route.queryParams.subscribe(params => {
       if (params['reload']) {
@@ -50,9 +52,6 @@ export class FilesComponent implements OnInit{
       (data) => {
         this.currentFolder = data;
         console.log(data);
-        // this.router.navigate(['/files', folder.id]);
-        this.location.replaceState(`/files/${folder.id}`);
-
       }
     );
   }
@@ -78,18 +77,28 @@ export class FilesComponent implements OnInit{
       );
       }
 
-    deletePopup(folder: Dossier): void
+     deletePopup(folder: Dossier): void
     {
       var newFolder: Dossier;
-      var message1 = "êtes-vous sûr de vouloir supprimer ce dossier ?";
-      var message2 = "êtes-vous sûr de vouloir supprimer ce dossier ?\n (Dossier non vide)! "
+      var f: Dossier;
+      var message1 = "êtes-vous sûr de vouloir supprimer le dossier "+ folder.nom+" ?";
+      var message2 = "êtes-vous sûr de vouloir supprimer "+ folder.nom+ " ?"+" (Dossier non vide)! "
       this.folderService.getFolderByIdAsAdmin(folder?.id).subscribe(
         (data) => {
           newFolder = data;
-          console.log(data);
+          f=newFolder.racine;
+          console.log(f);
           console.log("dossiers: ", newFolder.dossiers.length);
-          this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1,"", folder.id, 0);
-          this.currentFolder = data;
+          this._helper.show("", newFolder.dossiers.length > 0 ? message2: message1,"", folder.id, 0).then((result) =>{
+            console.log(this.currentFolder)
+            if (result == 0)
+            {
+                this.folderService.getFolderByIdAsAdmin(f.id).subscribe((data) =>{
+                this.currentFolder = data;
+              })
+            }
+            // this.cdRef.detectChanges();
+          });
         }
       );
     }

@@ -95,7 +95,7 @@ export class HelperService {
     //     });
     // }
 
-    show(title: string, message: string, username: string, folderId: number, id: number): Promise<number> {
+    show(title: string, message: string, username: string, folderId: number, id: number, ): Promise<number> {
         return new Promise<number>((resolve) => {
           swal.fire({
             title: title,
