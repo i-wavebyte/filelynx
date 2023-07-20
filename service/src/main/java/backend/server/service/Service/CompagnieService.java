@@ -7,7 +7,6 @@ import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
 import backend.server.service.security.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,16 +19,17 @@ public class CompagnieService implements ICompagnieService{
      private final GroupeRepository groupeRepository;
      private final MembreRepository membreRepository;
 
-     private  UserRepository userRepository;
+     private final UserRepository userRepository;
      private final CompagnieRepository compagnieRepository;
 
      private final GroupeService groupeService;
 
-     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, GroupeService groupeService){
+     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, UserRepository userRepository, GroupeService groupeService){
           this.compagnieRepository = compagnieRepository;
           this.groupeRepository = groupeRepository;
           this.membreRepository = membreRepository;
-          this.groupeService = groupeService;
+         this.userRepository = userRepository;
+         this.groupeService = groupeService;
      }
      @Override
     public Compagnie getCompagnie(Long id){
@@ -136,7 +136,7 @@ public class CompagnieService implements ICompagnieService{
         }
         log.info("membre name: "+membre.getNom()+" compagnie name: "+membre.getCompagnie().getNom());
         membreRepository.deleteById(membreId);
-//        userRepository.deleteByUsername(username);
+        userRepository.deleteByUsername(username);
     }
     @Override
     public Membre updateMembre(Membre membre) {

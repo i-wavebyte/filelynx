@@ -59,7 +59,7 @@ public class CompagnieController {
             String messageErreur = "Erreur : Compagnie introuvable !";
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
-        // Vérifier si le nom d'utilisateur est disponible
+//         Vérifier si le nom d'utilisateur est disponible
         if (userRepository.existsByUsername(membre.getUsername())) {
             System.out.println("existsByUsername");
             String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
