@@ -23,17 +23,16 @@ export class FilesComponent implements OnInit{
     private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    console.log(this.currentFolder);
     this.loadFolders();
     this.route.queryParams.subscribe(params => {
       if (params['reload']) {
-          console.log('reload');
-          this.loadFolders();
+        this.loadFolders();
       }
     });
   }
 
   loadFolders(): void{
+
     if(this.currentFolder == null){
       this.folderService.getRootFolderAsAdmin().subscribe(
         (data) => {
@@ -44,6 +43,9 @@ export class FilesComponent implements OnInit{
           console.log(err);
         }
       );
+    }
+    else{
+      this.onFolderClick(this.currentFolder);
     }
   }
 
