@@ -110,6 +110,12 @@ public class CompagnieController {
             dossier.setNom(group);
             dossier.setCompagnie(compagnie);
             dossier.setGroupRoot(true);
+            Authorisation authorisation = Authorisation.generateFullAccess();
+            authorisation.setRessourceAccessor(groupeService.getGroupe(group,compagnieNom));
+
+            dossier.getAuthorisations().add(authorisation);
+
+
             dossierService.addDossier(dossier,dossierService.getRootDossier().getId());
             return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès"));
         }

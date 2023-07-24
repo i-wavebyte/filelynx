@@ -16,15 +16,15 @@ import { AddMembreComponent } from './components/add-membre/add-membre.component
 import { LogsComponent } from './layouts/logs/logs.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
-
 import { AuthGuard } from './_services/authguard.service';
 import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
-
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 import { MembersettingComponent } from './components/membersetting/membersetting.component';
 import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
+
+import { UserFilesComponent } from './layouts/user-files/user-files.component';
 
 
 const routes: Routes = [
@@ -35,9 +35,14 @@ const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]  },
-  { path: 'userdashboard', component: UserDashboardComponent,  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'userdashboard', component: UserDashboardComponent },
   { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },
+
   { path: 'groups', component: GroupesComponent , canActivate: [AuthGuard] ,
   children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
   { path: 'users', component: UsersComponent , canActivate: [AuthGuard] ,
@@ -51,14 +56,16 @@ const routes: Routes = [
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "details", component: FoldersettingComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
-  { path: "add-categorie", component: AddCategorieComponent }
+  { path: "add-categorie", component: AddCategorieComponent },
+  { path: 'user-files', component: UserFilesComponent },
 ]}
+
 
 
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

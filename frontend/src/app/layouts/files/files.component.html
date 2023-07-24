@@ -13,7 +13,7 @@
         <h2 class="fullPath"><img src="../../../assets/folder.256x204.png" alt="" class="folder-icon" style="width:14px"> {{currentFolder?.fullPath}}</h2>
         <div class="buttons">
           <h3 *ngIf="currentFolder?.racine!==null" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">return</h3>
-          <h3 class="return-btn" [routerLink]="['/files/upload', currentFolder?.id]">Télécharger</h3>
+          <h3 class="return-btn" [routerLink]="['/files/upload', currentFolder?.id]">Téléverser</h3>
           <h3 class="return-btn" [routerLink]="['/files/add-folder', currentFolder?.id]">+ Dossier</h3>
         </div>
       </div>
