@@ -1,5 +1,6 @@
 package backend.server.service.security.controllers;
 
+import backend.server.service.Repository.AuthorisationRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
@@ -64,6 +65,8 @@ public class AuthController {
     CompagnieService compagnieService;
     @Autowired
     DossierService dossierService;
+    @Autowired
+    AuthorisationRepository authorisationRepository;
 
     /**
      * Authenticates a user and returns a JWT token if successful
@@ -163,12 +166,15 @@ public class AuthController {
         dossierGroupe.setNom(compagnie.getNom());
         dossierGroupe.setRacine(root);
         dossierGroupe.setGroupRoot(true);
-        authorisation.setRessourceAccessor(groupe);
-        authorisation.setDossier(dossierGroupe);
+        authorisation.setRessourceAccessor(compagnie);
+        authorisation.setDossier(root);
+        authorisationGroupe.setDossier(dossierGroupe);
+        authorisationGroupe.setRessourceAccessor(groupe);
         dossierGroupe.getAuthorisations().add(authorisationGroupe);
         dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
         logMessage = Log.builder().message("Dossier "+dossierGroupe.getNom()+" créée dans /root").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
+        authorisationRepository.save(authorisation);
         return ResponseEntity.ok(new MessageResponse("Société enregistrée avec succès!"));
     }
 

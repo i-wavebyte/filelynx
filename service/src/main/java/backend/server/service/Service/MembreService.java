@@ -3,7 +3,6 @@ package backend.server.service.Service;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.MembreRepository;
 import backend.server.service.domain.Membre;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;

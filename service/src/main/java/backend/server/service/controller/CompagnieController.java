@@ -112,7 +112,7 @@ public class CompagnieController {
             dossier.setGroupRoot(true);
             Authorisation authorisation = Authorisation.generateFullAccess();
             authorisation.setRessourceAccessor(groupeService.getGroupe(group,compagnieNom));
-
+            authorisation.setDossier(dossier);
             dossier.getAuthorisations().add(authorisation);
 
 

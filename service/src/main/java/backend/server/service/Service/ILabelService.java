@@ -1,7 +1,6 @@
 package backend.server.service.Service;
 
 import backend.server.service.POJO.PageResponse;
-import backend.server.service.domain.Categorie;
 import backend.server.service.domain.Label;
 
 import java.util.List;
