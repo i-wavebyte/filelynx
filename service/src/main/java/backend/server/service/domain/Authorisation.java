@@ -46,4 +46,49 @@ public class Authorisation {
                 .build();
     }
 
+    private void checkLecture() {
+        if (!this.lecture) {
+            throw new RuntimeException("l'entité doit avoir le droit a la lecture pour avoir ce droit");
+        }
+    }
+
+    public void setLecture(boolean lecture) {
+        this.lecture = lecture;
+    }
+
+    public void setEcriture(boolean ecriture) {
+        checkLecture();
+        this.ecriture = ecriture;
+    }
+
+    public void setModification(boolean modification) {
+        checkLecture();
+        this.modification = modification;
+    }
+
+    public void setSuppression(boolean suppression) {
+        checkLecture();
+        this.suppression = suppression;
+    }
+
+    public void setPartage(boolean partage) {
+        checkLecture();
+        this.partage = partage;
+    }
+
+    public void setTelechargement(boolean telechargement) {
+        checkLecture();
+        this.telechargement = telechargement;
+    }
+
+    public void setUpload(boolean upload) {
+        checkLecture();
+        this.upload = upload;
+    }
+
+    public void setCreationDossier(boolean creationDossier) {
+        checkLecture();
+        this.creationDossier = creationDossier;
+    }
+
 }
