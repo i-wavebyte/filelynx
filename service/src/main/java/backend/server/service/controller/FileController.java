@@ -84,5 +84,4 @@ public class FileController {
     public List<Fichier> getFilesFromParent(@RequestBody Long parentFolderId) {
         return fichierService.getFichiersByParent(parentFolderId);
     }
-
 }

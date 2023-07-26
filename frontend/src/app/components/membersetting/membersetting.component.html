@@ -10,7 +10,7 @@
         </div>
         <div class="groupe-line">
             <label for="groupe">Groupe</label>
-            <select id="groupe" [(ngModel)]="selectedGroupe">
+            <select id="groupe" (change)="onSave()" [(ngModel)]="selectedGroupe">
                 <option [value]="collaborateur.groupe.nom">{{collaborateur.groupe.nom}}</option>
                 <option *ngFor="let groupe of groupes" [value]="groupe">{{groupe}}</option>
             </select>
@@ -19,7 +19,7 @@
         <div class="button-line">
             <button class="reset-password">Réinitialiser le mot de passe</button>
             <button class="disable-account">Désactiver le compte</button>
-            <button class="save-button" (click)="onSave()" routerLink="../..">enregistrer</button>
+            <!-- <button class="save-button" (click)="onSave()" routerLink="../..">enregistrer</button> -->
         </div>
     </div>
 </div>

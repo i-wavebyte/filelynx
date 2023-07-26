@@ -125,7 +125,7 @@ public class CompagnieController {
         }
     }
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/ChangeMemberGroup/{username}/{group}")
+    @PutMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);

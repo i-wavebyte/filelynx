@@ -54,7 +54,7 @@ public class AuthotisationService {
     }
 
     public boolean hasAuth(Long resourceAccessorId, Long dossierId,String authType){
-        Authorisation auth = GetAuthorisation(ressourceAccessorId,dossierId);
+        Authorisation auth = GetAuthorisation(resourceAccessorId,dossierId);
 
         if(authType.equals("lecture")){
             return auth.isLecture();
