@@ -46,6 +46,19 @@ public class Authorisation {
                 .build();
     }
 
+    public static Authorisation generateReadOnly(){
+        return Authorisation.builder()
+                .lecture(true)
+                .ecriture(false)
+                .modification(false)
+                .suppression(false)
+                .partage(false)
+                .telechargement(false)
+                .upload(false)
+                .creationDossier(false)
+                .build();
+    }
+
     private void checkLecture() {
         if (!this.lecture) {
             throw new RuntimeException("l'entité doit avoir le droit a la lecture pour avoir ce droit");
@@ -90,5 +103,4 @@ public class Authorisation {
         checkLecture();
         this.creationDossier = creationDossier;
     }
-
 }
