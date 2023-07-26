@@ -2,9 +2,7 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.FichierRepository;
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.Fichier;
+import backend.server.service.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +17,12 @@ import java.util.List;
 @Slf4j
 public class DossierService implements IDossierService {
 
-    @Autowired
     private final DossierRepository dossierRepository;
+    private final FichierRepository fichierRepository;
+    private final IFichierService fichierService;
+    private final ICompagnieService compagnieService;
+    private final IAuthotisationService authotisationService;
 
-    @Autowired
-    private FichierRepository fichierRepository;
-
-    @Autowired
-    private FichierService fichierService;
-    @Autowired
-    private CompagnieService compagnieService;
     public Dossier addDossier(Dossier d, Long ParentFolderId)
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -52,21 +46,28 @@ public class DossierService implements IDossierService {
         log.info("File created at {}", d.getFullPath());
         return d;
     }
-    public Dossier addDossier(Dossier d, Long ParentFolderId, Compagnie compagnie)
+    public Dossier addDossier(Dossier d, Long parentFolderId, Compagnie compagnie, boolean skipAuthCreation)
     {
-
+        //determine si un dossier portant le méme nom existe déja
         List<Dossier> dossiers = compagnie.getDossiers();
         for (Dossier dossier: dossiers)
         {
             if (dossier.getNom().equals(d.getNom()))
                 throw new RuntimeException("Dossier: "+d.getNom()+" existe déjà");
         }
-        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
-
+        //determine le dossier parent
+        Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
+        //ajoute le dossier a la base de donnée
         d.setCompagnie(compagnie);
         d.setRacine(dossierParent);
-        d= dossierRepository.save(d);
-        if (ParentFolderId!=null) {
+        //determine le chemin du dossier
+
+        //ajoute les autorisations par défaut
+        if(!skipAuthCreation){
+            authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(),d);
+        }
+
+        if (parentFolderId!=null) {
             dossierParent.getDossiers().add(d);
             dossierRepository.save(dossierParent);
         }
@@ -74,11 +75,11 @@ public class DossierService implements IDossierService {
         return d;
     }
 
-    public Dossier renameDossier(Long DossierId,String name)
+    public Dossier renameDossier(Long dossierId,String name)
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Dossier dossier = dossierRepository.findById(DossierId).orElseThrow(()-> new RuntimeException("Folder not found"));
+        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(()-> new RuntimeException("Folder not found"));
 
         List<Dossier> dossiers = compagnie.getDossiers();
         for (Dossier d: dossiers)

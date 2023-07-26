@@ -1,6 +1,7 @@
 package backend.server.service.security.controllers;
 
 import backend.server.service.Repository.AuthorisationRepository;
+import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
@@ -67,6 +68,8 @@ public class AuthController {
     DossierService dossierService;
     @Autowired
     AuthorisationRepository authorisationRepository;
+    @Autowired
+    DossierRepository dossierRepository;
 
     /**
      * Authenticates a user and returns a JWT token if successful
@@ -84,6 +87,7 @@ public class AuthController {
             String jwt = jwtUtils.generateJwtToken(userDetails);
             List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                     .collect(Collectors.toList());
+
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
             return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
                     userDetails.getUsername(), userDetails.getEmail(), roles));
@@ -157,12 +161,13 @@ public class AuthController {
         Authorisation authorisation = Authorisation.generateFullAccess();
         authorisation.setRessourceAccessor(compagnie);
         authorisation.setDossier(root);
-        root.getAuthorisations().add(authorisation);
-        root = dossierService.addDossier(root, null, compagnie);
+
+        root = dossierService.addDossier(root, null, compagnie,true);
         logMessage = Log.builder().message("Dossier root créée").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         Dossier dossierGroupe = new Dossier();
         Authorisation authorisationGroupe = Authorisation.generateFullAccess();
+        Authorisation authorisationCompagnie = Authorisation.generateReadOnly();
         dossierGroupe.setNom(compagnie.getNom());
         dossierGroupe.setRacine(root);
         dossierGroupe.setGroupRoot(true);
@@ -170,12 +175,15 @@ public class AuthController {
         authorisation.setDossier(root);
         authorisationGroupe.setDossier(dossierGroupe);
         authorisationGroupe.setRessourceAccessor(groupe);
+        authorisationCompagnie.setDossier(dossierGroupe);
+        authorisationCompagnie.setRessourceAccessor(compagnie);
         dossierGroupe.getAuthorisations().add(authorisationGroupe);
-        dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie);
+        dossierGroupe.getAuthorisations().add(authorisationCompagnie);
         logMessage = Log.builder().message("Dossier "+dossierGroupe.getNom()+" créée dans /root").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
-        authorisationRepository.save(authorisation);
+        root.getAuthorisations().add(authorisation);
+        dossierRepository.save(root);
+        dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie,true);
         return ResponseEntity.ok(new MessageResponse("Société enregistrée avec succès!"));
     }
-
 }

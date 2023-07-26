@@ -128,22 +128,53 @@ public class AuthotisationService implements IAuthotisationService{
             Authorisation selfAuth = Authorisation.generateFullAccess();
             selfAuth.setRessourceAccessor(ressourceAccessor);
             selfAuth.setDossier(dossier);
-            authorisationRepository.save(selfAuth);
+            //authorisationRepository.save(selfAuth);
             Authorisation groupeAuth = Authorisation.generateReadOnly();
             groupeAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe());
             groupeAuth.setDossier(dossier);
-            authorisationRepository.save(groupeAuth);
+            //authorisationRepository.save(groupeAuth);
             Authorisation compagnieAuth = Authorisation.generateReadOnly();
             compagnieAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe().getCompagnie());
             compagnieAuth.setDossier(dossier);
-            authorisationRepository.save(compagnieAuth);
+            dossier.getAuthorisations().add(selfAuth);
+            dossier.getAuthorisations().add(groupeAuth);
+            dossier.getAuthorisations().add(compagnieAuth);
+            //authorisationRepository.save(compagnieAuth);
+
         }
         if (ressourceAccessor instanceof Compagnie) {
             Authorisation compagnieAuth = Authorisation.generateFullAccess();
             compagnieAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe().getCompagnie());
             compagnieAuth.setDossier(dossier);
-            authorisationRepository.save(compagnieAuth);
+            dossier.getAuthorisations().add(compagnieAuth);
+            //authorisationRepository.save(compagnieAuth);
         }
+    }
+    public boolean determineResourceAssessor(){
+        String resourceAccessorRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+        return resourceAccessorRole.contains("ROLE_COMPAGNIE");
+    }
 
+
+
+    public Compagnie extractCompagnieFromResourceAccessor(){
+        String resourceAccessorName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(determineResourceAssessor()){
+            return compagnieRepository.findByNom(resourceAccessorName);
+        }
+        else{
+            Membre membre = membreRepository.findByUsername(resourceAccessorName);
+            return membre.getGroupe().getCompagnie();
+        }
+    }
+
+    public RessourceAccessor extractResourceAccessorFromSecurityContext(){
+        String resourceAccessorName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(determineResourceAssessor()){
+            return compagnieRepository.findByNom(resourceAccessorName);
+        }
+        else{
+            return membreRepository.findByUsername(resourceAccessorName);
+        }
     }
 }

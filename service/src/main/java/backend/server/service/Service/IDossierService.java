@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IDossierService {
     Dossier addDossier(Dossier d, Long ParentFolderId);
-    Dossier addDossier(Dossier d, Long ParentFolderId, Compagnie compagnie);
+    Dossier addDossier(Dossier d, Long ParentFolderId, Compagnie compagnie, boolean skipAuthCreation);
     Dossier renameDossier(Long DossierId,String name);
 
     void fileTree(Long DossierId, Long level);
