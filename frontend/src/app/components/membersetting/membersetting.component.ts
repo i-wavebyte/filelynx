@@ -13,6 +13,8 @@ export class MembersettingComponent {
 
   collaborateur!: Membre;
   groupes!: string[];
+  selectedGroupe!: string; // Step 1: Property to store the selected groupe
+
   constructor(private router: Router, private route: ActivatedRoute, private compagnieService: CompagnieService) {}
 
   ngOnInit(): void {
@@ -23,6 +25,9 @@ export class MembersettingComponent {
       if (membreData) {
         console.log(membreData.groupe.nom);
         this.collaborateur = membreData;
+        this.selectedGroupe = membreData.groupe.nom;
+        console.log(this.collaborateur.groupe.nom);
+  
         // Use the data as needed
       }
     });
@@ -35,5 +40,21 @@ export class MembersettingComponent {
       }
       console.log(this.groupes);
     });
+  }
+
+  onSave(): void {
+    // Step 3: Update the collaborateur's groupe with the selectedGroupe value
+    console.log(this.selectedGroupe);
+    // Call the service method to update the collaborateur in the backend
+    this.compagnieService.changeGroupe(this.collaborateur.username, this.selectedGroupe).subscribe(
+      (response) => {
+        // Handle success response
+        console.log('Collaborateur updated successfully:', response);
+      },
+      (error) => {
+        // Handle error response
+        console.error('Error updating collaborateur:', error);
+      }
+    );
   }
 }

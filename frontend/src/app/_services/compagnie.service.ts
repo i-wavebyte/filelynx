@@ -23,6 +23,9 @@ export class CompagnieService {
   constructor(private http: HttpClient) {}
 
 
+  changeGroupe(username: string, groupe: string):Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/ChangeMemberGroup/${username}/${groupe}`, httpOptions);
+  }
 
   getQuotaStatus():Observable<Quota> {
     return this.http.get<Quota>(this.baseUrl + "/getQuotaStatus", httpOptions);
