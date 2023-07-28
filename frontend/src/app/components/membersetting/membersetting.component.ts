@@ -27,8 +27,6 @@ export class MembersettingComponent {
         this.collaborateur = membreData;
         this.selectedGroupe = membreData.groupe.nom;
         console.log(this.collaborateur.groupe.nom);
-  
-        // Use the data as needed
       }
     });
     this.compagnieService.getAllUniqueGroups().subscribe((data) => {

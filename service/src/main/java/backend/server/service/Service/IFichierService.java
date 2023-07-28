@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.enums.ETAT;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface IFichierService {
     Fichier changeCategory(Long fichierId,Long categorieId);
     Fichier updateLabels(Long fichierId, List<Label> labels);
     List<Fichier> getFichiersByParent(Long parentId);
+
+    List<String> uploadFile(MultipartFile file) throws Exception;
 }

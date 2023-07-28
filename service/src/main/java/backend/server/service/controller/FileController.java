@@ -6,11 +6,25 @@ import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +32,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 public class FileController {
 
+    private static final String path = "/Users/macbookpro/Desktop/files/";
     @Autowired
     private IFichierService fichierService;
 
@@ -58,7 +73,6 @@ public class FileController {
     public ResponseEntity<?> moveFile(@PathVariable Long fileId,@RequestParam Long targetFolderId) {
         fichierService.changerEmplacement(fileId, targetFolderId);
         return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du fichier réussie!"));
-
     }
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -84,4 +98,50 @@ public class FileController {
     public List<Fichier> getFilesFromParent(@RequestBody Long parentFolderId) {
         return fichierService.getFichiersByParent(parentFolderId);
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<List<String>> fileUpload
+            (@RequestParam("file") MultipartFile file)
+            throws Exception {
+        System.out.println("file: "+ file);
+        return new ResponseEntity<>(fichierService.uploadFile(file),
+                HttpStatus.OK);
+
+    }
+
+    private HttpHeaders headers(String name) {
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=" + name);
+        header.add("Cache-Control",
+                "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+        return header;
+
+    }
+    @GetMapping(path = "/download/{name}")
+    public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
+        System.out.println("filename: "+name);
+        // 1. Construct the File object representing the file to be downloaded
+        File file = new File(path + name);
+
+        // 2. Create a Path object from the File's absolute path
+        Path filePath = Paths.get(file.getAbsolutePath());
+
+        // 3. Read the file's content into a ByteArrayResource
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(filePath));
+
+        // 4. Prepare and return the ResponseEntity with the file content
+        return ResponseEntity
+                .ok()
+                .headers(this.headers(name)) // Add custom headers for the response
+                .contentLength(file.length()) // Set the Content-Length header
+                .contentType(MediaType.parseMediaType("application/octet-stream")) // Set the Content-Type header
+                .body(resource); // Set the response body with the file content
+    }
+
+
+
 }

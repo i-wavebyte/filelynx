@@ -11,12 +11,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
+
+    private static final String path = "/Users/macbookpro/Desktop/files/";
     @Autowired
     private FichierRepository fichierRepository;
     @Autowired
@@ -97,4 +104,31 @@ public class FichierService implements IFichierService{
         return dossier.getFichiers();
     }
 
+    /*a Spring-specific class used to handle file uploads.
+    returns a List<String> containing the filenames of all
+    files present in the directory where the new file will be uploaded*/
+
+    @Override
+    public List<String> uploadFile(MultipartFile file)
+            throws Exception {
+        // Save file on system
+        if (!file.getOriginalFilename().isEmpty()) {
+            BufferedOutputStream outputStream =
+                    new BufferedOutputStream(
+                            new FileOutputStream(new File(path,
+                                    file.getOriginalFilename())));
+            outputStream.write(file.getBytes());
+            outputStream.flush();
+            outputStream.close();
+        } else {
+            throw new Exception();
+        }
+        List<String> list = new ArrayList<String>();
+        File files = new File(path);
+        String[] fileList = files.list();
+        for (String name : fileList) {
+            list.add(name);
+        }
+        return list;
+    }
 }

@@ -29,7 +29,6 @@ public class Label {
 
     public String toString(){
         String str = "\nLabel: "+nom;
-
         return str;
     }
 }
