@@ -18,7 +18,7 @@ export class MembersettingComponent {
   constructor(private router: Router, private route: ActivatedRoute, private compagnieService: CompagnieService) {}
 
   ngOnInit(): void {
-
+      console.log("hnaaaaaa");
     // Access the data passed during navigation
     this.route.queryParams.subscribe(params => {
       const membreData = JSON.parse(params['membreData'] || '{}');

@@ -43,6 +43,7 @@ import { HelperService } from './_services/helper.service';
 import { MembersettingComponent } from './components/membersetting/membersetting.component';
 import { UserFilesComponent } from './layouts/user-files/user-files.component';
 import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
+import { FilesettingsComponent } from './components/filesettings/filesettings.component';
 
 
 
@@ -78,7 +79,8 @@ import { FoldersettingComponent } from './components/foldersetting/foldersetting
     DeleteFolderComponent,
     MembersettingComponent,
     FoldersettingComponent,
-    UserFilesComponent
+    UserFilesComponent,
+    FilesettingsComponent
 
   ],
   imports: [

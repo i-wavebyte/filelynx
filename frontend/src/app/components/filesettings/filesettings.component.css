@@ -41,12 +41,6 @@
     width: 100%;
   }
   
-  .row2{
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-
   .left-side{
     flex-basis: 50%;
   }
@@ -116,9 +110,19 @@
     align-items: center;
   }
 
-  .label-container .sele {
-    width: 70%;
+    .rectangleb {
+    width: 80%;
     height: 30px;
+    background-color: #fff;
+    color: #000;
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .label-container .sele {
+    width: 80%;
+    height: 33px;
     border: 1px solid #C6CED6;
     border-radius: 3px;
 
@@ -151,7 +155,7 @@
     cursor: pointer;
   }
 
-  .enregistrer {
+  .charger {
     border: none;
     background-color: #000;
     border-radius: 4px;
@@ -172,7 +176,14 @@
     font-weight: 400;
   }
 
-  .close {
+  .test {
+    display: flex;
+  }
+ span {
+    color: #C6CED6;
+   }
+
+   .close {
     position: absolute;
     top: 16px;
     right: 16px;

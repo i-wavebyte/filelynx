@@ -109,7 +109,7 @@ export class FilesComponent implements OnInit{
       this.selectedFolder = folder;
       this.showModal = true; // Open the modal
       // this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
-      this.router.navigate(['files/details'], { queryParams: { folderId: folder.id } });
+      this.router.navigate(['files/folderdetails'], { queryParams: { folderId: folder.id } });
 
     }
 

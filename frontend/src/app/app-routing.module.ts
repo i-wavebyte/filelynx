@@ -25,6 +25,7 @@ import { MembersettingComponent } from './components/membersetting/membersetting
 import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
 
 import { UserFilesComponent } from './layouts/user-files/user-files.component';
+import { FilesettingsComponent } from './components/filesettings/filesettings.component';
 
 
 const routes: Routes = [
@@ -53,7 +54,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {path : "files", component : FilesComponent,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "details", component: FoldersettingComponent }]},
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "folderdetails", component: FoldersettingComponent }, { path: "filedetails", component: FilesettingsComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent },

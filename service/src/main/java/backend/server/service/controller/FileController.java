@@ -32,7 +32,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 public class FileController {
 
-    private static final String path = "/Users/macbookpro/Desktop/files/";
+    private static final String path = "/Users/macbookpro/Desktop/files/upload/";
+    private static final String pathd = "/Users/macbookpro/Desktop/files/download/";
+
     @Autowired
     private IFichierService fichierService;
 
@@ -132,7 +134,15 @@ public class FileController {
 
         // 3. Read the file's content into a ByteArrayResource
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(filePath));
+        System.out.println("siiiiiiiiiiiize: "+ResponseEntity.ok().contentLength(file.length()));
 
+        BufferedOutputStream outputStream =
+                new BufferedOutputStream(
+                        new FileOutputStream(new File(pathd,
+                                "tswira.png")));
+        outputStream.write(resource.getByteArray());
+        outputStream.flush();
+        outputStream.close();
         // 4. Prepare and return the ResponseEntity with the file content
         return ResponseEntity
                 .ok()
