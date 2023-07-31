@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class Fichier {
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
+    @JsonIncludeProperties({"id","nom"})
+    private Groupe groupe;
 
     public String toString(){
         String str = "\nFichier: "+nom+"."+extension+" ("+type+")";
