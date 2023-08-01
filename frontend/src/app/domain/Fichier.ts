@@ -1,5 +1,7 @@
+import Categorie from "./Categorie";
 import Compagnie from "./Compagnie";
 import Dossier from "./Dossier";
+import Label from "./Label";
 
 export default interface Fichier {
     id: number;
@@ -9,5 +11,7 @@ export default interface Fichier {
     compagnie: Compagnie;
     taille: number;
     extension: string;
+    labels:Label[];
+    categorie: Categorie;
 }
 
