@@ -9,4 +9,7 @@ public interface DossierRepository extends JpaRepository<Dossier,Long> {
     Boolean existsByName(String name);
     //find the dossier by compagnie name and has no racine
     Dossier findByCompagnieNomAndRacineIsNull(String compagnieNom);
+    //find Dossier by groupe id, racine not null and isRoot true
+    Dossier findByGroupeIdAndRacineIsNotNullAndIsGroupRootTrue(Long groupeId);
+    Long countByCompagnieNom(String compagnieNom);
 }

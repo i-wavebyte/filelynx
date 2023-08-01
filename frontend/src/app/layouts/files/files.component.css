@@ -93,6 +93,10 @@ nav{
 }
 
 .folder-icon{
+  height: 30px;
+}
+
+.folder-icon-title{
   width: 30px;
 }
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,7 @@ public class Fichier {
     private List<Label> labels = new ArrayList<>();
     @Enumerated (value = EnumType.STRING)
     private ETAT etat;
+    private Date dateCreation;
     public String getFullPath(){
         String path= "/"+ nom +"."+extension;
         if(racine != null) path = racine.getFullPath() + path;

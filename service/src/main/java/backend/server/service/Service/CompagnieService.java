@@ -2,8 +2,11 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
+import backend.server.service.payloads.EntitiesCountResponse;
 import backend.server.service.security.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -11,27 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
- @Service @Slf4j @Transactional
+ @Service @Slf4j @Transactional @RequiredArgsConstructor
 public class CompagnieService implements ICompagnieService{
      private final GroupeRepository groupeRepository;
      private final MembreRepository membreRepository;
-
      private final UserRepository userRepository;
      private final LabelRepository labelRepository;
      private final CategorieRepository categorieRepository;
      private final CompagnieRepository compagnieRepository;
+     private final DossierRepository dossierRepository;
+     private final FichierRepository fichierRepository;
+
 
      private final GroupeService groupeService;
 
-     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, UserRepository userRepository, GroupeService groupeService, LabelRepository labelRepository, CategorieRepository categorieRepository){
-          this.compagnieRepository = compagnieRepository;
-          this.groupeRepository = groupeRepository;
-          this.membreRepository = membreRepository;
-         this.userRepository = userRepository;
-         this.groupeService = groupeService;
-         this.labelRepository = labelRepository;
-         this.categorieRepository = categorieRepository;
-     }
+
      @Override
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
@@ -166,6 +163,17 @@ public class CompagnieService implements ICompagnieService{
     }
 
      @Override
+     public EntitiesCountResponse getEntitiesCount() {
+         EntitiesCountResponse entitiesCountResponse = new EntitiesCountResponse();
+         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+         entitiesCountResponse.setDossiers(dossierRepository.countByCompagnieNom(compagnieName));
+         entitiesCountResponse.setFichiers(fichierRepository.countByCompagnieNom(compagnieName));
+         entitiesCountResponse.setGroupes(groupeRepository.countByCompagnieNom(compagnieName));
+         entitiesCountResponse.setMembres(membreRepository.countByCompagnieNom(compagnieName));
+         return entitiesCountResponse;
+     }
+
+     @Override
      public List<String> getAllLabels() {
          List<Label> l = labelRepository.findAll();
          List<String> listLabels = new ArrayList<>();
@@ -186,5 +194,7 @@ public class CompagnieService implements ICompagnieService{
          }
          return (listCategories);
      }
+
+
 
 }

@@ -10,6 +10,7 @@ import Membre from '../domain/Membre';
 import Label from '../domain/Label';
 import Categorie from '../domain/Categorie';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import EntitesCount from '../domain/EntitiesCount';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -210,6 +211,10 @@ export class CompagnieService {
 
   getAllCategories(): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/categories`);
+  }
+
+  getEntitesCount(): Observable<EntitesCount> {
+    return this.http.get<EntitesCount>(`${this.baseUrl}/getEntitiesCount`);
   }
 
 }

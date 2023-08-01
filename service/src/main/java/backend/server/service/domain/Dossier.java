@@ -23,7 +23,7 @@ public class Dossier {
     @JsonIncludeProperties({"id","nom","extension","type","taille","etat"})
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
-    @JsonIncludeProperties({"id","nom"})
+    @JsonIncludeProperties({"id","nom","groupRoot"})
     private List<Dossier> dossiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL , mappedBy = "dossier")
     private List<Authorisation> authorisations = new ArrayList<>();

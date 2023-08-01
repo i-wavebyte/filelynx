@@ -11,5 +11,5 @@ export default interface Dossier {
     fichiers: Fichier[];
     fullPath: string;
     groupe:Groupe;
-
+    groupRoot: boolean;
 }

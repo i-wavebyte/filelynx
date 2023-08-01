@@ -10,7 +10,7 @@
    <div class="header-card-container">
     <div class="header-card">
       <div class="fileExplorer-heading">
-        <h2 class="fullPath"><img src="../../../assets/folder.256x204.png" alt="" class="folder-icon" style="width:14px"> {{currentFolder?.fullPath}}</h2>
+        <h2 class="fullPath"><img src="../../../assets/folder.256x204.png" alt="" class="folder-icon-title" style="width:14px"> {{currentFolder?.fullPath}}</h2>
         <div class="buttons">
           <h3 *ngIf="currentFolder?.racine!==null" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">return</h3>
           <h3 class="return-btn" [routerLink]="['/files/upload', currentFolder?.id]">Charger</h3>
@@ -24,7 +24,7 @@
         </div>
         <div *ngFor="let folder of currentFolder?.dossiers" class="file-or-folder">
           <div (click)="onFolderClick(folder)">
-            <img src="../../../assets/folder.256x204.png" alt="" class="folder-icon">
+            <img [src]="folder.groupRoot?'./../../assets/mind-map.250x256.png':'./../../assets/folder.256x204.png'" alt="" class="folder-icon">
             <p>{{folder.nom}}</p>
           </div>
           <div class="file-button-collection">
