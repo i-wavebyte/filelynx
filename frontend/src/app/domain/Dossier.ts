@@ -1,5 +1,6 @@
 import Compagnie from "./Compagnie";
 import Fichier from "./Fichier";
+import Groupe from "./Groupe";
 
 export default interface Dossier {
     id: number;
@@ -9,5 +10,6 @@ export default interface Dossier {
     dossiers: Dossier[];
     fichiers: Fichier[];
     fullPath: string;
+    groupe:Groupe;
 
 }

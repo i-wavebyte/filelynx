@@ -4,6 +4,7 @@ package backend.server.service.controller;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
+import backend.server.service.Service.GroupeService;
 import backend.server.service.Service.IDossierService;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
@@ -11,6 +12,7 @@ import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Log;
 import backend.server.service.enums.LogType;
 import backend.server.service.security.POJOs.responses.MessageResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +26,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/dossier")
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
+@RequiredArgsConstructor
 public class DossierController {
 
-    @Autowired
-    private IDossierService dossierService;
+    private final IDossierService dossierService;
+    private final CompagnieService compagnieService;
+    private final LogRepository logRepository;
+    private final GroupeService groupeService;
 
-    @Autowired
-    private CompagnieService compagnieService;
 
-    @Autowired
-    private LogRepository logRepository;
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
@@ -44,6 +45,7 @@ public class DossierController {
             if(dossierService.getRootDossier().getId() == parentFolderId){
                 return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas ajouter un dossier à la racine"));
             }
+            d.setGroupe(dossierService.getGroupRootGroupe(parentFolderId));
             dossierService.addDossier(d, parentFolderId);
             Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);

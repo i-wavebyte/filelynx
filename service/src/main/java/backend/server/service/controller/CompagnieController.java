@@ -103,13 +103,14 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         try
         {
-            compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
+            Groupe groupe =  compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
             Log logMessage = Log.builder().message("Groupe " + group + " créé").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
             Dossier dossier = new Dossier();
             dossier.setNom(group);
             dossier.setCompagnie(compagnie);
             dossier.setGroupRoot(true);
+            dossier.setGroupe(groupe);
             Authorisation authorisation = Authorisation.generateFullAccess();
             authorisation.setRessourceAccessor(groupeService.getGroupe(group,compagnieNom));
             authorisation.setDossier(dossier);

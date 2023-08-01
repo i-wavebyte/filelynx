@@ -14,7 +14,7 @@
               <label for="name">Collaborateur</label>
               <div class="row">
                 <select class="sele">
-                  <option value="">Collaborateur</option>
+                  <option value="" *ngFor="let membre of membres" [value]="membre.id">{{membre.username}}</option>
                 </select>
                 <button>+</button>
               </div>
@@ -28,8 +28,8 @@
           <div class="label-container">
             <label for="name">Groupe</label>
             <div class="row">
-              <select class="sele">
-                <option value="">Groupe</option>
+              <select class="sele" disabled>
+                <option value="">{{groupe.nom}}</option>
               </select>
             </div>
           </div>

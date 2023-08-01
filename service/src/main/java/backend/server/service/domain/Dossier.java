@@ -30,8 +30,9 @@ public class Dossier {
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
+    @ManyToOne
+    private Groupe groupe;
     private boolean isGroupRoot;
-
     public String getFullPath(){
         String path= "/"+nom;
         if(racine != null) path = racine.getFullPath() + path;

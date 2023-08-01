@@ -1,5 +1,6 @@
 package backend.server.service.domain;
 
+import backend.server.service.enums.AuthLevel;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,8 @@ public class Authorisation {
     private boolean telechargement;
     private boolean upload;
     private boolean creationDossier;
+    @Enumerated(EnumType.STRING)
+    private AuthLevel authLevel;
     @ManyToOne
     @JsonIncludeProperties({"id"})
     @JoinColumn(name = "ressource_accessor_id")

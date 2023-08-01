@@ -200,7 +200,7 @@ export class CompagnieService {
     return this.http.post<any>(`${this.baseUrl}/addCategorie`, categorie, httpOptions);
   }
 
-  getMembresByGroup(group: string): Observable<Membre[]> {
+  getMembresByGroup(group: number): Observable<Membre[]> {
     return this.http.get<Membre[]>(`${this.baseUrl}/getMembresByGroupe/${group}`);
   }
 

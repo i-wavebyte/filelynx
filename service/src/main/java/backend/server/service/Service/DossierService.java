@@ -167,4 +167,16 @@ public class DossierService implements IDossierService {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         return dossierRepository.findByCompagnieNomAndRacineIsNull(compagnieNom);
     }
+
+    @Override
+    public Groupe getGroupRootGroupe(Long dossierId) {
+        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        if(dossier.getRacine()==null){
+            return null;
+        }
+        while(!dossier.isGroupRoot()){
+            dossier = dossier.getRacine();
+        }
+        return dossier.getGroupe();
+    }
 }

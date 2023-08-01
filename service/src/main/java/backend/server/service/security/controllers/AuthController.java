@@ -171,6 +171,7 @@ public class AuthController {
         dossierGroupe.setNom(compagnie.getNom());
         dossierGroupe.setRacine(root);
         dossierGroupe.setGroupRoot(true);
+        dossierGroupe.setGroupe(groupe);
         authorisation.setRessourceAccessor(compagnie);
         authorisation.setDossier(root);
         authorisationGroupe.setDossier(dossierGroupe);

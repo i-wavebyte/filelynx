@@ -5,6 +5,7 @@ import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.MembreRepository;
 import backend.server.service.Repository.RessourceAccessorRepository;
 import backend.server.service.domain.*;
+import backend.server.service.enums.AuthLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -126,14 +127,17 @@ public class AuthotisationService implements IAuthotisationService{
                 .orElseThrow(() -> new RuntimeException("resourceAccessorId not found"));
         if (ressourceAccessor instanceof Membre) {
             Authorisation selfAuth = Authorisation.generateFullAccess();
+            selfAuth.setAuthLevel(AuthLevel.MEMBRE);
             selfAuth.setRessourceAccessor(ressourceAccessor);
             selfAuth.setDossier(dossier);
             //authorisationRepository.save(selfAuth);
             Authorisation groupeAuth = Authorisation.generateReadOnly();
+            selfAuth.setAuthLevel(AuthLevel.GROUPE);
             groupeAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe());
             groupeAuth.setDossier(dossier);
             //authorisationRepository.save(groupeAuth);
             Authorisation compagnieAuth = Authorisation.generateReadOnly();
+            selfAuth.setAuthLevel(AuthLevel.COMPAGNIE);
             compagnieAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe().getCompagnie());
             compagnieAuth.setDossier(dossier);
             dossier.getAuthorisations().add(selfAuth);
