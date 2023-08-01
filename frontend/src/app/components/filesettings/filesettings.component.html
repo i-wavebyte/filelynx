@@ -20,6 +20,7 @@
               <div class="row">
                 <select class="sele">
                   <option value="">Rapports</option>
+                  <option *ngFor="let categorie of categories" value="categorie">{{categorie}}</option>
                 </select>
               </div>
           </div>
@@ -28,6 +29,7 @@
             <div class="row">
               <select class="sele">
                 <option value="">Selectionnez un label</option>
+                <option *ngFor="let label of labels" value="label">{{label}}</option>
               </select>
             </div>
         </div>
@@ -35,7 +37,7 @@
         <div class="right-side">
           <div class="label-container">
             <label for="name">Groupe</label>
-            <div class="rectangle"><p>Omnishore</p></div>
+            <div class="rectangle"><p>{{groupe}}</p></div>
           </div>
           <div class="label-container">
             <label for="name">Taille</label>

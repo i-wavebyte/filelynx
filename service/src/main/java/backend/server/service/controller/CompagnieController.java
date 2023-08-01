@@ -312,6 +312,19 @@ public class CompagnieController {
     public List<String> getAllUniqueGroupes() {
         return compagnieService.getAllUniqueGroups();
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/labels")
+    public List<String> getAllLabels() {
+         return compagnieService.getAllLabels();
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/categories")
+    public List<String> getAllCategories() {
+        return compagnieService.getAllCategories();
+    }
+
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
