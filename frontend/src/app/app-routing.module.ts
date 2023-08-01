@@ -54,7 +54,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {path : "files", component : FilesComponent,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "folderdetails", component: FoldersettingComponent }, { path: "filedetails", component: FilesettingsComponent }]},
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "folderdetails", component: FoldersettingComponent }, { path: "upload/:parentId", component: FilesettingsComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent },

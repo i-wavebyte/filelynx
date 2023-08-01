@@ -1,16 +1,13 @@
 package backend.server.service.Service;
 
-import backend.server.service.Repository.CompagnieRepository;
-import backend.server.service.Repository.GroupeRepository;
-import backend.server.service.Repository.MembreRepository;
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Groupe;
-import backend.server.service.domain.Membre;
+import backend.server.service.Repository.*;
+import backend.server.service.domain.*;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,16 +17,20 @@ public class CompagnieService implements ICompagnieService{
      private final MembreRepository membreRepository;
 
      private final UserRepository userRepository;
+     private final LabelRepository labelRepository;
+     private final CategorieRepository categorieRepository;
      private final CompagnieRepository compagnieRepository;
 
      private final GroupeService groupeService;
 
-     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, UserRepository userRepository, GroupeService groupeService){
+     public CompagnieService(CompagnieRepository compagnieRepository, GroupeRepository groupeRepository, MembreRepository membreRepository, UserRepository userRepository, GroupeService groupeService, LabelRepository labelRepository, CategorieRepository categorieRepository){
           this.compagnieRepository = compagnieRepository;
           this.groupeRepository = groupeRepository;
           this.membreRepository = membreRepository;
          this.userRepository = userRepository;
          this.groupeService = groupeService;
+         this.labelRepository = labelRepository;
+         this.categorieRepository = categorieRepository;
      }
      @Override
     public Compagnie getCompagnie(Long id){
@@ -163,5 +164,27 @@ public class CompagnieService implements ICompagnieService{
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         return groupeRepository.findAllUniqueGroupes(compagnieName);
     }
+
+     @Override
+     public List<String> getAllLabels() {
+         List<Label> l = labelRepository.findAll();
+         List<String> listLabels = new ArrayList<>();
+         for (Label n: l)
+         {
+             listLabels.add(n.getNom());
+         }
+         return (listLabels);
+     }
+
+     @Override
+     public List<String> getAllCategories() {
+         List<Categorie> l = categorieRepository.findAll();
+         List<String> listCategories = new ArrayList<>();
+         for (Categorie n: l)
+         {
+             listCategories.add(n.getNom());
+         }
+         return (listCategories);
+     }
 
 }

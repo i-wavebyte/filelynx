@@ -204,4 +204,12 @@ export class CompagnieService {
     return this.http.get<Membre[]>(`${this.baseUrl}/getMembresByGroupe/${group}`);
   }
 
+  getAllLabels(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/labels`);
+  }
+
+  getAllCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/categories`);
+  }
+
 }

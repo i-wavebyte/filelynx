@@ -22,4 +22,8 @@ public interface ICompagnieService {
     void deleteMembre(Long membreId, String username);
     Membre updateMembre(Membre membre);
     List<String> getAllUniqueGroups();
+
+    List<String> getAllLabels();
+
+    List<String> getAllCategories();
 }
