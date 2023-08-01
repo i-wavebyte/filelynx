@@ -58,13 +58,7 @@ export class FoldersettingComponent {
 
   }
 
-  closePopup() {
-
+  openPopup() {
+    
   }
-
-
-
-
-
-
 }

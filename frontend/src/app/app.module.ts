@@ -44,6 +44,7 @@ import { MembersettingComponent } from './components/membersetting/membersetting
 import { UserFilesComponent } from './layouts/user-files/user-files.component';
 import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
 import { FilesettingsComponent } from './components/filesettings/filesettings.component';
+import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
 
 
 
@@ -80,7 +81,8 @@ import { FilesettingsComponent } from './components/filesettings/filesettings.co
     MembersettingComponent,
     FoldersettingComponent,
     UserFilesComponent,
-    FilesettingsComponent
+    FilesettingsComponent,
+    AddFolderCollabComponent
 
   ],
   imports: [

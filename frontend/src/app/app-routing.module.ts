@@ -26,6 +26,7 @@ import { FoldersettingComponent } from './components/foldersetting/foldersetting
 
 import { UserFilesComponent } from './layouts/user-files/user-files.component';
 import { FilesettingsComponent } from './components/filesettings/filesettings.component';
+import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
 
 
 const routes: Routes = [
@@ -54,7 +55,9 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {path : "files", component : FilesComponent,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, { path: "folderdetails", component: FoldersettingComponent }, { path: "upload/:parentId", component: FilesettingsComponent }]},
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, 
+      { path: "folderdetails", component: FoldersettingComponent, children: [{path: "add-collab", component: AddFolderCollabComponent}] },
+       { path: "upload/:parentId", component: FilesettingsComponent }]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent },

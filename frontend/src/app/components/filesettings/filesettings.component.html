@@ -7,12 +7,16 @@
           <div class="label-container">
               <label for="name">Fichier</label>
               <div class="test">
-                <button class="Vector"> <img src="../../../assets/Vector.svg" alt=""> </button>
-                <input type="text">
+                <!-- <button class="Vector"> <img src="../../../assets/Vector.svg" alt=""> </button> -->
+                <input type="file" class="file-input" id="file-input" (change)="onFileSelected($event)">
+                <label for="file-input">
+                  <img src="../../../assets/Vector.svg" alt="">
+                </label>
+                <input class="ttt" type="text" [(ngModel)]="selectedFileNameWithoutExtension" (input)="onFileNameChanged($event)">
                   <!-- <div class="rectangle">
                       <p>test</p>
                   </div> -->
-                  <span>.pdf</span>
+                  <span>{{extension}}</span>
               </div>
           </div>
           <div class="label-container">
@@ -41,7 +45,7 @@
           </div>
           <div class="label-container">
             <label for="name">Taille</label>
-            <div class="rectangleb"><span>3.6mo</span></div>
+            <div class="rectangleb"><span>{{selectedFile?.size}}</span></div>
           </div>
         </div>
       </div>
