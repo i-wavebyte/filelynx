@@ -67,4 +67,9 @@ public class MembreService implements IMembreService {
         System.out.println(pageContent);
         return new PageResponse<>(pageContent, membres.size());
     }
+
+    @Override
+    public List<Membre> getMembresByGroupeId(Long groupeId) {
+        return membreRepository.findAllByGroupeId(groupeId);
+    }
 }

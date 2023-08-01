@@ -369,4 +369,10 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getMembresByGroupe/{groupe}")
+    public List<Membre> getMembresByGroupe(@PathVariable Long groupe) {
+        return membreService.getMembresByGroupeId(groupe);
+    }
 }

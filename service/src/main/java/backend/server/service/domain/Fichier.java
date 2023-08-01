@@ -45,8 +45,10 @@ public class Fichier {
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
+    @ManyToOne
     @JsonIncludeProperties({"id","nom"})
-    private Groupe groupe;
+    private Groupe Groupe;
+
 
     public String toString(){
         String str = "\nFichier: "+nom+"."+extension+" ("+type+")";

@@ -11,11 +11,17 @@ import java.util.List;
 @Service @Transactional @RequiredArgsConstructor
 public class QuotaService implements IQuotaService{
 
-
     private final AuthorisationRepository authorisationRepository;
     private final AuthotisationService  authotisationService;
 
     public Double getTotalQuotaOfGroup(Long ressourceAccessorId){
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            ressourceAccessorId = ((Membre) ressourceAccessor).getGroupe().getId();
+        }
+        else{
+            throw new RuntimeException("ressourceAccessor is not a groupe");
+        }
         List<Authorisation> authorisations = authorisationRepository.findAllByRessourceAccessorId(ressourceAccessorId);
         Double totalQuota = 0.0;
         for (Authorisation authorisation : authorisations) {
@@ -60,6 +66,8 @@ public class QuotaService implements IQuotaService{
             checkQuotaOfCompagnie(f);
             CheckQuotaOfGroupe(f);
         }
-
+        else{
+            checkQuotaOfCompagnie(f);
+        }
     }
 }
