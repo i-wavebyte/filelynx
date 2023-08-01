@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FolderService } from 'src/app/_services/folder.service';
 import * as $ from 'jquery';
+import { FileService } from 'src/app/_services/file.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-filesettings',
@@ -10,8 +12,6 @@ import * as $ from 'jquery';
   styleUrls: ['./filesettings.component.css']
 })
 export class FilesettingsComponent {
-
-
   categories: String[] = [];
   labels: String[] = [];
   groupe: string = "";
@@ -22,9 +22,7 @@ export class FilesettingsComponent {
   size: string = '';
   selectedLabels: string[] = [];
 
-
-
-  constructor(private compagnieService: CompagnieService, private route: ActivatedRoute, private folderService: FolderService) {}
+    constructor(private compagnieService: CompagnieService, private route: ActivatedRoute, private folderService: FolderService, private fileService: FileService,  private toast: NgToastService,  private router:Router) {}
   ngOnInit() {
     this.route.params.subscribe(params => {
       const folderId = params['parentId']; // Here 'id' is the route parameter name defined in the routerLink
@@ -118,5 +116,21 @@ export class FilesettingsComponent {
       }
     }
 
+    onUpload() {
+      if (this.selectedFile) {
+        const formData: FormData = new FormData();
+        formData.append('file', this.selectedFile);
+    
+        this.fileService.upload(formData).subscribe((data) => {
+          this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
+          // this.router.navigate(['../'], );
+
+        },
+        (err) => {
+          this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
+        }
+        );
+      }
+    }
   }
 
