@@ -35,20 +35,27 @@
     margin-bottom: 20px;
   }
 
-  .row1, .row2{
+  .row1{
     display: flex;
     align-items: flex-start;
     width: 100%;
   }
 
+  .row2{
+    display: flex;
+    width: 100%;
+  }
   .left-side{
     flex-basis: 50%;
   }
 
-  .row2 .left-side{
-    flex-basis: 40%;
-    display: flex;
-    justify-content: space-between;
+.row2 .left-side{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  grid-row-gap: 4px;
+  grid-column-gap: 6px;
+  width: 100%;
+  padding-right: 80px;
   }
 
   .right-side{
@@ -60,7 +67,7 @@
     flex-direction: column;
     margin-bottom: 20px;
   }
- 
+
   .hhhh {
     margin-bottom: 10px;
   }
@@ -260,6 +267,7 @@
     font-weight: 300;
     font-size: 14px;
     line-height: 19.36px;
+    width: 100%;
   }
 
   .selected-label img{
