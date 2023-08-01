@@ -45,7 +45,7 @@ export class CompagnieService {
     return this.http.put<any>(`${this.baseUrl}/updateLabel/${labelId}/${labelName}`, httpOptions);
 
   }
-  
+
   deleteLabel(labelId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/deleteLabel/${labelId}`, httpOptions);
 
@@ -198,6 +198,10 @@ export class CompagnieService {
 
   addCategorie(categorie: Categorie): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/addCategorie`, categorie, httpOptions);
+  }
+
+  getMembresByGroup(group: string): Observable<Membre[]> {
+    return this.http.get<Membre[]>(`${this.baseUrl}/getMembresByGroupe/${group}`);
   }
 
 }

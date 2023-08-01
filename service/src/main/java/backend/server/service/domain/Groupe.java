@@ -21,18 +21,15 @@ import java.util.List;
 public class Groupe extends RessourceAccessor{
     private String nom;
     private Double quota;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Compagnie compagnie;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupe") @JsonIncludeProperties({"nom","prenom","username","email"})
     private List<Membre> membres = new ArrayList<>();
-
     @JsonIgnore
     public Compagnie getCompagnie() {
         return compagnie;
     }
-
     @Override
     public String toString() {
         return nom;

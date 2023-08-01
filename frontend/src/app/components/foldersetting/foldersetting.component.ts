@@ -7,7 +7,18 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./foldersetting.component.css']
 })
 export class FoldersettingComponent {
-  checkboxes = [
+  checkboxeUser = [
+    { id: 1, description: 'Visibilité' , checked: true},
+    { id: 2, description: 'Télechargement (up)', checked: false },
+    { id: 3, description: 'Suppression' , checked: true},
+    { id: 4, description: 'Partage', checked: false },
+    { id: 5, description: 'Creation de dossiers', checked: true },
+    { id: 6, description: 'Modification', checked: true },
+    { id: 7, description: 'Télechargement (down)', checked: false },
+    // Add more checkboxes as needed
+  ];
+
+  checkboxeGroupe = [
     { id: 1, description: 'Visibilité' , checked: true},
     { id: 2, description: 'Télechargement (up)', checked: false },
     { id: 3, description: 'Suppression' , checked: true},
@@ -27,14 +38,14 @@ export class FoldersettingComponent {
     });
 
   }
-  
+
   closePopup() {
 
   }
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 }
