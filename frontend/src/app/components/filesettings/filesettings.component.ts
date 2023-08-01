@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FolderService } from 'src/app/_services/folder.service';
-import Categorie from 'src/app/domain/Categorie';
-import Label from 'src/app/domain/Label';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-filesettings',
@@ -12,6 +11,7 @@ import Label from 'src/app/domain/Label';
 })
 export class FilesettingsComponent {
 
+
   categories: String[] = [];
   labels: String[] = [];
   groupe: string = "";
@@ -19,6 +19,8 @@ export class FilesettingsComponent {
   selectedFileName: string = '';
   selectedFileNameWithoutExtension: string = '';
   extension: string = '';
+  size: string = '';
+  selectedLabels: string[] = [];
 
 
 
@@ -52,6 +54,7 @@ export class FilesettingsComponent {
         this.selectedFileName = this.selectedFile.name;
         this.selectedFileNameWithoutExtension = this.getFileDisplayName(this.selectedFile.name);
         this.extension = this.getFileExtension(this.selectedFile.name);
+        this.size = this.tailleToBestUnit(this.selectedFile.size, true, 2); 
 
         // Use the selected file here or save it in a variable for later use
         console.log('Selected file:', this.selectedFile);
@@ -71,6 +74,48 @@ export class FilesettingsComponent {
     getFileExtension(fileName: string): string {
       const dotIndex = fileName.lastIndexOf('.');
       return dotIndex !== -1 ? fileName.substring(dotIndex) : '';
+    }
+
+    tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): string {
+      let unit = 'Go'; // Start with Gigabytes as the default unit
+      let tailleInUnit = taille;
+    
+      if (taille >= 1024 * 1024 * 1024 * 1024) {
+        unit = 'To';
+        tailleInUnit /= (1024 * 1024 * 1024 * 1024);
+      } else if (taille >= 1024 * 1024 * 1024) {
+        unit = 'Go';
+        tailleInUnit /= (1024 * 1024 * 1024);
+      } else if (taille >= 1024 * 1024) {
+        unit = 'Mo';
+        tailleInUnit /= (1024 * 1024);
+      } else if (taille >= 1024) {
+        unit = 'Ko';
+        tailleInUnit /= 1024;
+      } else {
+        unit = 'B'; // Add Bytes as the smallest unit
+      }
+    
+      const formattedTaille = tailleInUnit.toFixed(precision);
+    
+      if (showUnit) {
+        return `${formattedTaille} ${unit}`;
+      } else {
+        return formattedTaille;
+      }
+    }
+
+    onLabelSelected(event: Event) {
+      const selectElement = event.target as HTMLSelectElement;
+      const selectedLabel = selectElement.value;
+    
+      console.log(selectedLabel);
+      if (selectedLabel) {
+        this.selectedLabels.push(selectedLabel);
+        this.labels = this.labels.filter(label => label !== selectedLabel);
+        console.log(this.selectedLabels);
+        console.log(this.labels);
+      }
     }
 
   }

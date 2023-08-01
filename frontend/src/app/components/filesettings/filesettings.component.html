@@ -13,9 +13,6 @@
                   <img src="../../../assets/Vector.svg" alt="">
                 </label>
                 <input class="ttt" type="text" [(ngModel)]="selectedFileNameWithoutExtension" (input)="onFileNameChanged($event)">
-                  <!-- <div class="rectangle">
-                      <p>test</p>
-                  </div> -->
                   <span>{{extension}}</span>
               </div>
           </div>
@@ -28,15 +25,17 @@
                 </select>
               </div>
           </div>
-          <div class="label-container">
+          <div class="label-container hhhh">
             <label for="name">Labels</label>
             <div class="row">
-              <select class="sele">
+              <select class="sele" (change)="onLabelSelected($event)">
                 <option value="">Selectionnez un label</option>
-                <option *ngFor="let label of labels" value="label">{{label}}</option>
+                <option *ngFor="let label of labels" [value]="label">{{ label }}</option>
               </select>
+              
+              
             </div>
-        </div>
+          </div>
         </div>
         <div class="right-side">
           <div class="label-container">
@@ -45,11 +44,19 @@
           </div>
           <div class="label-container">
             <label for="name">Taille</label>
-            <div class="rectangleb"><span>{{selectedFile?.size}}</span></div>
+            <div class="rectangleb"><span>{{size}}</span></div>
           </div>
         </div>
       </div>
-
+      <div class="row2">
+        <div class="left-side">
+          <div *ngFor="let label of selectedLabels" class="selected-label">
+            {{ label }}
+            <img src="../../../assets/close.svg" alt="">
+            <!-- Add any other styling or content you want for each selected label -->
+          </div>
+        </div>
+      </div>
       <div class="row3">
         <button class="annuler" routerLink=".." >annuler</button>
         <button class="charger">charger</button>
