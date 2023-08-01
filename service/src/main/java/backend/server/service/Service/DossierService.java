@@ -5,7 +5,6 @@ import backend.server.service.Repository.FichierRepository;
 import backend.server.service.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class DossierService implements IDossierService {
     private final ICompagnieService compagnieService;
     private final IAuthotisationService authotisationService;
 
-    public Dossier addDossier(Dossier d, Long ParentFolderId)
+    public Dossier addDossier(Dossier d, Long parentFolderId)
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
@@ -34,11 +33,11 @@ public class DossierService implements IDossierService {
             if (dossier.getNom().equals(d.getNom()))
                 throw new RuntimeException("Dossier: "+d.getNom()+" existe déjà");
         }
-        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
+        Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
         d= dossierRepository.save(d);
-        if (ParentFolderId!=null) {
+        if (parentFolderId!=null) {
             dossierParent.getDossiers().add(d);
 
             dossierRepository.save(dossierParent);
@@ -179,4 +178,11 @@ public class DossierService implements IDossierService {
         }
         return dossier.getGroupe();
     }
+
+    @Override
+    public Dossier getGroupRoot(Groupe groupe) {
+        return dossierRepository.findByGroupeIdAndRacineIsNotNullAndIsGroupRootTrue(groupe.getId());
+    }
+
+
 }

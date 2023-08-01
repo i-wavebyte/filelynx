@@ -130,28 +130,24 @@ public class AuthotisationService implements IAuthotisationService{
             selfAuth.setAuthLevel(AuthLevel.MEMBRE);
             selfAuth.setRessourceAccessor(ressourceAccessor);
             selfAuth.setDossier(dossier);
-            //authorisationRepository.save(selfAuth);
             Authorisation groupeAuth = Authorisation.generateReadOnly();
             selfAuth.setAuthLevel(AuthLevel.GROUPE);
             groupeAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe());
             groupeAuth.setDossier(dossier);
-            //authorisationRepository.save(groupeAuth);
-            Authorisation compagnieAuth = Authorisation.generateReadOnly();
-            selfAuth.setAuthLevel(AuthLevel.COMPAGNIE);
+            Authorisation compagnieAuth = Authorisation.generateNoAuths();
+            compagnieAuth.setAuthLevel(AuthLevel.COMPAGNIE);
             compagnieAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe().getCompagnie());
             compagnieAuth.setDossier(dossier);
             dossier.getAuthorisations().add(selfAuth);
             dossier.getAuthorisations().add(groupeAuth);
             dossier.getAuthorisations().add(compagnieAuth);
-            //authorisationRepository.save(compagnieAuth);
-
         }
         if (ressourceAccessor instanceof Compagnie) {
             Authorisation compagnieAuth = Authorisation.generateFullAccess();
-            compagnieAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe().getCompagnie());
+            compagnieAuth.setRessourceAccessor((ressourceAccessor));
             compagnieAuth.setDossier(dossier);
+            compagnieAuth.setAuthLevel(AuthLevel.COMPAGNIE);
             dossier.getAuthorisations().add(compagnieAuth);
-            //authorisationRepository.save(compagnieAuth);
         }
     }
     public boolean determineResourceAssessor(){

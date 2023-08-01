@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
+import EntitesCount from 'src/app/domain/EntitiesCount';
 import Log from 'src/app/domain/Log';
 import Quota from 'src/app/domain/Quota';
 
@@ -18,7 +19,7 @@ export class DashboardComponent implements OnInit {
   popupClass = 'popup';
   popupBackgroundColor = '';
   roles: string[] = [];
-
+  entitiesCount!:EntitesCount;
 
   constructor(private compagnieService: CompagnieService, private tokenStorage: TokenStorageService, private router: Router) {}
   ngOnInit(): void {
@@ -34,13 +35,20 @@ export class DashboardComponent implements OnInit {
     this.compagnieService.getCompagnieLogs().subscribe(
       (data) => {
         //get the 5 last logs
-        this.logs = data.slice(Math.max(data.length - 5, 0));
+        this.logs = data.slice(Math.max(data.length - 4, 0));
         console.log(data);
       },
       (err) => {
         console.log(err);
       }
     );
+
+    this.compagnieService.getEntitesCount().subscribe(
+      (data) => {
+        this.entitiesCount = data;
+      }
+    );
+
 
   }
 

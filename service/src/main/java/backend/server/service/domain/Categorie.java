@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Builder
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"compagnie_id", "nom"}))
 public class Categorie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

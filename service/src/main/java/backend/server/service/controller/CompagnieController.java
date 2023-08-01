@@ -5,7 +5,9 @@ import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.Service.*;
 import backend.server.service.domain.*;
+import backend.server.service.enums.AuthLevel;
 import backend.server.service.enums.LogType;
+import backend.server.service.payloads.EntitiesCountResponse;
 import backend.server.service.payloads.RegisterUserRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.entities.EROLE;
@@ -60,18 +62,15 @@ public class CompagnieController {
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
 //         Vérifier si le nom d'utilisateur est disponible
-        if (userRepository.existsByUsername(membre.getUsername())) {
-            System.out.println("existsByUsername");
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(membre.getUsername()))) {
             String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
         // Vérifier si l'adresse email est disponible
-        if (userRepository.existsByEmail(membre.getEmail())) {
-            System.out.println("existsByEmail");
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(membre.getEmail()))) {
             String messageErreur = "Erreur : L'adresse email '" + membre.getEmail() + "' est déjà utilisée !";
             return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
         }
-        System.out.println(membre);
 
         // Créer un nouvel utilisateur avec le rôle ROLE_USER
         User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
@@ -87,7 +86,7 @@ public class CompagnieController {
                 .groupe(groupeService.getGroupe(membre.getGroupe(),compagnieNom))
                 .compagnie(compagnie)
                 .build();
-        Membre m = membreService.addMembre(newMembre);
+        membreService.addMembre(newMembre);
         // Ajouter un message de log pour l'ajout du nouveau membre
         Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
@@ -112,6 +111,7 @@ public class CompagnieController {
             dossier.setGroupRoot(true);
             dossier.setGroupe(groupe);
             Authorisation authorisation = Authorisation.generateFullAccess();
+            authorisation.setAuthLevel(AuthLevel.GROUPE);
             authorisation.setRessourceAccessor(groupeService.getGroupe(group,compagnieNom));
             authorisation.setDossier(dossier);
             dossier.getAuthorisations().add(authorisation);
@@ -131,9 +131,10 @@ public class CompagnieController {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Membre membre = membreService.getMembre(username);
+        Groupe oldGroupe = membre.getGroupe();
         membre.setGroupe(groupeService.getGroupe(group,compagnieNom));
         membreService.updateMembre(membre);
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " changed group from " + membre.getGroupe() + " to" + group).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " à changer de groupe de " + oldGroupe + " vers " + group).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Le groupe d'utilisateurs a bien été remplacé par " + group));
     }
@@ -197,6 +198,18 @@ public class CompagnieController {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         try {
+            Groupe groupe = groupeService.getGroupe(group,compagnieNom);
+            Groupe defaultGroup = groupeService.getGroupe(compagnieNom,compagnieNom);
+            for (Membre membre : groupe.getMembres()) {
+                membre.setGroupe(defaultGroup);
+                membreService.updateMembre(membre);
+                Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " Déplacé vers le groupe " + compagnieNom).type(LogType.DÉPLACER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+                logRepository.save(logMessage);
+            }
+            groupe.getMembres().clear();
+            Dossier dossierGroupe = dossierService.getGroupRoot(groupe);
+            Log.builder().message("Le dossier " + dossierGroupe.getFullPath() + " a était supprimé.").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            dossierService.delete(dossierGroupe.getId());
             compagnieService.deleteGroupe(group);
             // Ajouter un message de log pour l'ajout du nouveau membre
             Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
@@ -388,5 +401,11 @@ public class CompagnieController {
     @GetMapping("/getMembresByGroupe/{groupe}")
     public List<Membre> getMembresByGroupe(@PathVariable Long groupe) {
         return membreService.getMembresByGroupeId(groupe);
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getEntitiesCount")
+    public EntitiesCountResponse getEntitiesCount() {
+        return compagnieService.getEntitiesCount();
     }
 }

@@ -6,6 +6,7 @@ import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.CompagnieService;
 import backend.server.service.Service.DossierService;
 import backend.server.service.domain.*;
+import backend.server.service.enums.AuthLevel;
 import backend.server.service.enums.LogType;
 import backend.server.service.security.JwtUtils;
 import backend.server.service.security.POJOs.requests.LoginRequest;
@@ -167,7 +168,10 @@ public class AuthController {
         logRepository.save(logMessage);
         Dossier dossierGroupe = new Dossier();
         Authorisation authorisationGroupe = Authorisation.generateFullAccess();
+        authorisationGroupe.setAuthLevel(AuthLevel.GROUPE);
         Authorisation authorisationCompagnie = Authorisation.generateReadOnly();
+        authorisationCompagnie.setAuthLevel(AuthLevel.COMPAGNIE);
+        authorisation.setAuthLevel(AuthLevel.COMPAGNIE);
         dossierGroupe.setNom(compagnie.getNom());
         dossierGroupe.setRacine(root);
         dossierGroupe.setGroupRoot(true);

@@ -2,10 +2,7 @@ package backend.server.service.controller;
 
 
 import backend.server.service.Repository.LogRepository;
-import backend.server.service.Service.CompagnieService;
-import backend.server.service.Service.DossierService;
-import backend.server.service.Service.GroupeService;
-import backend.server.service.Service.IDossierService;
+import backend.server.service.Service.*;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
@@ -33,7 +30,7 @@ public class DossierController {
     private final CompagnieService compagnieService;
     private final LogRepository logRepository;
     private final GroupeService groupeService;
-
+    private final AuthotisationService authotisationService;
 
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
@@ -46,6 +43,7 @@ public class DossierController {
                 return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas ajouter un dossier à la racine"));
             }
             d.setGroupe(dossierService.getGroupRootGroupe(parentFolderId));
+            authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(), d);
             dossierService.addDossier(d, parentFolderId);
             Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);

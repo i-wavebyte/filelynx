@@ -18,5 +18,5 @@ public interface IDossierService {
     Dossier getDossier(Long dossierId);
     Dossier getRootDossier();
     Groupe getGroupRootGroupe(Long dossierId);
-
+    Dossier getGroupRoot(Groupe groupe);
 }

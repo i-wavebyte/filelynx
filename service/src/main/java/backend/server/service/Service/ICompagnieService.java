@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
+import backend.server.service.payloads.EntitiesCountResponse;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface ICompagnieService {
     void deleteMembre(Long membreId, String username);
     Membre updateMembre(Membre membre);
     List<String> getAllUniqueGroups();
+    EntitiesCountResponse getEntitiesCount();
 
     List<String> getAllLabels();
 
