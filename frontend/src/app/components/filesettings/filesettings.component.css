@@ -201,10 +201,7 @@
     background-color: #f5f7f8;
   }
 
-  .test button {
-    margin-left: 0;
-    width: 35px;
-  }
+
 
   .Vector {
     text-align: center;
@@ -215,11 +212,34 @@
     height: 12px;
   }
 
-  input {
+  .ttt {
     margin-left: 12px;
-    width: 60%;
+    width: 55%;
     border-radius: 3px;
     height: 33px;
     /* border: none; */
     border: 1px solid #C6CED6;
   }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .test label {
+    display: block;
+    width: 35px;
+    height: 32px;
+    background-color: #000;
+    border-radius: 3px;
+    text-align: center;
+    padding-top: 8px;
+    cursor: pointer;
+  }
+
+
+  .test span{
+    margin-top: 5px;
+    margin-left: 3px;
+  }
+
+/* Component's CSS file or global styles */

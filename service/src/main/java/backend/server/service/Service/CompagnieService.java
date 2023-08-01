@@ -32,6 +32,7 @@ public class CompagnieService implements ICompagnieService{
          this.labelRepository = labelRepository;
          this.categorieRepository = categorieRepository;
      }
+     
      @Override
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
