@@ -200,6 +200,8 @@ public class CompagnieController {
         try {
             Groupe groupe = groupeService.getGroupe(group,compagnieNom);
             Groupe defaultGroup = groupeService.getGroupe(compagnieNom,compagnieNom);
+            if(groupe.getNom().equals(compagnieNom))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Vous ne pouvez pas supprimer le groupe par défaut"));
             for (Membre membre : groupe.getMembres()) {
                 membre.setGroupe(defaultGroup);
                 membreService.updateMembre(membre);
