@@ -247,8 +247,10 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieNom);
         String nom = grp.getNom();
+        Dossier dossier = dossierService.getGroupRoot(grp);
         try{
             compagnieService.updateGroupe(groupeId, newName);
+            dossierService.renameDossier(dossier.getId(), newName);
             // Ajouter un message de log pour l'ajout du nouveau membre
             Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);

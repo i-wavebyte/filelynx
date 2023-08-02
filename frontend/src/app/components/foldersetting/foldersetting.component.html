@@ -7,7 +7,7 @@
           <div class="label-container">
               <label for="name">Nom</label>
               <div class="rectangle">
-                <p>Omnishore</p>
+                <p class="fullpath">{{dossier.nom}}</p>
               </div>
           </div>
           <div class="label-container">
@@ -23,7 +23,7 @@
         <div class="right-side">
           <div class="label-container">
             <label for="name">Emplacement</label>
-            <div class="rectangle"><p>/root/Omnishore</p></div>
+            <div class="rectangle"><p class="fullpath">{{dossier.fullPath}}</p></div>
           </div>
           <div class="label-container">
             <label for="name">Groupe</label>
@@ -59,3 +59,4 @@
       </div>
     </div>
   </div>
+<router-outlet></router-outlet>

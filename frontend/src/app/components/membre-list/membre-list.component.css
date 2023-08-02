@@ -22,7 +22,7 @@ input {
   background-color: white;
   border-radius: 4px;
   border: 1px solid #c6ced6;
-  width: 326px;
+  width: 300px;
   padding: 13px;
   outline: none;
   font-size: 0.9em;
@@ -62,6 +62,11 @@ h2 {
 table {
   width: 100%;
   text-align: left;
+}
+
+.editable{
+  border: #c6ced6 1px solid!important;
+  padding: 3px!important;
 }
 
 .bg {
