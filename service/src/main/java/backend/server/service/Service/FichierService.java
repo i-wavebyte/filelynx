@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
 
-    private static final String path = "/Users/macbookpro/Desktop/files/";
+    private static final String path = "/Users/macbookpro/Desktop/files/upload";
     @Autowired
     private FichierRepository fichierRepository;
     @Autowired
