@@ -17,7 +17,7 @@
                     <div class="name-info">
                         <!-- <button (click)="onInfoProfessor(professor.id)" class="info">?</button> -->
                         <button class="info">?</button>
-                        <input class="table-data" [(ngModel)]="category.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="category.nom | titlecase"/>
+                        <input class="table-data editable" [(ngModel)]="category.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="category.nom | titlecase"/>
                     </div>
                 </td>
 

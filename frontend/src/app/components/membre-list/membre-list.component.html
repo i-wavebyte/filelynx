@@ -32,17 +32,17 @@
                 <td>
                     <div class="name-info">
                         <button (click)="onInfoProfessor(membre)" class="info">?</button>
-                        <input class="table-data" [(ngModel)]="membre.username" />
+                        <input class="table-data editable" [(ngModel)]="membre.username" />
                     </div>
                 </td>
                 <td>
-                    <input class="table-data" [(ngModel)]="membre.prenom" />
+                    <input class="table-data editable" [(ngModel)]="membre.prenom" />
                 </td>
                 <td>
-                    <input class="table-data" [(ngModel)]="membre.nom" />
+                    <input class="table-data editable" [(ngModel)]="membre.nom" />
                 </td>
                 <td>
-                    <input class="table-data" [(ngModel)]="membre.email" />
+                    <input class="table-data editable" [(ngModel)]="membre.email" />
                 </td>
                 <td>
                   <p class="table-data" [(ngModel)]="membre.groupe.nom" >{{membre.groupe.nom}} </p>

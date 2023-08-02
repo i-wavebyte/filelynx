@@ -11,7 +11,11 @@
     align-items: center;
     justify-content: center;
   }
-  
+
+
+  .fullpath{
+    font-size: 0.8em;
+  }
   .popup-content {
     width: 57%;
     padding: 24px;
@@ -26,7 +30,7 @@
     justify-content: center;
     flex-direction: column;
   }
-  
+
   h3 {
     font-size: 17px;
     font-family:  "inter"; /* Specify the font family */
@@ -34,13 +38,13 @@
     color: #000;
     margin-bottom: 20px;
   }
-  
+
   .row1{
     display: flex;
     align-items: center;
     width: 100%;
   }
-  
+
   .row2{
     display: flex;
     align-items: center;
@@ -76,7 +80,7 @@
     align-items: center;
     margin-bottom: 7px;
   }
-  
+
   .checkbox-container input{
     /* appearance: none;
     -webkit-appearance: none;
@@ -84,7 +88,7 @@
     border: 1px solid #000;
     border-radius: 3px;   */
     margin-right: 8px;
-    width: 17px; 
+    width: 17px;
     height: 17px;
   }
 
@@ -104,7 +108,7 @@
     font-weight: 300;
     margin-bottom: 5px;
   }
-  
+
   .rectangle {
     width: 80%;
     height: 30px;

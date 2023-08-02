@@ -187,4 +187,6 @@ right: 24px;
 
 .table-data{
   background-color: rgba(0, 0,0, 0);
+  border: #c6ced6 1px solid;
+  padding: 3px;
 }

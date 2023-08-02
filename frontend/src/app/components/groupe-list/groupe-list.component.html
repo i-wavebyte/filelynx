@@ -25,7 +25,7 @@
                     <div class="name-info">
                         <!-- <button (click)="onInfoProfessor(professor.id)" class="info">?</button> -->
                         <button class="info">?</button>
-                        <input class="table-data" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
+                        <input class="table-data editable" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
                     </div>
                 </td>
                 <td>

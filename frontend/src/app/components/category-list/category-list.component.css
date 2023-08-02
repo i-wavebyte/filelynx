@@ -22,6 +22,7 @@ th {
 }
 
 
+
 input {
   border-radius: 4px;
   border: 1px solid #c6ced6;
@@ -187,4 +188,9 @@ right: 24px;
     flex-direction: row;
     gap: 8px;
     align-items: center;
+}
+
+.editable{
+  border: #c6ced6 1px solid;
+  padding: 3px;
 }

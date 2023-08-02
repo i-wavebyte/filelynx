@@ -187,3 +187,8 @@ right: 24px;
     gap: 8px;
     align-items: center;
 }
+
+.editable{
+  border: #c6ced6 1px solid;
+  padding: 3px;
+}
