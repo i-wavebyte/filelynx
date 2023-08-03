@@ -287,8 +287,19 @@ tr.log-row:hover {
 
 
 .uploaded-today{
-  margin-top: 42px;
+  margin-top: 30px;
   font-size: 1.1em;
   font-weight: 600;
   color: #3C3C3E;
+}
+
+.red{
+  background-color: #FFD6AA!important;
+}
+
+.group-allocated{
+  margin-top: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #5C5C5E;
 }

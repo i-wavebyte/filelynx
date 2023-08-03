@@ -1,8 +1,10 @@
 package backend.server.service.Service;
 
+import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
 import backend.server.service.payloads.EntitiesCountResponse;
+import backend.server.service.payloads.QuotaUsedToday;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
- @Service @Slf4j @Transactional @RequiredArgsConstructor
+@Service @Slf4j @Transactional @RequiredArgsConstructor
 public class CompagnieService implements ICompagnieService{
      private final GroupeRepository groupeRepository;
      private final MembreRepository membreRepository;
@@ -243,6 +245,30 @@ public class CompagnieService implements ICompagnieService{
              listCategories.add(n.getNom());
          }
          return (listCategories);
+     }
+
+     public QuotaUsedToday getQuotaUsedToday() {
+        QuotaUsedToday quotaUsedToday = new QuotaUsedToday();
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Fichier> fichiers = fichierRepository.findAllByCompagnieNom(compagnieName);
+        //filter the files that were created today after midnight
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0); //midnight
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date midnight = calendar.getTime();
+        List<Fichier> fichiersToday = fichiers.stream().filter(fichier -> fichier.getDateCreation().after(midnight)).collect(Collectors.toList());
+        //sum the size of the files
+        double size = 0;
+        for (Fichier fichier : fichiersToday) {
+            size += fichier.getTaille();
+        }
+        quotaUsedToday.setQuotaUsedToday(size);
+        quotaUsedToday.setFileCount((long) fichiersToday.size());
+
+        return quotaUsedToday;
      }
 
 

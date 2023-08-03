@@ -23,7 +23,7 @@ import java.util.*;
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
 
-    private static final String path = "/Users/macbookpro/Desktop/files/upload";
+    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
     private FichierRepository fichierRepository;
     private DossierRepository dossierRepository;
     private DossierService dossierService;
@@ -32,12 +32,7 @@ public class FichierService implements IFichierService{
     private LabelRepository labelRepository;
     private CompagnieService compagnieService;
 
-    /**
-     * ajoute et persiste un nouveau fichier
-     * @param f fichier à ajouter
-     * @param ParentFolderId id du dossier parent
-     * @return le fichier ajouté
-     */
+
     @Autowired
     public FichierService(@Lazy DossierService dossierService, FichierRepository fichierRepository, DossierRepository dossierRepository, CategorieRepository categorieRepository, CategorieService categorieService, LabelRepository labelRepository, CompagnieService compagnieService) {
         this.dossierService = dossierService;
@@ -49,6 +44,12 @@ public class FichierService implements IFichierService{
         this.compagnieService = compagnieService;
 
     }
+    /**
+     * ajoute et persiste un nouveau fichier
+     * @param f fichier à ajouter
+     * @param ParentFolderId id du dossier parent
+     * @return le fichier ajouté
+     */
     @Override
     public Fichier addFichier(Fichier f, Long ParentFolderId)
     {

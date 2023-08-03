@@ -19,6 +19,7 @@ public interface GroupeRepository extends JpaRepository<Groupe, Long> {
     List<String> findAllUniqueGroupes(@Param("compagnieNom") String compagnieNom);
     //find all groups of a company, accepts a Sort object to sort the results
     List<Groupe> findAllByCompagnieNom(String compagnieNom, org.springframework.data.domain.Sort sort);
+    List<Groupe> findAllByCompagnieNom(String compagnieNom);
     //count by company nom
     Long countByCompagnieNom(String compagnieNom);
 
