@@ -22,6 +22,12 @@ public class CategorieService implements ICategorieService{
     private CategorieRepository categorieRepository;
     @Autowired
     private ICompagnieService compagnieService;
+
+    /**
+     * ajoute et persiste une nouvelle catégorie
+     * @param cat catégorie à ajouter
+     * @return la catégorie ajoutée
+     */
     public Categorie addCategorie(Categorie cat)
     {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -30,16 +36,31 @@ public class CategorieService implements ICategorieService{
         return categorieRepository.save(cat);
     }
 
+    /**
+     * Supprime une catégorie
+     * @param categorieId id de la catégorie à supprimer
+     */
     public void deleteCategorie(Long categorieId)
     {
         categorieRepository.deleteById(categorieId);
     }
 
+    /**
+     * Met à jour une catégorie
+     * @param cat catégorie à mettre à jour
+     * @return la catégorie mise à jour
+     */
     public Categorie updateCategorie(Categorie cat)
     {
         return categorieRepository.save(cat);
     }
 
+    /**
+     * Met à jour le nom d'une catégorie
+     * @param categorieId id de la catégorie à mettre à jour
+     * @param newName nouveau nom de la catégorie
+     * @return la catégorie mise à jour
+     */
     public Categorie updateCategorie(Long categorieId, String newName)
     {
            Optional<Categorie> optCat = categorieRepository.findById(categorieId);
@@ -48,16 +69,25 @@ public class CategorieService implements ICategorieService{
            return categorieRepository.save(cat);
     }
 
+    /**
+     * Récupère toutes les catégories
+     * @return la liste de toutes les catégories
+     */
     public List<Categorie> getAllCategories()
     {
         return categorieRepository.findAll();
     }
-
+    /** Récupère une catégorie par son id
+     * @param id id de la catégorie à récupérer
+     * @return la catégorie récupérée
+     */
     public Categorie getCategorie(Long id)
     {
         return categorieRepository.findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
     }
-
+    /**
+     * Récupère une catégorie par son nom
+     */
     public Categorie getCategorie(String nom)
     {
 
@@ -71,6 +101,15 @@ public class CategorieService implements ICategorieService{
         }
     }
 
+    /**
+     * Récupére un page de catégories de la base de données
+     * @param page numéro de la page
+     * @param size taille de la page
+     * @param sortBy nom de la colonne à trier
+     * @param sortOrder ordre de tri
+     * @param searchQuery mot clé de recherche
+     * @return la page de catégories
+     */
     @Override
     public PageResponse<Categorie> getCategoriesPage(int page, int size, String sortBy, String sortOrder, String searchQuery) {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();

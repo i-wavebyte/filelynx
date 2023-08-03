@@ -33,6 +33,12 @@ public class DossierController {
     private final AuthotisationService authotisationService;
 
 
+    /**
+     * Ajoute un dossier dans le dossier parent spécifié
+     * @param d dossier à ajouter
+     * @param parentFolderId id du dossier parent
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
@@ -55,12 +61,21 @@ public class DossierController {
 
     }
 
+    /**
+     * Récupère le dossier racine de la compagnie
+     * @return le dossier racine de la compagnie
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/getRoot")
     public Dossier getRoot() {
         return dossierService.getRootDossier();
     }
 
+    /**
+     * supprime de dossier spécifié
+     * @param dossierId id du dossier à supprimer
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
@@ -75,6 +90,12 @@ public class DossierController {
         return ResponseEntity.ok(new MessageResponse("dossier supprimé avec succès!"));
     }
 
+    /**
+     * Renomme le dossier spécifié
+     * @param dossierId id du dossier à renommer
+     * @param name nouveau nom du dossier
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename/{dossierId}")
     public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
@@ -91,6 +112,12 @@ public class DossierController {
         }
     }
 
+    /**
+     * change l'emplacement du dossier spécifié
+     * @param dossierId id du dossier à déplacer
+     * @param targetFolderId id du dossier cible
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/changerEmplacement/{dossierId}")
     public ResponseEntity<?> changerEmplacement(@PathVariable Long dossierId,@RequestParam Long targetFolderId) {
@@ -98,12 +125,22 @@ public class DossierController {
         return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du dossier réussie!"));
     }
 
+    /**
+     * Récupère les dossiers enfants du dossier spécifié
+     * @param dossierId id du dossier parent
+     * @return la liste des dossiers enfants
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/getChildrenFolders/{dossierId}")
     public List<Dossier> getChildrenDossiers(@PathVariable Long dossierId) {
         return dossierService.getChildrenDossiers(dossierId);
     }
 
+    /**
+     * Récupère le dossier spécifié
+     * @param dossierId id du dossier à récupérer
+     * @return le dossier spécifié
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/get/{dossierId}")
     public Dossier getDossier(@PathVariable Long dossierId) {

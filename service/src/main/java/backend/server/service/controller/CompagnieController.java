@@ -95,6 +95,12 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès !"));
     }
 
+    /**
+     * Crée un nouveau groupe dans la compagnie actuelle.
+     * @param group Le nom du groupe à créer.
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
+
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/createGroup/{group}")
     public ResponseEntity<?> createGroup(@PathVariable String group) {
@@ -125,6 +131,13 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * Transfére un membre d'un groupe à un autre.
+     * @param username Le nom d'utilisateur du membre à transférer.
+     * @param group Le nom du groupe dans lequel le membre doit être transféré.
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
@@ -139,6 +152,11 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Le groupe d'utilisateurs a bien été remplacé par " + group));
     }
 
+    /**
+     * retourne l'etat d'utilisation du quota de la compagnie
+     * @param
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getQuotaStatus")
     public ResponseEntity<?> getQuotaStatus() {
@@ -151,6 +169,10 @@ public class CompagnieController {
         return ResponseEntity.ok(quota1);
     }
 
+    /**
+     * retourne les logs de la compagnie
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCompagnieLogs")
     public ResponseEntity<?> getCompagnieLogs() {
@@ -159,6 +181,13 @@ public class CompagnieController {
         return ResponseEntity.ok(compagnie.getLogs());
     }
 
+    /**
+     * retourne les logs de la compagnie, paginés
+     * @param page nombre de la page
+     * @param size taille de la page
+     * @param sortBy propriété utilisée pour le tri
+     * @return la page de logs demandée
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getLogsPagination")
     public  PageResponse<Log> getAllLogs(
@@ -169,6 +198,17 @@ public class CompagnieController {
     {
         return logService.getLogsPage(page, size, sortBy);
     }
+
+    /**
+     * retourne les Membres (collaborateurs) de la compagnie, paginés et filtrés
+     * @param page nombre de la page
+     * @param size taille de la page
+     * @param sortBy propriété utilisée pour le tri
+     * @param sortOrder ordre de tri
+     * @param searchQuery chaine de caractère utilisée pour la recherche
+     * @param groupFilter filtre sur le groupe
+     * @return la page de Membres demandée
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getUsers")
     public PageResponse<Membre> getAllUsers(
@@ -181,6 +221,16 @@ public class CompagnieController {
     ) {
         return membreService.getMembresPage(page, size, sortBy, sortOrder, searchQuery, groupFilter);
     }
+
+    /**
+     * retourne les groupes de la compagnie, paginés et filtrés
+     * @param page nombre de la page
+     * @param size taille de la page
+     * @param sortBy propriété utilisée pour le tri
+     * @param sortOrder ordre de tri
+     * @param searchQuery chaine de caractère utilisée pour la recherche
+     * @return la page de groupes demandée
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getGroups")
     public PageResponse<Groupe> getAllGroups(
@@ -192,6 +242,12 @@ public class CompagnieController {
     ) {
         return groupeService.getGroupesPage(page, size, sortBy, sortOrder, searchQuery);
     }
+
+    /**
+     * supprime un groupe de la compagnie (sauf le groupe par défaut) et remet les membres dans le groupe par défaut, le dossier du groupe est supprimé
+     * @param group nom du groupe à supprimer
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
@@ -223,6 +279,13 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * supprime un membre de la compagnie
+     * @param membreId id du membre à supprimer
+     * @param username nom d'utilisateur du membre à supprimer
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteMembre/{membreId}/{username}")
     public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {
@@ -240,6 +303,13 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * Modifie le nom d'un groupe, le dossier du groupe est renommé également avec le nouveau nom, les membres du groupe ne sont pas modifiés
+     * @param groupeId id du groupe à modifier
+     * @param newName nouveau nom du groupe
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateGroupe/{groupeId}/{newName}")
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
@@ -262,6 +332,11 @@ public class CompagnieController {
         }
     }
 
+    /**
+     * Modifie les informations d'un membre
+     * @param membre membre à modifier
+     * @return  Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
@@ -274,6 +349,12 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
     }
 
+    /**
+     * Modifie le nom d'une catégorie
+     * @param categorieId id de la catégorie à modifier
+     * @param newName nouveau nom de la catégorie
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateCategorie/{categorieId}/{newName}")
     public ResponseEntity<?> updateCategorie(@PathVariable Long categorieId, @PathVariable String newName ) {
@@ -287,6 +368,11 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Categorie mis à jour avec succès"));
     }
 
+    /**
+     * Supprime une catégorie
+     * @param categorieId id de la catégorie à supprimer
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteCategorie/{categorieId}")
     public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
@@ -300,6 +386,12 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
     }
 
+    /**
+     * Modifie le nom d'une étiquette
+     * @param labelId id de l'étiquette à modifier
+     * @param newName nouveau nom de l'étiquette
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateLabel/{labelId}/{newName}")
     public ResponseEntity<?> updateLabel(@PathVariable Long labelId, @PathVariable String newName ) {
@@ -313,6 +405,11 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse("Étiquete mis à jour avec succès"));
     }
 
+    /**
+     * Supprime une étiquette
+     * @param labelId id de l'étiquette à supprimer
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteLabel/{labelId}")
     public ResponseEntity<?> deleteLabel(@PathVariable Long labelId) {
@@ -325,11 +422,19 @@ public class CompagnieController {
         logRepository.save(logMessage);
         return ResponseEntity.ok(new MessageResponse("Étiquete supprimé avec succès"));
     }
+
+    /**
+     * @return une liste des groupes de la compagnie ou au moins un membre est affecté
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/distinctGroups")
     public List<String> getAllUniqueGroupes() {
         return compagnieService.getAllUniqueGroups();
     }
+
+    /**
+     * @return une liste des labels de la compagnie
+     */
 
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/labels")
@@ -337,12 +442,24 @@ public class CompagnieController {
          return compagnieService.getAllLabels();
     }
 
+    /**
+     * @return une liste des catégories de la compagnie
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/categories")
     public List<String> getAllCategories() {
         return compagnieService.getAllCategories();
     }
 
+
+    /**
+     * @param page numéro de la page
+     * @param size nombre d'éléments par page
+     * @param sortBy nom de la colonne à trier
+     * @param sortOrder ordre de tri
+     * @param searchQuery mot clé de recherche
+     * @return une liste des catégories de la compagnie, paginé et triable, avec un mot clé de recherche
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCategories")
     public PageResponse<Categorie> getCategories(
@@ -355,6 +472,14 @@ public class CompagnieController {
         return categorieService.getCategoriesPage(page, size, sortBy, sortOrder, searchQuery);
     }
 
+    /**
+     * @param page numéro de la page
+     * @param size nombre d'éléments par page
+     * @param sortBy nom de la colonne à trier
+     * @param sortOrder ordre de tri
+     * @param searchQuery mot clé de recherche
+     * @return une liste des étiquettes de la compagnie, paginé et triable, avec un mot clé de recherche
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getLabels")
     public PageResponse<Label> getAllLabels(
@@ -366,6 +491,12 @@ public class CompagnieController {
     ) {
         return labelService.getLabelsPage(page, size, sortBy, sortOrder, searchQuery);
     }
+
+    /**
+     * ajoute une étiquette
+     * @param label étiquette à ajouter
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addLabel")
     public ResponseEntity<?> addLabel(@RequestBody Label label) {
@@ -383,6 +514,12 @@ public class CompagnieController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * ajoute une catégorie
+     * @param categorie catégorie à ajouter
+     * @return Une réponse HTTP contenant un message de réussite ou d'erreur.
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addCategorie")
     public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {
@@ -401,12 +538,20 @@ public class CompagnieController {
         }
     }
 
+    /**
+     * @param groupe nom du groupe
+     * @return une liste des membres de la compagnie affectés au groupe
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getMembresByGroupe/{groupe}")
     public List<Membre> getMembresByGroupe(@PathVariable Long groupe) {
         return membreService.getMembresByGroupeId(groupe);
     }
 
+    /**
+     *
+     * @return un objet contenant le nombre de membres, le nombre de groupes, le nombre de dossiers et le nombre de fichiers de la compagnie
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getEntitiesCount")
     public EntitiesCountResponse getEntitiesCount() {
