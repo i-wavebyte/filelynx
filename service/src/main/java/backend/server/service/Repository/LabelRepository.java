@@ -11,4 +11,6 @@ public interface LabelRepository extends JpaRepository<Label,Long> {
     List<Label> findAllByCompagnieNom(String compagnieNom, org.springframework.data.domain.Sort sort);
 
     Label findByIdAndCompagnieNom(Long labelId, String compagnieNom);
+
+    Label findByNom(String nom);
 }

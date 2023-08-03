@@ -24,13 +24,14 @@ export class FilesettingsComponent {
   size: string = '';
   selectedLabels: string[] = [];
   selectedCategorie: string= '';
-  folder!: Dossier;
+
+  folderId!: number;
 
     constructor(private compagnieService: CompagnieService, private route: ActivatedRoute, private folderService: FolderService, private fileService: FileService,  private toast: NgToastService,  private router:Router) {}
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const folderId = params['parentId']; // Here 'id' is the route parameter name defined in the routerLink
-      this.folderService.getFolderByIdAsAdmin(folderId).subscribe((data) => {
+       this.folderId = params['parentId']; // Here 'id' is the route parameter name defined in the routerLink
+      this.folderService.getFolderByIdAsAdmin(this.folderId).subscribe((data) => {
         console.log(data);
         this.groupe = data.nom;
       })
@@ -124,8 +125,11 @@ export class FilesettingsComponent {
       if (this.selectedFile) {
         const formData: FormData = new FormData();
         formData.append('file', this.selectedFile);
+        formData.append('selectedLabels', JSON.stringify(this.selectedLabels));
+        formData.append('selectedCategorie', this.selectedCategorie);
+        formData.append('folderId', this.folderId.toString());
         // console.log(this.selectedFile);
-        this.fileService.upload(formData, this.selectedFile).subscribe((data) => {
+        this.fileService.upload(formData).subscribe((data) => {
           this.router.navigate(['/files']);
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
         },

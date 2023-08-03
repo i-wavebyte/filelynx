@@ -2,9 +2,11 @@ package backend.server.service.controller;
 
 import backend.server.service.Service.FichierService;
 import backend.server.service.Service.IFichierService;
+import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.security.POJOs.responses.MessageResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -103,9 +105,12 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<List<String>> fileUpload
-            (@RequestParam("file") MultipartFile file)
+            (@RequestParam("file") MultipartFile file,
+             @RequestParam("selectedLabels") List<String> selectedLabels,
+             @RequestParam("selectedCategorie") String selectedCategorie,
+             @RequestParam("folderId") Long folderId)
             throws Exception {
-        return new ResponseEntity<>(fichierService.uploadFile(file),
+        return new ResponseEntity<>(fichierService.uploadFile(file, folderId, selectedLabels, selectedCategorie),
                 HttpStatus.OK);
 
     }

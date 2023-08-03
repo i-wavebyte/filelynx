@@ -13,7 +13,7 @@ export class FileService {
   constructor(private http: HttpClient) { }
 
  
-  upload(formData: FormData, file: File): Observable<any> {
+  upload(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
     headers.delete('Content-Type');
     return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });

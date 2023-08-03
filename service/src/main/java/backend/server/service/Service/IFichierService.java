@@ -20,5 +20,5 @@ public interface IFichierService {
     Fichier updateLabels(Long fichierId, List<Label> labels);
     List<Fichier> getFichiersByParent(Long parentId);
 
-    List<String> uploadFile(MultipartFile file) throws Exception;
+    List<String> uploadFile(MultipartFile file, Long folderId, List<String> selectedLabels, String selectedCategorie) throws Exception;
 }

@@ -18,7 +18,7 @@ public class DossierService implements IDossierService {
 
     private final DossierRepository dossierRepository;
     private final FichierRepository fichierRepository;
-    private final IFichierService fichierService;
+//    private final IFichierService fichierService;
     private final ICompagnieService compagnieService;
     private final IAuthotisationService authotisationService;
 
