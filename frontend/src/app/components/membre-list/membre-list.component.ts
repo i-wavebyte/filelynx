@@ -20,7 +20,7 @@ export class MembreListComponent implements OnInit{
   selectedGroupe: string = '';
   nameOrder: string = '';
   page: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 7;
   totalMembres!: number;
 
     

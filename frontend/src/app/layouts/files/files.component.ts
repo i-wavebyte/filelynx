@@ -5,6 +5,7 @@ import { FolderService } from 'src/app/_services/folder.service';
 import { HelperService } from 'src/app/_services/helper.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Dossier from 'src/app/domain/Dossier';
+import Fichier from 'src/app/domain/Fichier';
 
 @Component({
   selector: 'app-files',
@@ -115,5 +116,16 @@ export class FilesComponent implements OnInit{
 
     hideModal(): void {
       this.showModal = false;
+    }
+
+    onFileClick(_t47: Fichier) {
+      throw new Error('Method not implemented.');
+      }
+
+    deleteFilePopup(_t47: Fichier) {
+      throw new Error('Method not implemented.');
+    }
+    openFilePopup(_t47: Fichier) {
+      throw new Error('Method not implemented.');
     }
 }

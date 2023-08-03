@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="explorer">
-        <div *ngIf="currentFolder?.dossiers?.length==0" class="folder-empty">
+        <div *ngIf="currentFolder?.dossiers?.length==0 && currentFolder?.fichiers?.length==0" class="folder-empty">
           <img src="../../../assets/high-priority.256x256.png" class="folder-icon" alt="">
           <p>Le dossier est vide</p>
         </div>
@@ -33,6 +33,21 @@
             </div>
             <div class="settings-button">
               <img class="settings-icon" src="../../../assets/full-trash.194x256.png" alt="" (click)="deletePopup(folder)">
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let fichier of currentFolder?.fichiers" class="file-or-folder">
+          <!-- Code for displaying the files -->
+          <div (click)="onFileClick(fichier)">
+            <img src="../../../assets/fileIcon.svg" alt="" class="file-icon">
+            <p>{{fichier.nom}}</p>
+          </div>
+          <div class="file-button-collection">
+            <div class="settings-button">
+              <img class="settings-icon" src="../../../assets/services.240x256.png" alt="" (click)="openFilePopup(fichier)">
+            </div>
+            <div class="settings-button">
+              <img class="settings-icon" src="../../../assets/full-trash.194x256.png" alt="" (click)="deleteFilePopup(fichier)">
             </div>
           </div>
         </div>

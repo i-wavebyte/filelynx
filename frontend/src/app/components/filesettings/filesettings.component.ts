@@ -123,8 +123,12 @@ export class FilesettingsComponent {
 
     onUpload() {
       if (this.selectedFile) {
+        // If a custom file name is provided, use it; otherwise, use the original file name
+        const fileName = this.selectedFileNameWithoutExtension || this.selectedFile.name;
+        // Create a new File object with the updated name
+        const updatedFile = new File([this.selectedFile], fileName + this.extension);
         const formData: FormData = new FormData();
-        formData.append('file', this.selectedFile);
+        formData.append('file', updatedFile);
         formData.append('selectedLabels', JSON.stringify(this.selectedLabels));
         formData.append('selectedCategorie', this.selectedCategorie);
         formData.append('folderId', this.folderId.toString());
