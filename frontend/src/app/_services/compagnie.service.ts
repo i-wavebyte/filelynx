@@ -11,6 +11,7 @@ import Label from '../domain/Label';
 import Categorie from '../domain/Categorie';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import EntitesCount from '../domain/EntitiesCount';
+import QuotaUsedToday from '../domain/QuotaUsedToday';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -216,5 +217,12 @@ export class CompagnieService {
   getEntitesCount(): Observable<EntitesCount> {
     return this.http.get<EntitesCount>(`${this.baseUrl}/getEntitiesCount`);
   }
+  getQuotaUsedToday(): Observable<QuotaUsedToday> {
+    return this.http.get<QuotaUsedToday>(`${this.baseUrl}/getQuotaUsedToday`);
+  }
+  getTotalAllocatedQuota(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/getTotalAllocatedQuota`);
+  }
+
 
 }

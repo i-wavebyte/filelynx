@@ -1,8 +1,12 @@
 package backend.server.service.Service;
 
 import backend.server.service.Repository.AuthorisationRepository;
+import backend.server.service.Repository.GroupeRepository;
+import backend.server.service.Repository.RessourceAccessorRepository;
 import backend.server.service.domain.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,11 +17,15 @@ public class QuotaService implements IQuotaService{
 
     private final AuthorisationRepository authorisationRepository;
     private final AuthotisationService  authotisationService;
-
+    private final RessourceAccessorRepository ressourceAccessorRepository;
+    private final GroupeRepository groupeRepository;
     public Double getTotalQuotaOfGroup(Long ressourceAccessorId){
-        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId).orElseThrow(()-> new RuntimeException("RessourceAccessor not found"));
         if(ressourceAccessor instanceof Membre){
             ressourceAccessorId = ((Membre) ressourceAccessor).getGroupe().getId();
+        }
+        else if(ressourceAccessor instanceof Groupe){
+            ressourceAccessorId = ressourceAccessor.getId();
         }
         else{
             throw new RuntimeException("ressourceAccessor is not a groupe");
@@ -69,5 +77,15 @@ public class QuotaService implements IQuotaService{
         else{
             checkQuotaOfCompagnie(f);
         }
+    }
+
+    public double getTotalAllocatedQuota(){
+        String compangnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Groupe> groupes = groupeRepository.findAllByCompagnieNom(compangnieName);
+        double totalAllocatedQuota = 0;
+        for (Groupe groupe : groupes) {
+            totalAllocatedQuota += groupe.getQuota();
+        }
+        return totalAllocatedQuota;
     }
 }

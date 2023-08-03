@@ -5,6 +5,7 @@ import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import EntitesCount from 'src/app/domain/EntitiesCount';
 import Log from 'src/app/domain/Log';
 import Quota from 'src/app/domain/Quota';
+import QuotaUsedToday from 'src/app/domain/QuotaUsedToday';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,12 +21,36 @@ export class DashboardComponent implements OnInit {
   popupBackgroundColor = '';
   roles: string[] = [];
   entitiesCount!:EntitesCount;
+  quotaUsedToday!:QuotaUsedToday;
+  totalAllocatedQuota!:number;
 
   constructor(private compagnieService: CompagnieService, private tokenStorage: TokenStorageService, private router: Router) {}
   ngOnInit(): void {
     this.compagnieService.getQuotaStatus().subscribe(
       (data) => {
+        console.log("quota",data);
+
         this.quota = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    this.compagnieService.getTotalAllocatedQuota().subscribe(
+      (data) => {
+        console.log("total allocated quota",data);
+        this.totalAllocatedQuota = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    this.compagnieService.getQuotaUsedToday().subscribe(
+      (data) => {
+        console.log("quota used today",data);
+        this.quotaUsedToday = data;
       },
       (err) => {
         console.log(err);
@@ -64,6 +89,35 @@ export class DashboardComponent implements OnInit {
       tailleInUnit /= (1024 * 1024 * 1024 * 1024);
     }
     const formattedTaille = tailleInUnit.toFixed(precision);
+    if (showUnit) {
+      return `${formattedTaille} ${unit}`;
+    } else {
+      return formattedTaille;
+    }
+  }
+
+  tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): string {
+    let unit = 'Go'; // Start with Gigabytes as the default unit
+    let tailleInUnit = taille;
+
+    if (taille >= 1024 * 1024 * 1024 * 1024) {
+      unit = 'To';
+      tailleInUnit /= (1024 * 1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024 * 1024) {
+      unit = 'Go';
+      tailleInUnit /= (1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024) {
+      unit = 'Mo';
+      tailleInUnit /= (1024 * 1024);
+    } else if (taille >= 1024) {
+      unit = 'Ko';
+      tailleInUnit /= 1024;
+    } else {
+      unit = 'B'; // Add Bytes as the smallest unit
+    }
+
+    const formattedTaille = tailleInUnit.toFixed(precision);
+
     if (showUnit) {
       return `${formattedTaille} ${unit}`;
     } else {

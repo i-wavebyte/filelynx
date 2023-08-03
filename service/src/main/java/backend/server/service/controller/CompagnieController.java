@@ -44,6 +44,7 @@ public class CompagnieController {
     private final ICategorieService categorieService;
     private final ILabelService labelService;
     private final IDossierService dossierService;
+    private final QuotaService quotaService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -164,8 +165,8 @@ public class CompagnieController {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Quota quota1 = new Quota();
         quota1.setQuota(compagnie.getQuota());
-        quota1.setUsedQuota(compagnie.getUsedQuota());
-        quota1.setQuotaLeft(compagnie.getQuota() - compagnie.getUsedQuota());
+        quota1.setUsedQuota(quotaService.getTotalQuotaOfCompagnie());
+        quota1.setQuotaLeft(compagnie.getQuota() - quotaService.getTotalQuotaOfCompagnie());
         return ResponseEntity.ok(quota1);
     }
 
@@ -557,4 +558,19 @@ public class CompagnieController {
     public EntitiesCountResponse getEntitiesCount() {
         return compagnieService.getEntitiesCount();
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getQuotaUsedToday")
+    public ResponseEntity<?> getQuotaUsedToday(){
+        return ResponseEntity.ok(compagnieService.getQuotaUsedToday());
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getTotalAllocatedQuota")
+    public ResponseEntity<?> getTotalAllocatedQuota(){
+        return ResponseEntity.ok(quotaService.getTotalAllocatedQuota());
+    }
+
+
+
 }
