@@ -26,10 +26,8 @@ public class CompagnieService implements ICompagnieService{
      private final FichierRepository fichierRepository;
 
 
-     private final GroupeService groupeService;
-
-
-     @Override
+    private final GroupeService groupeService;
+    @Override
     public Compagnie getCompagnie(Long id){
         return compagnieRepository.findById(id).orElseThrow(()-> new RuntimeException("Compagnie not found") );
     }
@@ -57,10 +55,17 @@ public class CompagnieService implements ICompagnieService{
     public void deleteCompagnie(String nom){
         compagnieRepository.deleteByNom(nom);
     }
+
+     /**
+      * Crée un nouveau groupe, l'ajoute à la compagnie et le persiste si le quota de la compagnie n'est pas dépassé, un dossier est créé pour le groupe
+      * @param nom nom du groupe
+      * @param quota quota du groupe (espace disque)
+      * @return le groupe créé
+      */
     @Override
     public Groupe createGroupe(String nom, double quota){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("compagnie name: "+ compagnieName+" nom de groupe: "+ nom);
+        //System.out.println("compagnie name: "+ compagnieName+" nom de groupe: "+ nom);
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, compagnieName) != null){
             throw new RuntimeException("Groupe already exists");
@@ -76,6 +81,14 @@ public class CompagnieService implements ICompagnieService{
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnieName);
     }
+
+     /**
+      * Crée un nouveau groupe, l'ajoute à la compagnie et le persiste si le quota de la compagnie n'est pas dépassé, un dossier est créé pour le groupe
+      * @param nom nom du groupe
+      * @param quota quota du groupe (espace disque)
+      * @param CompagnieId id de la compagnie
+      * @return le groupe créé
+      */
     @Override
     public Groupe createGroupe(String nom, double quota, Long CompagnieId){
         //check if the compagnie has a groupe with the same name
@@ -93,6 +106,11 @@ public class CompagnieService implements ICompagnieService{
         compagnieRepository.save(compagnie);
         return groupeService.getGroupe(nom, compagnie.getNom());
     }
+
+     /**
+      * Supprime un groupe de la compagnie si le groupe existe et si l'utilisateur est autorisé à le faire
+      * @param nom nom du groupe
+      */
     @Override
     public void deleteGroupe(String nom){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -103,25 +121,35 @@ public class CompagnieService implements ICompagnieService{
         if(!(compagnieName.equals(groupe.getCompagnie().getNom()))){
             throw new RuntimeException("Non autorisé");
         }
-        if(groupe.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+        if(groupe.getNom().equalsIgnoreCase(compagnieName)){
             throw new RuntimeException("Impossible de supprimer le groupe par défaut");
         }
         log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
         groupeRepository.delete(groupe);
     }
+    /**
+     * Supprime un groupe de la compagnie si le groupe existe et si l'utilisateur est autorisé à le faire
+     * @param groupeId id du groupe
+     */
     @Override
     public Groupe updateGroupe(Long groupeId, String newName) {
 
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieName);
-        if(grp.getNom().toLowerCase().equals(compagnieName.toLowerCase())){
+        if(grp.getNom().equalsIgnoreCase(compagnieName)){
             throw new RuntimeException("Impossible de modifier le groupe par défaut");
         }
         grp.setNom(newName);
         // Save the updated Professor and return it
         return groupeRepository.save(grp);
     }
+
+     /**
+      * Supprime un Memebre de la compagnie si le membre existe et si l'utilisateur est autorisé à le faire
+      * @param membreId id du membre
+      * @param username nom d'utilisateur du membre
+      */
     @Override
     public void deleteMembre(Long membreId, String username){
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -136,6 +164,12 @@ public class CompagnieService implements ICompagnieService{
         membreRepository.deleteById(membreId);
         userRepository.deleteByUsername(username);
     }
+
+     /**
+      * Mis à jour un membre passé en paramètre
+      * @param membre membre à mettre à jour
+      * @return le membre mis à jour
+      */
     @Override
     public Membre updateMembre(Membre membre) {
         Optional<Membre> optionalExistingMembre = membreRepository.findById(membre.getId());
@@ -150,18 +184,26 @@ public class CompagnieService implements ICompagnieService{
             existingMembre.setUsername(membre.getUsername());
 
             // Save the updated entity back to the database
-            Membre updatedMembre = membreRepository.save(existingMembre);
-            return updatedMembre;
+            return membreRepository.save(existingMembre);
         } else {
             throw new RuntimeException("membre introuvable");
         }
     }
+
+     /**
+      * Récupère tous les groupes de la compagnie
+      * @return la liste des groupes de la compagnie
+      */
     @Override
     public List<String> getAllUniqueGroups() {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         return groupeRepository.findAllUniqueGroupes(compagnieName);
     }
 
+     /**
+      * Récupére le nombre des membres, groupes, fichiers et dossiers de la compagnie
+      * @return Un objet de type EntitiesCountResponse contenant le nombre des membres, groupes, fichiers et dossiers
+      */
      @Override
      public EntitiesCountResponse getEntitiesCount() {
          EntitiesCountResponse entitiesCountResponse = new EntitiesCountResponse();
@@ -173,6 +215,10 @@ public class CompagnieService implements ICompagnieService{
          return entitiesCountResponse;
      }
 
+     /**
+      * Récupére toutes les étiquettes de la compagnie et les retourne sous forme d'une liste de chaînes de caractères
+      * @return la liste des étiquettes de la compagnie
+      */
      @Override
      public List<String> getAllLabels() {
          List<Label> l = labelRepository.findAll();
@@ -184,6 +230,10 @@ public class CompagnieService implements ICompagnieService{
          return (listLabels);
      }
 
+     /**
+      * Récupére tous les groupes de la compagnie et les retourne sous forme d'une liste de chaînes de caractères
+      * @return la liste des groupes de la compagnie
+      */
      @Override
      public List<String> getAllCategories() {
          List<Categorie> l = categorieRepository.findAll();

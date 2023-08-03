@@ -38,6 +38,12 @@ public class FileController {
     @Autowired
     private IFichierService fichierService;
 
+    /**
+     * ajoute un fichier dans le dossier parent spécifié
+     * @param f fichier à ajouter
+     * @param parentFolderId id du dossier parent
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addFile(@RequestBody Fichier f,@PathVariable Long parentFolderId) {
@@ -46,6 +52,11 @@ public class FileController {
 
     }
 
+    /**
+     * Supprime un fichier
+     * @param fileId id du fichier à supprimer
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/delete/{fileId}")
     public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
@@ -54,6 +65,12 @@ public class FileController {
 
     }
 
+    /**
+     * Renomme un fichier
+     * @param fileId id du fichier à renommer
+     * @param name nouveau nom du fichier
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename/{fileId}")
     public ResponseEntity<?> renameFile(@PathVariable Long fileId,@RequestParam String name) {
@@ -62,6 +79,11 @@ public class FileController {
 
     }
 
+    /**
+     * Mis à jour d'un fichier
+     * @param f fichier à mettre à jour
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/update")
     public ResponseEntity<?> updateFile(@RequestBody Fichier f) {
@@ -70,6 +92,12 @@ public class FileController {
 
     }
 
+    /**
+     * deplace un fichier vers un dossier cible
+     * @param fileId id du fichier à déplacer
+     * @param targetFolderId id du dossier cible
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/move/{fileId}")
     public ResponseEntity<?> moveFile(@PathVariable Long fileId,@RequestParam Long targetFolderId) {
@@ -77,40 +105,75 @@ public class FileController {
         return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du fichier réussie!"));
     }
 
+    /**
+     * retourne un fichier
+     * @param fileId id du fichier à retourner
+     * @return le fichier demandé
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/get")
     public Fichier getFile(@RequestBody Long fileId) {
         return fichierService.getFichier(fileId);
     }
 
+    /**
+     * Change la catégorie d'un fichier
+     * @param fileId id du fichier à modifier
+     * @param categoryId id de la nouvelle catégorie
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/changeCategory/{fileId}")
-    public void changeCategory(@PathVariable Long fileId,@RequestBody Long categoryId) {
+    public ResponseEntity<?> changeCategory(@PathVariable Long fileId,@RequestBody Long categoryId) {
         fichierService.changeCategory(fileId, categoryId);
+        return ResponseEntity.ok(new MessageResponse("changement de la catégorie du fichier réussie!"));
     }
 
+    /**
+     * Change les labels d'un fichier
+     * @param fileId id du fichier à modifier
+     * @param labels liste des nouveaux labels
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/changeLabel/{fileId}")
-    public void changeLabel(@PathVariable Long fileId,@RequestBody List<Label> labels) {
+    public ResponseEntity<?> changeLabel(@PathVariable Long fileId,@RequestBody List<Label> labels) {
         fichierService.updateLabels(fileId, labels);
+        return ResponseEntity.ok(new MessageResponse("changement des labels du fichier réussie!"));
     }
 
+    /**
+     * retourne la liste des fichiers d'un dossier
+     * @param parentFolderId id du dossier parent
+     * @return la liste des fichiers du dossier parent
+     */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/admin/getFromParent")
     public List<Fichier> getFilesFromParent(@RequestBody Long parentFolderId) {
         return fichierService.getFichiersByParent(parentFolderId);
     }
 
+    /**
+     * Charge un fichier
+     * @param file fichier à charger
+     * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
+     * @throws Exception exception
+     */
     @PostMapping("/upload")
     public ResponseEntity<List<String>> fileUpload
             (@RequestParam("file") MultipartFile file)
             throws Exception {
-        System.out.println("file: "+ file);
+        //System.out.println("file: "+ file);
         return new ResponseEntity<>(fichierService.uploadFile(file),
                 HttpStatus.OK);
 
     }
 
+    /**
+     * Retourne l'entête de la réponse HTTP pour le téléchargement d'un fichier
+     * @param name nom du fichier
+     * @return l'entête de la réponse HTTP pour le téléchargement d'un fichier
+     */
     private HttpHeaders headers(String name) {
 
         HttpHeaders header = new HttpHeaders();
@@ -123,6 +186,13 @@ public class FileController {
         return header;
 
     }
+
+    /**
+     * Télécharge un fichier
+     * @param name nom du fichier à télécharger
+     * @return le fichier demandé
+     * @throws IOException exception
+     */
     @GetMapping(path = "/download/{name}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
         System.out.println("filename: "+name);

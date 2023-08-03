@@ -22,6 +22,12 @@ public class DossierService implements IDossierService {
     private final ICompagnieService compagnieService;
     private final IAuthotisationService authotisationService;
 
+    /**
+     * Ajoute un dossier, le persiste et l'ajoute à la liste des dossiers du dossier parent, si le dossier parent est null, le dossier ajouté est un dossier racine, il n'est pas possible d'ajouter un dossier au dossier racine
+     * @param d dossier à ajouter
+     * @param parentFolderId id du dossier parent
+     * @return le dossier ajouté
+     */
     public Dossier addDossier(Dossier d, Long parentFolderId)
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -45,6 +51,15 @@ public class DossierService implements IDossierService {
         log.info("File created at {}", d.getFullPath());
         return d;
     }
+
+    /**
+     * Ajouter un dossier dans le parent spécifié et ajoute les autorisations par défaut si skipAuthCreation est false
+     * @param d dossier à supprimer
+     * @param parentFolderId id du dossier parent
+     * @param compagnie compagnie à laquelle appartient le dossier
+     * @param skipAuthCreation true si on ne veut pas ajouter les autorisations par défaut
+     * @return le dossier ajouté
+     */
     public Dossier addDossier(Dossier d, Long parentFolderId, Compagnie compagnie, boolean skipAuthCreation)
     {
         //determine si un dossier portant le méme nom existe déja
@@ -74,6 +89,12 @@ public class DossierService implements IDossierService {
         return d;
     }
 
+    /**
+     * Renomme un dossier
+     * @param dossierId id du dossier à renommer
+     * @param name nouveau nom du dossier
+     * @return le dossier renommé
+     */
     public Dossier renameDossier(Long dossierId,String name)
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -100,7 +121,7 @@ public class DossierService implements IDossierService {
         log.info("File Renamed at {}", dossier.getFullPath());
         return dossierRepository.save(dossier);
     }
-
+    // cette method a été créé initialement pour tester l'arborescence du system de fichiers sur console, elle n'est plus utilisée
     // fix the display here
     public void fileTree(Long DossierId, Long level) {
         Dossier dossier = dossierRepository.findById(DossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
@@ -115,6 +136,7 @@ public class DossierService implements IDossierService {
             fileTreeFiles(f.getId(), level + 1);
         }
     }
+    // cette method a été créé initialement pour tester l'arborescence du system de fichiers sur console, elle n'est plus utilisée
 
     public void fileTreeFiles(Long fichierId, Long level) {
         Fichier fichier = fichierRepository.findById(fichierId).orElseThrow(() -> new RuntimeException("Folder not found"));
@@ -124,12 +146,20 @@ public class DossierService implements IDossierService {
         System.out.println("└── " + fichier.getNom()+"."+fichier.getExtension());
     }
 
+    /**
+     * Supprime un dossier et ses sous-dossiers et fichiers
+     * @param DossierId id du dossier à supprimer
+     */
     public void delete(Long DossierId) {
         log.info("Deleting dossier with ID: {}", DossierId);
         Dossier dossier = dossierRepository.findById(DossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
         deleteRecursively(dossier);
     }
 
+    /**
+     * supprime les sous-dossiers et fichiers d'un dossier
+     * @param dossier dossier à vider
+     */
     private void deleteRecursively(Dossier dossier) {
         log.info("Deleting recursively dossier with ID: {}", dossier.getId());
         List<Dossier> childDossiers = new ArrayList<>(dossier.getDossiers());
@@ -144,6 +174,12 @@ public class DossierService implements IDossierService {
         log.info("Deleted dossier with ID: {}", dossier.getId());
     }
 
+    /**
+     * Déplace un dossier vers un autre dossier
+     * @param dossierId dossier à déplacer
+     * @param dossierCibleId dossier cible
+     * @return le dossier déplacé
+     */
     public Dossier changerEmplacement(Long dossierId,Long dossierCibleId ) {
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
         Dossier dossierCible = dossierRepository.findById(dossierCibleId).orElseThrow(() -> new RuntimeException("Folder not found"));
@@ -151,22 +187,40 @@ public class DossierService implements IDossierService {
         return dossierRepository.save(dossier);
     }
 
+    /**
+     * Retourne les sous-dossiers d'un dossier
+     * @param dossierId id du dossier
+     * @return les sous-dossiers
+     */
     public List<Dossier> getChildrenDossiers(Long dossierId){
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
-//        System.out.println("here's the folder: "+ dossier);
         return dossier.getDossiers();
     }
 
+    /**
+     * retourne un dossier
+     * @param dossierId id du dossier
+     * @return le dossier
+     */
     public Dossier getDossier(Long dossierId) {
         return dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
     }
 
+    /**
+     * retourne le dossier racine de la compagnie
+     * @return le dossier racine de la compagnie
+     */
     @Override
     public Dossier getRootDossier() {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         return dossierRepository.findByCompagnieNomAndRacineIsNull(compagnieNom);
     }
 
+    /**
+     * Retourne le groupe à qui appartient le dossier
+     * @param dossierId id du dossier
+     * @return le groupe à qui appartient le dossier
+     */
     @Override
     public Groupe getGroupRootGroupe(Long dossierId) {
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
@@ -179,6 +233,11 @@ public class DossierService implements IDossierService {
         return dossier.getGroupe();
     }
 
+    /**
+     * Retourne le dossier racine d'un groupe
+     * @param groupe groupe
+     * @return le dossier racine d'un groupe
+     */
     @Override
     public Dossier getGroupRoot(Groupe groupe) {
         return dossierRepository.findByGroupeIdAndRacineIsNotNullAndIsGroupRootTrue(groupe.getId());
