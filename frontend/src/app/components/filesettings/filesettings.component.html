@@ -19,9 +19,9 @@
           <div class="label-container">
               <label for="name">Categorie</label>
               <div class="row">
-                <select class="sele">
+                <select class="sele" (change)="onCategorieSelected($event)" >
                   <option value="">Rapports</option>
-                  <option *ngFor="let categorie of categories" value="categorie">{{categorie}}</option>
+                  <option *ngFor="let categorie of categories" [value]="categorie">{{categorie}}</option>
                 </select>
               </div>
           </div>

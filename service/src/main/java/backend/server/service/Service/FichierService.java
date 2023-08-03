@@ -2,14 +2,12 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.FichierRepository;
-import backend.server.service.domain.Categorie;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.Fichier;
-import backend.server.service.domain.Label;
+import backend.server.service.domain.*;
 import backend.server.service.enums.ETAT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
 
-    private static final String path = "/Users/macbookpro/Desktop/files/";
+    private static final String path = "/Users/macbookpro/Desktop/files/upload";
     @Autowired
     private FichierRepository fichierRepository;
     @Autowired
@@ -37,6 +35,9 @@ public class FichierService implements IFichierService{
      * @param ParentFolderId id du dossier parent
      * @return le fichier ajouté
      */
+    @Autowired
+    private CompagnieService compagnieService;
+
     @Override
     public Fichier addFichier(Fichier f, Long ParentFolderId)
     {
@@ -185,6 +186,7 @@ public class FichierService implements IFichierService{
                     new BufferedOutputStream(
                             new FileOutputStream(new File(path,
                                     file.getOriginalFilename())));
+            saveFile(file);
             outputStream.write(file.getBytes());
             outputStream.flush();
             outputStream.close();
@@ -200,4 +202,19 @@ public class FichierService implements IFichierService{
         ;
         return list;
     }
+
+    private void saveFile(MultipartFile file) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Fichier fichier = new Fichier();
+        int lastIndex = file.getOriginalFilename().lastIndexOf('.');
+        fichier.setNom(lastIndex != -1 ? file.getOriginalFilename().substring(0, lastIndex) : file.getOriginalFilename());
+        fichier.setExtension(lastIndex != -1 ? file.getOriginalFilename().substring(lastIndex+1, file.getOriginalFilename().length()) : file.getOriginalFilename());
+        fichier.setTaille((double)file.getSize());
+        fichier.setRealPath(path);
+        fichier.setCompagnie(compagnie);
+        System.out.println("nom de fichier: "+fichier.getNom());
+        System.out.println("extension de fichier: "+fichier.getExtension());
+    }
+
 }
