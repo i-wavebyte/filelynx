@@ -5,6 +5,7 @@ import { FolderService } from 'src/app/_services/folder.service';
 import * as $ from 'jquery';
 import { FileService } from 'src/app/_services/file.service';
 import { NgToastService } from 'ng-angular-popup';
+import Dossier from 'src/app/domain/Dossier';
 
 @Component({
   selector: 'app-filesettings',
@@ -12,6 +13,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./filesettings.component.css']
 })
 export class FilesettingsComponent {
+
   categories: String[] = [];
   labels: String[] = [];
   groupe: string = "";
@@ -21,6 +23,8 @@ export class FilesettingsComponent {
   extension: string = '';
   size: string = '';
   selectedLabels: string[] = [];
+  selectedCategorie: string= '';
+  folder!: Dossier;
 
     constructor(private compagnieService: CompagnieService, private route: ActivatedRoute, private folderService: FolderService, private fileService: FileService,  private toast: NgToastService,  private router:Router) {}
   ngOnInit() {
@@ -120,11 +124,10 @@ export class FilesettingsComponent {
       if (this.selectedFile) {
         const formData: FormData = new FormData();
         formData.append('file', this.selectedFile);
-    
-        this.fileService.upload(formData).subscribe((data) => {
+        // console.log(this.selectedFile);
+        this.fileService.upload(formData, this.selectedFile).subscribe((data) => {
+          this.router.navigate(['/files']);
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
-          // this.router.navigate(['../'], );
-
         },
         (err) => {
           this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
@@ -132,5 +135,15 @@ export class FilesettingsComponent {
         );
       }
     }
+
+    onCategorieSelected(event: Event) {
+      const selectElement = event.target as HTMLSelectElement;
+      const selectedCategorie = selectElement.value;
+
+      if (selectedCategorie) {
+        this.selectedCategorie = selectedCategorie;
+        console.log(this.selectedCategorie);
+      }
+      }
   }
 

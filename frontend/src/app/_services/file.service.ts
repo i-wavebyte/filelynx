@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -14,13 +13,9 @@ export class FileService {
   constructor(private http: HttpClient) { }
 
  
-  upload(formData: FormData): Observable<any> {
+  upload(formData: FormData, file: File): Observable<any> {
     const headers = new HttpHeaders();
-    // Remove the default 'Content-Type' header to let Angular set it automatically as 'multipart/form-data'
-    // This will ensure that the request is sent as a multipart request.
     headers.delete('Content-Type');
-    console.log("formData: ", formData);
-
-    return this.http.post<any>(this.baseUrl + "/upload", formData, { headers });
+    return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
   }
 }

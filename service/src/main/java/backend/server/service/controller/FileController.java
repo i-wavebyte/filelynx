@@ -105,7 +105,6 @@ public class FileController {
     public ResponseEntity<List<String>> fileUpload
             (@RequestParam("file") MultipartFile file)
             throws Exception {
-        System.out.println("file: "+ file);
         return new ResponseEntity<>(fichierService.uploadFile(file),
                 HttpStatus.OK);
 
