@@ -26,7 +26,6 @@ public class FichierService implements IFichierService{
     private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
     private FichierRepository fichierRepository;
     private DossierRepository dossierRepository;
-    private DossierService dossierService;
     private CategorieService categorieService;
     private CategorieRepository categorieRepository;
     private LabelRepository labelRepository;
@@ -35,7 +34,6 @@ public class FichierService implements IFichierService{
 
     @Autowired
     public FichierService(@Lazy DossierService dossierService, FichierRepository fichierRepository, DossierRepository dossierRepository, CategorieRepository categorieRepository, CategorieService categorieService, LabelRepository labelRepository, CompagnieService compagnieService) {
-        this.dossierService = dossierService;
         this.fichierRepository = fichierRepository;
         this.dossierRepository = dossierRepository;
         this.categorieService = categorieService;

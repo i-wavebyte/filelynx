@@ -155,10 +155,11 @@ tr.log-row:hover {
 }
 
 .popup {
-  width: 500px;
+  width: 855px;
+  height: 240px;
   background: white;
   border-radius: 6px;
-  border: 2px solid rgba(25,23,22, 0.2); /* Add this line to set the border color and width */
+  /* border: 2px solid rgba(25,23,22, 0.2);  */
   position: absolute;
   top: 0;
   left: 50%;
@@ -170,15 +171,16 @@ tr.log-row:hover {
 
 .popup.open-popup {
   border-radius: 10px;
-  border: 2px solid rgb(25,23,22); /* Add this line to set the border color and width */
+  /* border: 0.5px solid rgb(150, 143, 139);  */
   position: absolute;
-  top: 50%;
+  top: 28%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
   text-align: center;
   visibility: visible;
   transition: transform 0.7s, top 1s;
-  background: rgba(255, 255, 255, 0.65);
+  /* background: rgba(255, 255, 255, 0.65); */
+  background: #FFFFFF;
 }
 
 .popup.open-popup h2 {
@@ -189,21 +191,6 @@ tr.log-row:hover {
   margin: 10px 0;
 }
 
-.popup.open-popup button {
-  background-color: #191716;
-  color: white;
-  width: 100px;
-  margin-bottom: 12px;
-  border-radius: 7px;
-  border: none;
-  outline: none;
-  padding: 7px;
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 500;
-  box-shadow: 0px 4px 4px -4px rgba(245, 89, 3, 0.02),
-    0px 1px 2px rgba(245, 89, 3, 0.06);
-}
 
 .blue-background {
   background-color: rgb(201, 226, 245);
@@ -303,3 +290,103 @@ tr.log-row:hover {
   font-weight: 600;
   color: #5C5C5E;
 }
+
+.modal-content{
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  width: 260px;
+  margin-top: 30px;
+  margin-bottom: 25px;
+  align-items: flex-start;
+}
+ .popup-header .type {
+  border-radius: 5px;
+  background: #EB7676;
+  color: #3C3C4E;
+  text-align: center;
+  padding: 8px 13px;
+  width: 150px;
+  height: 33px;
+ }
+
+ .popup-header .date {
+  padding: 5px 0px;
+  color: #585858;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+ }
+
+ .log-trigger{
+  display: flex;
+  width: 255px;
+  margin-bottom: 25px;
+ }
+
+ .log-trigger .declencheur{
+  color: #000;
+  font-family: Inter;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+ }
+
+ .log-trigger .value{
+  color: #545454;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  margin-left: 7px;
+  padding-top: 1px;
+ }
+
+ .popup-message{
+  display: flex;
+  width: 700px;
+  height: 57px;
+  background: #EDEDED;
+  color: #3C3C4E;
+  border-radius: 10px;
+  align-items: center;
+  padding-left: 18px;
+ }
+
+ .popup-message .message {
+  color: #3C3C4E;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+ }
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 25px;
+  height: 25px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgb(15, 1, 1);
+  border: none;
+  outline: none;
+  font-size: 0.7em;
+  background-color: #f5f7f8;
+}
+
