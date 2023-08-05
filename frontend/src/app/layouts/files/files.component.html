@@ -44,7 +44,7 @@
           </div>
           <div class="file-button-collection">
             <div class="settings-button">
-              <img class="settings-icon" src="../../../assets/services.240x256.png" alt="" (click)="openFilePopup(fichier)">
+              <img class="settings-icon" src="../../../assets/services.240x256.png" alt="" [routerLink]="['/files/filedetails', fichier?.id]">
             </div>
             <div class="settings-button">
               <img class="settings-icon" src="../../../assets/full-trash.194x256.png" alt="" (click)="deleteFilePopup(fichier)">
