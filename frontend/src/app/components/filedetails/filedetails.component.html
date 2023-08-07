@@ -1,0 +1,53 @@
+
+<div class="popup-bg" >
+    <div class="popup-content">
+      <button class="close" routerLink="../">X</button>
+      <div class="left-side">
+
+      </div>
+      <div class="right-side">
+        <div class="label-container">
+            <label for="name">Fichier</label>
+            <div class="file">
+                <input id="fileName" type="text" class="rectangle" value="mazal ...">
+                <span>.pdf</span>
+            </div>
+        </div>
+        <div class="label-container">
+            <label for="name">Categorie</label>
+            <div class="row">
+              <select class="sele" >
+                <option value="">Rapports</option>
+                <option ></option>
+              </select>
+            </div>
+        </div>
+        <div class="label-container">
+            <label for="name">Labels</label>
+            <div class="row">
+              <select class="sele" >
+                <option value="">Selectionnez un label</option>
+                <option ></option>
+              </select>
+            </div>
+        </div>
+        <div class="label-container">
+            <label for="name">Groupe</label>
+            <div class="rectangleb">
+                <p class="fullpath">Omnishore</p>
+            </div>
+        </div>
+        <div class="label-container">
+            <label for="name">Taille</label>
+            <div class="rectanglec">
+                <p class="fullpath">3.6mo</p>
+            </div>
+        </div>
+        <div class="row3">
+            <button class="annuler" routerLink=".." >annuler</button>
+            <button class="enregistrer" >enregistrer</button>
+          </div>
+      </div>
+    </div>
+  </div>
+<router-outlet></router-outlet>

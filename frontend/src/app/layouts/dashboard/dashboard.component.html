@@ -11,7 +11,6 @@
         <p class="compagnie-identity">{{compagnieName.name}}</p>
       </div>
     </nav>
-
     <div class="dashboard-container">
       <div class="header-card-container">
         <div class="header-card">
@@ -108,12 +107,20 @@
 <!-- Custum Modal -->
 <div class="popup" [class]="popupClass" [ngClass]="popupBackgroundColor" *ngIf="showModal">
   <div class="modal-content">
-    <h2>Détails du Log</h2>
-    <p> Le: {{ selectedLog.date.toString().slice(0,10)}}</p>
-    <p>Société: {{ selectedLog.compagnie.nom}}</p>
-    <p>Trigger: {{ selectedLog.trigger.nom}}</p>
-    <p>Type: {{selectedLog.type}}</p>
-    <p>Message: {{selectedLog.message}}</p>
-    <button (click)="hideModal()">Close</button>
+    <button class="close" (click)="hideModal()" >X</button>
+    <div class="popup-header">
+      <div class="type" [ngStyle]="{'background-color': getLogTypeColor(selectedLog.type)}">{{selectedLog.type}}</div>
+      <div class="date">{{ selectedLog.date.toString().slice(0,10)}}</div>
+    </div>
+    <div class="log-trigger">
+      <div class="declencheur">Déclencheur : </div>
+      <div class="value">{{ selectedLog.trigger.nom.charAt(0).toUpperCase() + selectedLog.trigger.nom.slice(1) }}</div>
+    </div>
+    <div class="popup-message">
+      <div class="message">
+        {{selectedLog.message}}
+      </div>
+    </div>
+    <!-- <button (click)="hideModal()">Close</button> -->
   </div>
 </div>

@@ -23,11 +23,10 @@ import { AddLabelComponent } from './components/add-label/add-label.component';
 import { AddCategorieComponent } from './components/add-categorie/add-categorie.component';
 import { MembersettingComponent } from './components/membersetting/membersetting.component';
 import { FoldersettingComponent } from './components/foldersetting/foldersetting.component';
-
 import { UserFilesComponent } from './layouts/user-files/user-files.component';
 import { FilesettingsComponent } from './components/filesettings/filesettings.component';
 import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
-
+import { FiledetailsComponent } from './components/filedetails/filedetails.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -57,15 +56,13 @@ const routes: Routes = [
   {path : "files", component : FilesComponent,
   children: [{ path: "add-folder/:parentId", component: AddFileComponent }, 
       { path: "folderdetails", component: FoldersettingComponent, children: [{path: "add-collab", component: AddFolderCollabComponent}] },
-       { path: "upload/:parentId", component: FilesettingsComponent }]},
+       { path: "upload/:parentId", component: FilesettingsComponent }, 
+      { path: "filedetails/:fileId", component: FiledetailsComponent}]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },
   { path: "add-categorie", component: AddCategorieComponent },
   { path: 'user-files', component: UserFilesComponent },
 ]}
-
-
-
 ];
 
 @NgModule({

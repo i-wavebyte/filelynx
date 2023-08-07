@@ -376,6 +376,7 @@ export class DashboardComponent implements OnInit {
   openPopup(log: Log): void
   {
       this.selectedLog = log;
+      console.log(this.selectedLog);
       this.showModal = true; // Open the modal
 
       this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
@@ -408,4 +409,21 @@ export class DashboardComponent implements OnInit {
 
 
   }
+
+  getLogTypeColor(logType: string): string
+  {
+    switch(logType)
+    {
+      case 'CRÉER':
+        return '#C9E2F5';
+      case 'MODIFIER':
+        return '#EDE6AA';
+      case 'SUPPRIMER':
+          return '#EB7676';
+      default:
+        return 'logType';
+    }
+  }
+
+
 }

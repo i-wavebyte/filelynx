@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import Fichier from '../domain/Fichier';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -18,4 +19,9 @@ export class FileService {
     headers.delete('Content-Type');
     return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
   }
+
+  // getFileById(fileId: number): Observable<Fichier>
+  // {
+
+  // }
 }

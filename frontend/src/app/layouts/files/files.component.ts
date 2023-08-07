@@ -33,7 +33,7 @@ export class FilesComponent implements OnInit{
   }
 
   loadFolders(): void{
-
+    
     if(this.currentFolder == null){
       this.folderService.getRootFolderAsAdmin().subscribe(
         (data) => {
@@ -107,11 +107,7 @@ export class FilesComponent implements OnInit{
     }
 
     openPopup(folder: Dossier){
-      this.selectedFolder = folder;
-      this.showModal = true; // Open the modal
-      // this.popupClass = 'popup open-popup'; // Add or remove CSS class as needed
       this.router.navigate(['files/folderdetails'], { queryParams: { folderId: folder.id } });
-
     }
 
     hideModal(): void {
@@ -122,10 +118,11 @@ export class FilesComponent implements OnInit{
       throw new Error('Method not implemented.');
       }
 
-    deleteFilePopup(_t47: Fichier) {
+    deleteFilePopup(fichier: Fichier) {
       throw new Error('Method not implemented.');
     }
-    openFilePopup(_t47: Fichier) {
-      throw new Error('Method not implemented.');
+
+    openFilePopup(fichier: Fichier) {
+      this.router.navigate(['files/filedetails'], { queryParams: { fileId: fichier.id } });
     }
 }

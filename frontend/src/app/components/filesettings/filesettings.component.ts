@@ -134,7 +134,7 @@ export class FilesettingsComponent {
         formData.append('folderId', this.folderId.toString());
         // console.log(this.selectedFile);
         this.fileService.upload(formData).subscribe((data) => {
-          this.router.navigate(['/files']);
+          this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
         },
         (err) => {
