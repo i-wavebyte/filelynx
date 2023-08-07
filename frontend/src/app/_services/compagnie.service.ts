@@ -12,6 +12,9 @@ import Categorie from '../domain/Categorie';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import EntitesCount from '../domain/EntitiesCount';
 import QuotaUsedToday from '../domain/QuotaUsedToday';
+import ConsumptionHistoryChart from '../domain/ConsumptionHistoryChart';
+import GroupConsumption from '../domain/GroupConsumption';
+import CompagnieName from '../domain/CompagnieName';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -21,7 +24,7 @@ const httpOptions = {
 
 
 export class CompagnieService {
-  private baseUrl = 'http://localhost:8080/api/v1/compagnie';
+  private baseUrl = 'http://172.16.16.235:8080/api/v1/compagnie';
   constructor(private http: HttpClient) {}
 
 
@@ -222,6 +225,18 @@ export class CompagnieService {
   }
   getTotalAllocatedQuota(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/getTotalAllocatedQuota`);
+  }
+
+  getQuotaUsedByDay(): Observable<ConsumptionHistoryChart> {
+    return this.http.get<ConsumptionHistoryChart>(`${this.baseUrl}/getQuotaUsedByDay`);
+  }
+
+  getAllGroupsConsumption(): Observable<GroupConsumption[]> {
+    return this.http.get<GroupConsumption[]>(`${this.baseUrl}/getAllGroupsConsumption`);
+  }
+
+  getCompagnieName(): Observable<CompagnieName> {
+    return this.http.get<CompagnieName>(`${this.baseUrl}/getCompagnieName`);
   }
 
 

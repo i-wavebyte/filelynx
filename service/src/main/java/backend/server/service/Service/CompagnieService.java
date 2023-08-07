@@ -3,7 +3,9 @@ package backend.server.service.Service;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
+import backend.server.service.payloads.ConsumptionHistoryChart;
 import backend.server.service.payloads.EntitiesCountResponse;
+import backend.server.service.payloads.GroupConsumption;
 import backend.server.service.payloads.QuotaUsedToday;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +29,7 @@ public class CompagnieService implements ICompagnieService{
      private final CompagnieRepository compagnieRepository;
      private final DossierRepository dossierRepository;
      private final FichierRepository fichierRepository;
-
+     private final QuotaService quotaService;
 
     private final GroupeService groupeService;
     @Override
@@ -214,6 +217,8 @@ public class CompagnieService implements ICompagnieService{
          entitiesCountResponse.setFichiers(fichierRepository.countByCompagnieNom(compagnieName));
          entitiesCountResponse.setGroupes(groupeRepository.countByCompagnieNom(compagnieName));
          entitiesCountResponse.setMembres(membreRepository.countByCompagnieNom(compagnieName));
+         entitiesCountResponse.setCategories(categorieRepository.countByCompagnieNom(compagnieName));
+         entitiesCountResponse.setLabels(labelRepository.countByCompagnieNom(compagnieName));
          return entitiesCountResponse;
      }
 
@@ -247,7 +252,70 @@ public class CompagnieService implements ICompagnieService{
          return (listCategories);
      }
 
-     public QuotaUsedToday getQuotaUsedToday() {
+    @Override
+    public ConsumptionHistoryChart getQuotaUsedByDay() {
+        ConsumptionHistoryChart consumptionHistoryChart = new ConsumptionHistoryChart();
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Fichier> fichiers = fichierRepository.findAllByCompagnieNom(compagnieName);
+        //seperates the files by day in a List of Lists
+        List<List<Fichier>> fichiersByDay = new ArrayList<>();
+        for (Fichier fichier : fichiers) {
+            Date date = fichier.getDateCreation();
+            boolean found = false;
+            for (List<Fichier> fichiers1 : fichiersByDay) {
+                if (fichiers1.get(0).getDateCreation().getDay() == date.getDay()) {
+                    fichiers1.add(fichier);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                List<Fichier> newFichiers = new ArrayList<>();
+                newFichiers.add(fichier);
+                fichiersByDay.add(newFichiers);
+            }
+        }
+        //reduce the content of the lists to the sum of the size of the files
+        List<Double> sizeByDay = new ArrayList<>();
+        for (List<Fichier> fichiers1 : fichiersByDay) {
+            double size = 0;
+            for (Fichier fichier : fichiers1) {
+                size += fichier.getTaille();
+            }
+            sizeByDay.add(size);
+        }
+        consumptionHistoryChart.setConsumptionHistory(sizeByDay);
+        // get the dates of the days as Date objects
+        List<Date> dates = new ArrayList<>();
+        for (List<Fichier> fichiers1 : fichiersByDay) {
+            dates.add(fichiers1.get(0).getDateCreation());
+        }
+        consumptionHistoryChart.setLabels(dates);
+
+        return consumptionHistoryChart;
+    }
+
+    @Override
+    public List<GroupConsumption> getAllGroupsConsumption() {
+        Compagnie compagnie = compagnieRepository.findByNom(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Groupe> groupes = groupeRepository.findAllByCompagnieNom(compagnie.getNom());
+        List<GroupConsumption> groupConsumptions = new ArrayList<>();
+        double consumed = 0;
+        for(Groupe groupe : groupes){
+            GroupConsumption groupConsumption = new GroupConsumption();
+            groupConsumption.setConsumption(quotaService.getTotalQuotaOfGroup(groupe.getId()));
+            groupConsumption.setName(groupe.getNom());
+            consumed += groupConsumption.getConsumption();
+            groupConsumptions.add(groupConsumption);
+        }
+        GroupConsumption groupConsumption = new GroupConsumption();
+        groupConsumption.setName("Libre");
+        groupConsumption.setConsumption(compagnie.getQuota() - consumed);
+        groupConsumptions.add(groupConsumption);
+        return groupConsumptions;
+    }
+
+    public QuotaUsedToday getQuotaUsedToday() {
         QuotaUsedToday quotaUsedToday = new QuotaUsedToday();
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Fichier> fichiers = fichierRepository.findAllByCompagnieNom(compagnieName);

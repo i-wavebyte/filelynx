@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity @AllArgsConstructor @Data @NoArgsConstructor @Builder
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"racine_id", "nom"}))
 public class Dossier {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

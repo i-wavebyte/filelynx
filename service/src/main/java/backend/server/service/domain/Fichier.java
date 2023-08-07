@@ -17,6 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Builder
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"racine_id", "nom"}))
 public class Fichier {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -6,6 +6,10 @@
       <button routerLink="/users">Collaborateurs</button>
       <button routerLink="/groups">Groupes</button>
       <button routerLink="/metadata">Metadata</button>
+      <div class="compagnie-name">
+        <div class="compagnie-avatar">{{compagnieName.name[0]|titlecase}}</div>
+        <p class="compagnie-identity">{{compagnieName.name}}</p>
+      </div>
     </nav>
 
     <div class="dashboard-container">
@@ -20,10 +24,10 @@
 
           </div>
           <div class="group-allocated">
-            {{ tailleToBestUnit(totalAllocatedQuota,  true, 2)}} is allocated to groups {{ tailleToBestUnit(quota.quota,  true, 2)}}
+            {{ tailleToBestUnit(totalAllocatedQuota,  true, 2)}} alloué à {{entitiesCount.groupes}} groupe{{entitiesCount.groupes>1?"s":""}} ({{(totalAllocatedQuota/quota.quota)*100}}%)
           </div>
           <div class="uploaded-today">
-            {{ tailleToBestUnit(quotaUsedToday.quotaUsedToday,  true, 2)}} uploaded today across {{quotaUsedToday.fileCount}} files
+            {{ tailleToBestUnit(quotaUsedToday.quotaUsedToday,  true, 2)}} chargé aujourd'hui ({{quotaUsedToday.fileCount}} fichiers)
           </div>
         </div>
         <div class="header-card">
@@ -77,6 +81,26 @@
           </div>
         </div>
       </div>
+      <div>
+        <div class="secondRow-card orange">
+          <div class="OrangIcon">
+            ?
+          </div>
+          <div>Vous avez {{entitiesCount.categories}} categories et {{entitiesCount.labels}} étiquettes</div>
+        </div>
+      </div>
+      <div class="bottom-card-container">
+        <div class="secondRow-card last">
+          <p class="header-card-title">Consomation par groupe</p><br>
+          <canvas id="GroupeAllocationChart">{{GroupeAllocationChart}}</canvas>
+        </div>
+        <div class="secondRow-card last">
+          <p class="header-card-title">Consomation par jour</p><br>
+          <canvas id="consumptionHistoryChart">{{consumptionHistoryChart}}</canvas>
+        </div>
+
+      </div>
+
     </div>
 
   </div>

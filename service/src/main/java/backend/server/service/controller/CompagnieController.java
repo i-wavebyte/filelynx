@@ -7,8 +7,7 @@ import backend.server.service.Service.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.AuthLevel;
 import backend.server.service.enums.LogType;
-import backend.server.service.payloads.EntitiesCountResponse;
-import backend.server.service.payloads.RegisterUserRequest;
+import backend.server.service.payloads.*;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.entities.EROLE;
 import backend.server.service.security.entities.User;
@@ -571,6 +570,24 @@ public class CompagnieController {
         return ResponseEntity.ok(quotaService.getTotalAllocatedQuota());
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getQuotaUsedByDay")
+    public ConsumptionHistoryChart getQuotaUsedByDay(){
+        return compagnieService.getQuotaUsedByDay();
+    }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getAllGroupsConsumption")
+    public List<GroupConsumption> getAllGroupsConsumption(){
+        return compagnieService.getAllGroupsConsumption();
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getCompagnieName")
+    public ResponseEntity<CompagnieName> getCompagnieName(){
+        CompagnieName compagnieName = new CompagnieName();
+        compagnieName.setName(SecurityContextHolder.getContext().getAuthentication().getName());
+        return ResponseEntity.ok(compagnieName);
+    }
 
 }

@@ -10,4 +10,6 @@ public class EntitiesCountResponse {
     Long Groupes;
     Long Dossiers;
     Long Fichiers;
+    Long Labels;
+    Long Categories;
 }

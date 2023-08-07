@@ -34,11 +34,6 @@ public class DossierService implements IDossierService {
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
 
         List<Dossier> dossiers = compagnie.getDossiers();
-        for (Dossier dossier: dossiers)
-        {
-            if (dossier.getNom().equals(d.getNom()))
-                throw new RuntimeException("Dossier: "+d.getNom()+" existe déjà");
-        }
         Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);

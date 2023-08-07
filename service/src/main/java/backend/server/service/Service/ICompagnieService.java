@@ -3,7 +3,9 @@ package backend.server.service.Service;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
+import backend.server.service.payloads.ConsumptionHistoryChart;
 import backend.server.service.payloads.EntitiesCountResponse;
+import backend.server.service.payloads.GroupConsumption;
 import backend.server.service.payloads.QuotaUsedToday;
 
 import java.util.List;
@@ -30,4 +32,8 @@ public interface ICompagnieService {
     List<String> getAllLabels();
 
     List<String> getAllCategories();
+
+    ConsumptionHistoryChart getQuotaUsedByDay();
+
+    List<GroupConsumption> getAllGroupsConsumption();
 }

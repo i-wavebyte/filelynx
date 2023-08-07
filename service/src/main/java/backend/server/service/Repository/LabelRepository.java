@@ -13,4 +13,5 @@ public interface LabelRepository extends JpaRepository<Label,Long> {
     Label findByIdAndCompagnieNom(Long labelId, String compagnieNom);
 
     Label findByNom(String nom);
+    Long countByCompagnieNom(String compagnieNom);
 }
