@@ -2,15 +2,21 @@ package backend.server.service.Service;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.CategorieRepository;
+import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.Categorie;
 import backend.server.service.domain.Compagnie;
+import backend.server.service.domain.Log;
+import backend.server.service.enums.LogType;
+import backend.server.service.security.POJOs.responses.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +28,8 @@ public class CategorieService implements ICategorieService{
     private CategorieRepository categorieRepository;
     @Autowired
     private ICompagnieService compagnieService;
+    @Autowired
+    private LogRepository logRepository;
 
     /**
      * ajoute et persiste une nouvelle catégorie
@@ -32,8 +40,13 @@ public class CategorieService implements ICategorieService{
     {
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieName);
-        cat.setCompagnie(compagnie);
-        return categorieRepository.save(cat);
+
+            cat.setCompagnie(compagnie);
+            cat = categorieRepository.save(cat);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Catégorie " + cat.getNom() + " ajoutée.").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return cat;
     }
 
     /**
@@ -42,7 +55,14 @@ public class CategorieService implements ICategorieService{
      */
     public void deleteCategorie(Long categorieId)
     {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
         categorieRepository.deleteById(categorieId);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+
     }
 
     /**
@@ -63,10 +83,19 @@ public class CategorieService implements ICategorieService{
      */
     public Categorie updateCategorie(Long categorieId, String newName)
     {
-           Optional<Categorie> optCat = categorieRepository.findById(categorieId);
-           Categorie cat = optCat.get();
-           cat.setNom(newName);
-           return categorieRepository.save(cat);
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
+        String categorieName = categorie.getNom();
+        Optional<Categorie> optCat = categorieRepository.findById(categorieId);
+        if(optCat.isEmpty())
+            throw new RuntimeException("La catégorie n'existe pas");
+        Categorie cat = optCat.get();
+        cat.setNom(newName);
+        categorieRepository.save(cat);
+        Log logMessage = Log.builder().message("Catégorie " + categorieName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return cat;
     }
 
     /**

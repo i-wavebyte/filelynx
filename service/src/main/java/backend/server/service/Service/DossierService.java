@@ -2,13 +2,20 @@ package backend.server.service.Service;
 
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.FichierRepository;
+import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.*;
+import backend.server.service.enums.LogType;
+import backend.server.service.security.POJOs.responses.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,6 +28,8 @@ public class DossierService implements IDossierService {
 //    private final IFichierService fichierService;
     private final ICompagnieService compagnieService;
     private final IAuthotisationService authotisationService;
+    @Autowired
+    private LogRepository logRepository;
 
     /**
      * Ajoute un dossier, le persiste et l'ajoute à la liste des dossiers du dossier parent, si le dossier parent est null, le dossier ajouté est un dossier racine, il n'est pas possible d'ajouter un dossier au dossier racine
@@ -236,6 +245,46 @@ public class DossierService implements IDossierService {
     @Override
     public Dossier getGroupRoot(Groupe groupe) {
         return dossierRepository.findByGroupeIdAndRacineIsNotNullAndIsGroupRootTrue(groupe.getId());
+    }
+
+    @Override
+    public Dossier addDossierCtrl(Dossier d, Long parentFolderId) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        if(getRootDossier().getId() == parentFolderId){
+            throw new RuntimeException("Vous ne pouvez pas ajouter un dossier à la racine");
+        }
+        d.setGroupe(getGroupRootGroupe(parentFolderId));
+        authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(), d);
+        d= addDossier(d, parentFolderId);
+        Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
+        return d;
+
+    }
+
+    @Override
+    public void deleteDossierCtrl(Long dossierId) {
+        if(getRootDossier().getId() == dossierId){
+            throw new RuntimeException("Vous ne pouvez pas supprimer la racine");
+        }
+        if(getDossier(dossierId).isGroupRoot()){
+            throw new RuntimeException("Vous ne pouvez pas supprimer un dossier racine de groupe");
+        }
+        System.out.println("dossierId: "+ dossierId);
+        delete(dossierId);
+    }
+
+    @Override
+    public Dossier renameDossierCtrl(Long dossierId, String name) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+
+            Dossier dossier = renameDossier(dossierId, name);
+            Log logMessage = Log.builder().message("Dossier "+name+" ajouté à la société "+compagnieNom).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return dossier;
+
     }
 
 

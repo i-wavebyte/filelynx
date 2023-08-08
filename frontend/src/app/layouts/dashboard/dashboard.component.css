@@ -467,3 +467,7 @@ tr.log-row:hover {
   background-color: #f5f7f8;
 }
 
+.relative{
+  transform: translate(0,-5px);
+}
+

@@ -3,14 +3,14 @@ package backend.server.service.Service;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
-import backend.server.service.payloads.ConsumptionHistoryChart;
-import backend.server.service.payloads.EntitiesCountResponse;
-import backend.server.service.payloads.GroupConsumption;
-import backend.server.service.payloads.QuotaUsedToday;
+import backend.server.service.enums.LogType;
+import backend.server.service.payloads.*;
+import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -30,6 +30,7 @@ public class CompagnieService implements ICompagnieService{
      private final DossierRepository dossierRepository;
      private final FichierRepository fichierRepository;
      private final QuotaService quotaService;
+     private final LogRepository logRepository;
 
     private final GroupeService groupeService;
     @Override
@@ -40,6 +41,13 @@ public class CompagnieService implements ICompagnieService{
     public Compagnie getCompagnie(String nom){
         return compagnieRepository.findByNom(nom);
     }
+
+    @Override
+    public List<Log> getLogs() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        return getCompagnie(compagnieNom).getLogs();
+    }
+
     @Override
     public List<Compagnie> getAllCompagnies(){
         return compagnieRepository.findAll();
@@ -177,6 +185,9 @@ public class CompagnieService implements ICompagnieService{
       */
     @Override
     public Membre updateMembre(Membre membre) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = getCompagnie(compagnieNom);
+        String username= membre.getUsername();
         Optional<Membre> optionalExistingMembre = membreRepository.findById(membre.getId());
 
         if (optionalExistingMembre.isPresent()) {
@@ -189,10 +200,16 @@ public class CompagnieService implements ICompagnieService{
             existingMembre.setUsername(membre.getUsername());
 
             // Save the updated entity back to the database
+            Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
             return membreRepository.save(existingMembre);
         } else {
             throw new RuntimeException("membre introuvable");
         }
+
+
+
+
     }
 
      /**
@@ -313,6 +330,13 @@ public class CompagnieService implements ICompagnieService{
         groupConsumption.setConsumption(compagnie.getQuota() - consumed);
         groupConsumptions.add(groupConsumption);
         return groupConsumptions;
+    }
+
+    @Override
+    public CompagnieName getCompagnieName() {
+        CompagnieName compagnieName = new CompagnieName();
+        compagnieName.setName(SecurityContextHolder.getContext().getAuthentication().getName());
+        return compagnieName;
     }
 
     public QuotaUsedToday getQuotaUsedToday() {

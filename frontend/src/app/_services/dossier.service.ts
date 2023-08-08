@@ -14,7 +14,7 @@ const httpOptions = {
 })
 export class DossierService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/dossier';
+  private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/dossier';
   constructor(private http: HttpClient) {}
 
   deleteFolder(folderId: number): Observable<any> {

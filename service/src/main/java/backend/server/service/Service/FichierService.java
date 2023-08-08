@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +24,8 @@ import java.util.*;
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
 
-//    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
-    private static final String path = "/Users/macbookpro/Desktop/files/upload";
+    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
+    //private static final String path = "/Users/macbookpro/Desktop/files/upload";
     private FichierRepository fichierRepository;
     private DossierRepository dossierRepository;
     private CategorieService categorieService;
@@ -212,6 +213,11 @@ public class FichierService implements IFichierService{
         }
         ;
         return list;
+    }
+
+    @Override
+    public ByteArrayResource dowloadFile(String name) {
+        return null;
     }
 
     private void saveFile(MultipartFile file, Long folderId, List<String> selectedlabels, String selectedCategorie) {

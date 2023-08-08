@@ -12,7 +12,7 @@ const httpOptions = {
 })
 export class FolderService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/dossier';
+  private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/dossier';
   constructor(private http: HttpClient) {}
 
   getRootFolderAsAdmin():Observable<Dossier> {

@@ -2,11 +2,10 @@ package backend.server.service.Service;
 
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Groupe;
+import backend.server.service.domain.Log;
 import backend.server.service.domain.Membre;
-import backend.server.service.payloads.ConsumptionHistoryChart;
-import backend.server.service.payloads.EntitiesCountResponse;
-import backend.server.service.payloads.GroupConsumption;
-import backend.server.service.payloads.QuotaUsedToday;
+import backend.server.service.payloads.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -14,6 +13,7 @@ public interface ICompagnieService {
 
     Compagnie getCompagnie(Long id);
     Compagnie getCompagnie(String nom);
+    List<Log> getLogs();
     List<Compagnie> getAllCompagnies();
     Compagnie createCompagnie(Compagnie compagnie);
     Compagnie updateCompagnie(Compagnie compagnie);
@@ -36,4 +36,6 @@ public interface ICompagnieService {
     ConsumptionHistoryChart getQuotaUsedByDay();
 
     List<GroupConsumption> getAllGroupsConsumption();
+
+    CompagnieName getCompagnieName();
 }

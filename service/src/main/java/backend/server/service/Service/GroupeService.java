@@ -1,14 +1,23 @@
 package backend.server.service.Service;
 
 import backend.server.service.POJO.PageResponse;
-import backend.server.service.domain.Groupe;
+import backend.server.service.Repository.LogRepository;
+import backend.server.service.domain.*;
 import backend.server.service.Repository.GroupeRepository;
+import backend.server.service.enums.AuthLevel;
+import backend.server.service.enums.LogType;
+import backend.server.service.security.POJOs.responses.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +25,17 @@ import java.util.stream.Collectors;
 public class GroupeService implements IGroupeService{
 
     private final GroupeRepository groupeRepository;
+    private final DossierService dossierService;
+    private final CompagnieService compagnieService;
+    private final IMembreService membreService;
+    @Autowired
+    private LogRepository logRepository;
+    public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService) {
 
-    public GroupeService(GroupeRepository groupeRepository) {
         this.groupeRepository = groupeRepository;
+        this.compagnieService = compagnieService;
+        this.dossierService = dossierService;
+        this.membreService = membreService;
     }
     @Override
     public Groupe addGroupe(Groupe groupe) {
@@ -60,6 +77,72 @@ public class GroupeService implements IGroupeService{
         }
         List<Groupe> pageContent = groupes.subList(start, Math.min(end, groupes.size()));
         return new PageResponse<>(pageContent, groupes.size());
+    }
+
+    @Override
+    public Groupe updateGroupe(Long groupeId, String newName) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieNom);
+        String nom = grp.getNom();
+        Dossier dossier = dossierService.getGroupRoot(grp);
+
+        grp = compagnieService.updateGroupe(groupeId, newName);
+            dossierService.renameDossier(dossier.getId(), newName);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            return grp;
+
+    }
+
+    @Override
+    public void deleteGroup(String group) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+            Groupe groupe = getGroupe(group,compagnieNom);
+            Groupe defaultGroup = getGroupe(compagnieNom,compagnieNom);
+            if(groupe.getNom().equals(compagnieNom))
+                throw new RuntimeException("Impossible de supprimer le groupe par défaut");
+            for (Membre membre : groupe.getMembres()) {
+                membre.setGroupe(defaultGroup);
+                membreService.updateMembre(membre);
+                Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " Déplacé vers le groupe " + compagnieNom).type(LogType.DÉPLACER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+                logRepository.save(logMessage);
+            }
+            groupe.getMembres().clear();
+            Dossier dossierGroupe = dossierService.getGroupRoot(groupe);
+            Log.builder().message("Le dossier " + dossierGroupe.getFullPath() + " a était supprimé.").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            dossierService.delete(dossierGroupe.getId());
+            compagnieService.deleteGroupe(group);
+            // Ajouter un message de log pour l'ajout du nouveau membre
+            Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+    }
+
+    @Override
+    public Groupe createGroupe(String group) {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+
+            Groupe groupe =  compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
+            Log logMessage = Log.builder().message("Groupe " + group + " créé").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            logRepository.save(logMessage);
+            Dossier dossier = new Dossier();
+            dossier.setNom(group);
+            dossier.setCompagnie(compagnie);
+            dossier.setGroupRoot(true);
+            dossier.setGroupe(groupe);
+            Authorisation authorisation = Authorisation.generateFullAccess();
+            authorisation.setAuthLevel(AuthLevel.GROUPE);
+            authorisation.setRessourceAccessor(getGroupe(group,compagnieNom));
+            authorisation.setDossier(dossier);
+            dossier.getAuthorisations().add(authorisation);
+
+
+            dossierService.addDossier(dossier,dossierService.getRootDossier().getId());
+            return groupe;
+
     }
 
 }

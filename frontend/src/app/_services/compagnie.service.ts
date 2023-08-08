@@ -24,7 +24,7 @@ const httpOptions = {
 
 
 export class CompagnieService {
-  private baseUrl = 'http://172.16.16.235:8080/api/v1/compagnie';
+  private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/compagnie';
   constructor(private http: HttpClient) {}
 
 

@@ -42,22 +42,8 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try {
-            if(dossierService.getRootDossier().getId() == parentFolderId){
-                return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas ajouter un dossier à la racine"));
-            }
-            d.setGroupe(dossierService.getGroupRootGroupe(parentFolderId));
-            authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(), d);
-            dossierService.addDossier(d, parentFolderId);
-            Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("dossier ajouté avec succès!"));
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        dossierService.addDossierCtrl(d, parentFolderId);
+        return ResponseEntity.ok(new MessageResponse("Dossier ajouté avec succès"));
 
     }
 
@@ -79,15 +65,8 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
-        if(dossierService.getRootDossier().getId() == dossierId){
-            return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas supprimer la racine"));
-        }
-        if(dossierService.getDossier(dossierId).isGroupRoot()){
-            return ResponseEntity.badRequest().body(new MessageResponse("Vous ne pouvez pas supprimer un dossier racine de groupe"));
-        }   
-        System.out.println("dossierId: "+ dossierId);
-        dossierService.delete(dossierId);
-        return ResponseEntity.ok(new MessageResponse("dossier supprimé avec succès!"));
+        dossierService.deleteDossierCtrl(dossierId);
+        return ResponseEntity.ok(new MessageResponse("Dossier supprimé avec succès"));
     }
 
     /**
@@ -99,17 +78,8 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/admin/rename/{dossierId}")
     public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try{
-            dossierService.renameDossier(dossierId, name);
-            Log logMessage = Log.builder().message("Dossier "+name+" ajouté à la société "+compagnieNom).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("dossier renommé avec succès!"));
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        dossierService.renameDossierCtrl(dossierId, name);
+        return ResponseEntity.ok(new MessageResponse("Dossier renommé avec succès"));
     }
 
     /**

@@ -199,17 +199,13 @@ public class FileController {
      */
     @GetMapping(path = "/download/{name}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
-        System.out.println("filename: "+name);
+        fichierService.dowloadFile(name);
         // 1. Construct the File object representing the file to be downloaded
         File file = new File(path + name);
-
         // 2. Create a Path object from the File's absolute path
         Path filePath = Paths.get(file.getAbsolutePath());
-
         // 3. Read the file's content into a ByteArrayResource
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(filePath));
-        System.out.println("siiiiiiiiiiiize: "+ResponseEntity.ok().contentLength(file.length()));
-
         BufferedOutputStream outputStream =
                 new BufferedOutputStream(
                         new FileOutputStream(new File(pathd,

@@ -2,6 +2,7 @@ package backend.server.service.Service;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.domain.Label;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

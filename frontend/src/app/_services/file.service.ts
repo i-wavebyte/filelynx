@@ -10,10 +10,10 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class FileService {
-  private baseUrl = 'http://localhost:8080/api/v1/fichier';
+  private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/fichier';
   constructor(private http: HttpClient) { }
 
- 
+
   upload(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
     headers.delete('Content-Type');

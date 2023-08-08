@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.enums.ETAT;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface IFichierService {
     List<Fichier> getFichiersByParent(Long parentId);
 
     List<String> uploadFile(MultipartFile file, Long folderId, List<String> selectedLabels, String selectedCategorie) throws Exception;
+
+    ByteArrayResource dowloadFile(String name);
 }

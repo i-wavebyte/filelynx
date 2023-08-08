@@ -2,6 +2,8 @@ package backend.server.service.Service;
 
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.domain.Categorie;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface ICategorieService {

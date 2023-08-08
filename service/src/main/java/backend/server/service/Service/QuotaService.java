@@ -1,10 +1,13 @@
 package backend.server.service.Service;
 
+import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.AuthorisationRepository;
 import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.RessourceAccessorRepository;
 import backend.server.service.domain.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,13 +15,22 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service @Transactional @RequiredArgsConstructor
+@Service @Transactional
 public class QuotaService implements IQuotaService{
 
     private final AuthorisationRepository authorisationRepository;
     private final AuthotisationService  authotisationService;
     private final RessourceAccessorRepository ressourceAccessorRepository;
     private final GroupeRepository groupeRepository;
+    private final ICompagnieService compagnieService;
+
+    public QuotaService(AuthorisationRepository authorisationRepository, AuthotisationService authotisationService, RessourceAccessorRepository ressourceAccessorRepository, GroupeRepository groupeRepository,@Lazy ICompagnieService compagnieService) {
+        this.authorisationRepository = authorisationRepository;
+        this.authotisationService = authotisationService;
+        this.ressourceAccessorRepository = ressourceAccessorRepository;
+        this.groupeRepository = groupeRepository;
+        this.compagnieService = compagnieService;
+    }
     public Double getTotalQuotaOfGroup(Long ressourceAccessorId){
         RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId).orElseThrow(()-> new RuntimeException("RessourceAccessor not found"));
         if(ressourceAccessor instanceof Membre){
@@ -87,5 +99,16 @@ public class QuotaService implements IQuotaService{
             totalAllocatedQuota += groupe.getQuota();
         }
         return totalAllocatedQuota;
+    }
+
+    @Override
+    public Quota getQuotaStatus() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Quota quota1 = new Quota();
+        quota1.setQuota(compagnie.getQuota());
+        quota1.setUsedQuota(getTotalQuotaOfCompagnie());
+        quota1.setQuotaLeft(compagnie.getQuota() - getTotalQuotaOfCompagnie());
+        return quota1;
     }
 }

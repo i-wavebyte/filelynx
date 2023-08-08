@@ -19,4 +19,10 @@ public interface IDossierService {
     Dossier getRootDossier();
     Groupe getGroupRootGroupe(Long dossierId);
     Dossier getGroupRoot(Groupe groupe);
+
+    Dossier addDossierCtrl(Dossier d, Long parentFolderId);
+
+    void deleteDossierCtrl(Long dossierId);
+
+    Dossier renameDossierCtrl(Long dossierId, String name);
 }

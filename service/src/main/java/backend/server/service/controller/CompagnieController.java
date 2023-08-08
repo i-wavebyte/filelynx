@@ -31,7 +31,7 @@ public class CompagnieController {
     private final ICompagnieService compagnieService;
     private final CompagnieRepository compagnieRepository;
     private final PasswordEncoder encoder;
-    private final UserRepository userRepository;
+
     private final RoleRepository roleRepository;
     private final IGroupeService groupeService;
     private final GroupeRepository groupeRepository;
@@ -54,45 +54,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/RegisterMembre")
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieRepository.findByNom(compagnieNom);
-        // Vérifier si la compagnie existe
-        if(compagnie == null){
-            String messageErreur = "Erreur : Compagnie introuvable !";
-            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
-        }
-//         Vérifier si le nom d'utilisateur est disponible
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(membre.getUsername()))) {
-            String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
-            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
-        }
-        // Vérifier si l'adresse email est disponible
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(membre.getEmail()))) {
-            String messageErreur = "Erreur : L'adresse email '" + membre.getEmail() + "' est déjà utilisée !";
-            return ResponseEntity.badRequest().body(new MessageResponse(messageErreur));
-        }
-
-        // Créer un nouvel utilisateur avec le rôle ROLE_USER
-        User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
-        user.setRoles(Collections.singleton(roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Erreur : Rôle introuvable."))));
-        userRepository.save(user);
-
-        // Ajouter le nouveau membre à la base de données
-        Membre newMembre = Membre.builder()
-                .nom(membre.getNom())
-                .prenom(membre.getPrenom())
-                .email(membre.getEmail())
-                .username(membre.getUsername())
-                .groupe(groupeService.getGroupe(membre.getGroupe(),compagnieNom))
-                .compagnie(compagnie)
-                .build();
-        membreService.addMembre(newMembre);
-        // Ajouter un message de log pour l'ajout du nouveau membre
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " créé et ajouté au groupe " + membre.getGroupe()).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-
-        // Retourner une réponse HTTP avec un message de réussite
-        return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès !"));
+        membreService.registerMembre(membre);
+        return ResponseEntity.ok(new MessageResponse("Membre enregistré avec succès!"));
     }
 
     /**
@@ -104,32 +67,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/createGroup/{group}")
     public ResponseEntity<?> createGroup(@PathVariable String group) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try
-        {
-            Groupe groupe =  compagnieService.createGroupe(group, 1024.*1024.*1024.*5,compagnie.getId());
-            Log logMessage = Log.builder().message("Groupe " + group + " créé").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            Dossier dossier = new Dossier();
-            dossier.setNom(group);
-            dossier.setCompagnie(compagnie);
-            dossier.setGroupRoot(true);
-            dossier.setGroupe(groupe);
-            Authorisation authorisation = Authorisation.generateFullAccess();
-            authorisation.setAuthLevel(AuthLevel.GROUPE);
-            authorisation.setRessourceAccessor(groupeService.getGroupe(group,compagnieNom));
-            authorisation.setDossier(dossier);
-            dossier.getAuthorisations().add(authorisation);
-
-
-            dossierService.addDossier(dossier,dossierService.getRootDossier().getId());
-            return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès"));
-        }
-        catch(RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        groupeService.createGroupe(group);
+        return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès!"));
     }
 
     /**
@@ -141,15 +80,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Membre membre = membreService.getMembre(username);
-        Groupe oldGroupe = membre.getGroupe();
-        membre.setGroupe(groupeService.getGroupe(group,compagnieNom));
-        membreService.updateMembre(membre);
-        Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " à changer de groupe de " + oldGroupe + " vers " + group).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Le groupe d'utilisateurs a bien été remplacé par " + group));
+        membreService.changeMemberGroup(username,group);
+        return ResponseEntity.ok(new MessageResponse("Membre transféré avec succès!"));
     }
 
     /**
@@ -160,13 +92,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getQuotaStatus")
     public ResponseEntity<?> getQuotaStatus() {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Quota quota1 = new Quota();
-        quota1.setQuota(compagnie.getQuota());
-        quota1.setUsedQuota(quotaService.getTotalQuotaOfCompagnie());
-        quota1.setQuotaLeft(compagnie.getQuota() - quotaService.getTotalQuotaOfCompagnie());
-        return ResponseEntity.ok(quota1);
+
+        return ResponseEntity.ok(quotaService.getQuotaStatus());
     }
 
     /**
@@ -175,10 +102,8 @@ public class CompagnieController {
      */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCompagnieLogs")
-    public ResponseEntity<?> getCompagnieLogs() {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        return ResponseEntity.ok(compagnie.getLogs());
+    public List<Log> getCompagnieLogs() {
+        return compagnieService.getLogs();
     }
 
     /**
@@ -251,33 +176,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try {
-            Groupe groupe = groupeService.getGroupe(group,compagnieNom);
-            Groupe defaultGroup = groupeService.getGroupe(compagnieNom,compagnieNom);
-            if(groupe.getNom().equals(compagnieNom))
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Vous ne pouvez pas supprimer le groupe par défaut"));
-            for (Membre membre : groupe.getMembres()) {
-                membre.setGroupe(defaultGroup);
-                membreService.updateMembre(membre);
-                Log logMessage = Log.builder().message("Membre " + membre.getUsername() + " Déplacé vers le groupe " + compagnieNom).type(LogType.DÉPLACER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-                logRepository.save(logMessage);
-            }
-            groupe.getMembres().clear();
-            Dossier dossierGroupe = dossierService.getGroupRoot(groupe);
-            Log.builder().message("Le dossier " + dossierGroupe.getFullPath() + " a était supprimé.").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            dossierService.delete(dossierGroupe.getId());
-            compagnieService.deleteGroupe(group);
-            // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Groupe " + group + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès"));
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        groupeService.deleteGroup(group);
+        return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès!"));
     }
 
     /**
@@ -289,19 +189,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteMembre/{membreId}/{username}")
     public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try {
-            compagnieService.deleteMembre(membreId, username);
-            // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Membre " + username + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès"));
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        membreService.deleteMembre(membreId, username);
+        return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès!"));
     }
 
     /**
@@ -313,23 +202,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateGroupe/{groupeId}/{newName}")
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieNom);
-        String nom = grp.getNom();
-        Dossier dossier = dossierService.getGroupRoot(grp);
-        try{
-            compagnieService.updateGroupe(groupeId, newName);
-            dossierService.renameDossier(dossier.getId(), newName);
-            // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Groupe " + nom + " de la Société " + compagnieNom + " a été mis à jour ").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Groupe mis à jour avec succès"));
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        groupeService.updateGroupe(groupeId, newName);
+        return ResponseEntity.ok(new MessageResponse("Groupe modifié avec succès!"));
     }
 
     /**
@@ -340,13 +214,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        String username= membre.getUsername();
         compagnieService.updateMembre(membre);
-        Log logMessage = Log.builder().message("Membre " + username + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Membre mis à jour avec succès"));
+        return ResponseEntity.ok(new MessageResponse("Membre modifié avec succès !"));
     }
 
     /**
@@ -358,14 +227,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateCategorie/{categorieId}/{newName}")
     public ResponseEntity<?> updateCategorie(@PathVariable Long categorieId, @PathVariable String newName ) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
-        String categorieName = categorie.getNom();
         categorieService.updateCategorie(categorieId, newName);
-        Log logMessage = Log.builder().message("Catégorie " + categorieName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Categorie mis à jour avec succès"));
+        return ResponseEntity.ok(new MessageResponse("Catégorie modifiée avec succès !"));
     }
 
     /**
@@ -376,14 +239,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteCategorie/{categorieId}")
     public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Categorie categorie = categorieRepository.findByIdAndCompagnieNom(categorieId, compagnieNom);
-        String categorieName = categorie.getNom();
         categorieService.deleteCategorie(categorieId);
-        Log logMessage = Log.builder().message("Catégorie " + categorieName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Categorie supprimé avec succès"));
+        return ResponseEntity.ok(new MessageResponse("Catégorie supprimée avec succès !"));
     }
 
     /**
@@ -395,14 +252,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PutMapping("/updateLabel/{labelId}/{newName}")
     public ResponseEntity<?> updateLabel(@PathVariable Long labelId, @PathVariable String newName ) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
-        String labelName = label.getNom();
         labelService.updateLabel(labelId, newName);
-        Log logMessage = Log.builder().message("Étiquete " + labelName + " de la Société " + compagnieNom + " a été mis à jour").type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Étiquete mis à jour avec succès"));
+        return ResponseEntity.ok(new MessageResponse("Etiquette modifiée avec succès !"));
     }
 
     /**
@@ -413,14 +264,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @DeleteMapping("/deleteLabel/{labelId}")
     public ResponseEntity<?> deleteLabel(@PathVariable Long labelId) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        Label label = labelRepository.findByIdAndCompagnieNom(labelId, compagnieNom);
-        String labelName = label.getNom();
         labelService.deleteLabel(labelId);
-        Log logMessage = Log.builder().message("Étiquete " + labelName + " retiré de la Société " + compagnieNom).type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-        logRepository.save(logMessage);
-        return ResponseEntity.ok(new MessageResponse("Étiquete supprimé avec succès"));
+        return ResponseEntity.ok(new MessageResponse("Etiquette supprimée avec succès !"));
     }
 
     /**
@@ -500,19 +345,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addLabel")
     public ResponseEntity<?> addLabel(@RequestBody Label label) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try {
             labelService.addLabel(label);
-            // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Label " + label.getNom() + " ajouté.").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Label ajouté avec succès"));
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+            return ResponseEntity.ok(new MessageResponse("Etiquette ajoutée avec succès !"));
     }
 
     /**
@@ -523,19 +357,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @PostMapping("/addCategorie")
     public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-        try {
             categorieService.addCategorie(categorie);
-            // Ajouter un message de log pour l'ajout du nouveau membre
-            Log logMessage = Log.builder().message("Catégorie " + categorie.getNom() + " ajoutée.").type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
-            logRepository.save(logMessage);
-            return ResponseEntity.ok(new MessageResponse("Catégorie ajoutée avec succès"));
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+            return ResponseEntity.ok(new MessageResponse("Catégorie ajoutée avec succès !"));
     }
 
     /**
@@ -585,9 +408,8 @@ public class CompagnieController {
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
     @GetMapping("/getCompagnieName")
     public ResponseEntity<CompagnieName> getCompagnieName(){
-        CompagnieName compagnieName = new CompagnieName();
-        compagnieName.setName(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(compagnieName);
+
+        return ResponseEntity.ok(compagnieService.getCompagnieName());
     }
 
 }
