@@ -10,11 +10,11 @@
     display: flex;
     align-items: center; /*center element vertically*/
     justify-content: center; /*center element horizontally*/
-    }
+  }
 
   .popup-content {
     width: 76%;
-    padding: 24px;
+    /* padding: 24px; */
     box-sizing: border-box;
     box-shadow: 0px 4px 4px -4px rgba(24, 24, 28, 0.02);
     filter: drop-shadow(0px 1px 2px rgba(24, 24, 28, 0.06));
@@ -24,7 +24,7 @@
     align-items: flex-start;
     justify-content: center;
     /* flex-direction: column; */
-    }
+  }
 
   .enregistrer {
     border: none;
@@ -34,7 +34,7 @@
     height: 31px;
     text-align: center;
     color: white;
-    }
+  }
 
   .annuler{
     border: none;
@@ -45,7 +45,7 @@
     background-color: white;
     font-size: 16px;
     font-weight: 400;
-    }
+  }
 
   .close {
     position: absolute;
@@ -67,7 +67,12 @@
 
   .left-side{
     flex-basis: 50%;
-    background: #ac722f;
+    overflow: hidden;
+  }
+
+  .left-side img{
+    width: 100%;
+    /* height: auto; */
   }
 
   .right-side{
@@ -76,6 +81,8 @@
     margin-left: 20px;
     margin-top: 20px;
     flex-direction: column;
+    padding: 24px;
+
   }
   
   .label-container {
@@ -125,6 +132,7 @@
         padding: 0px 10px;
         display: flex;
         align-items: center;
+        margin-bottom: 60px;
        }
 
      p{
@@ -174,12 +182,6 @@
         padding-left: 5px;
     }
 
-
-
-
-
-
-
   .checkbox-container {
     display: flex;
     flex-direction: column;
@@ -192,7 +194,6 @@
   }
 
   .checkbox-container input{
-
     margin-right: 8px;
     width: 17px;
     height: 17px;
@@ -230,6 +231,7 @@
     display: flex;
     justify-content: flex-end;
     width: 100%;
+    padding-right: 20px;
   }
 
   .row3 button {

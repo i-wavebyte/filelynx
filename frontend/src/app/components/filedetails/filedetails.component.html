@@ -1,16 +1,16 @@
 
 <div class="popup-bg" >
     <div class="popup-content">
-      <button class="close" routerLink="../">X</button>
+      <button class="close" routerLink="../..">X</button>
       <div class="left-side">
-
+        <img src="../../../assets/left-side.png" alt="">
       </div>
       <div class="right-side">
         <div class="label-container">
             <label for="name">Fichier</label>
             <div class="file">
-                <input id="fileName" type="text" class="rectangle" value="mazal ...">
-                <span>.pdf</span>
+                <input id="fileName" type="text" class="rectangle" value={{fileName}}>
+                <span>.{{extension}}</span>
             </div>
         </div>
         <div class="label-container">
@@ -18,7 +18,7 @@
             <div class="row">
               <select class="sele" >
                 <option value="">Rapports</option>
-                <option ></option>
+                <option  >{{categorie}}</option>
               </select>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="row">
               <select class="sele" >
                 <option value="">Selectionnez un label</option>
-                <option ></option>
+                <option *ngFor="let label of labels" [value]="label">{{label}}</option>
               </select>
             </div>
         </div>
@@ -40,12 +40,12 @@
         <div class="label-container">
             <label for="name">Taille</label>
             <div class="rectanglec">
-                <p class="fullpath">3.6mo</p>
+                <p class="fullpath">{{size}}</p>
             </div>
         </div>
         <div class="row3">
-            <button class="annuler" routerLink=".." >annuler</button>
-            <button class="enregistrer" >enregistrer</button>
+            <button class="annuler" routerLink="../.." >annuler</button>
+            <button class="enregistrer" (click)="onSave()" >enregistrer</button>
           </div>
       </div>
     </div>

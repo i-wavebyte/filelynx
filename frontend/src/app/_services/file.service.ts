@@ -20,8 +20,8 @@ export class FileService {
     return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
   }
 
-  // getFileById(fileId: number): Observable<Fichier>
-  // {
-
-  // }
+  getFileById(fileId: number): Observable<Fichier>
+  {
+    return this.http.get<Fichier>(`${this.baseUrl}/admin/get/${fileId}`, httpOptions);
+  }
 }
