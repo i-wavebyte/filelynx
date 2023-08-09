@@ -161,5 +161,10 @@ export class FilesettingsComponent {
         console.log(this.selectedCategorie);
       }
       }
+      removeLabel(label: string): void
+      {
+        this.selectedLabels = this.selectedLabels.filter(selectedLabel => selectedLabel !== label);
+        this.labels.push(label);
+      }
   }
 

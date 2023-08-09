@@ -222,7 +222,4 @@ public class FileController {
                 .contentType(MediaType.parseMediaType("application/octet-stream")) // Set the Content-Type header
                 .body(resource); // Set the response body with the file content
     }
-
-
-
 }

@@ -31,8 +31,6 @@
                 <option value="">Selectionnez un label</option>
                 <option *ngFor="let label of labels" [value]="label">{{ label }}</option>
               </select>
-
-
             </div>
           </div>
         </div>
@@ -51,7 +49,7 @@
         <div class="left-side">
           <div *ngFor="let label of selectedLabels" class="selected-label">
             {{ label }}
-            <img src="../../../assets/close.svg" alt="">
+            <img (click)="removeLabel(label)" src="../../../assets/close.svg" alt="">
             <!-- Add any other styling or content you want for each selected label -->
           </div>
         </div>

@@ -49,6 +49,10 @@
     flex-basis: 50%;
   }
 
+  .left-side img{
+    cursor: pointer;
+  }
+  
 .row2 .left-side{
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
