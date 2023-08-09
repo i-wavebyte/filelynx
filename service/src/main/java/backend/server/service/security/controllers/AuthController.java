@@ -1,5 +1,6 @@
 package backend.server.service.security.controllers;
 
+import backend.server.service.Literals;
 import backend.server.service.Repository.AuthorisationRepository;
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.LogRepository;
@@ -95,7 +96,7 @@ public class AuthController {
         }
         catch (Exception e)
         {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "Invalid username or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, Literals.INVALID_USERNAME_OR_PASSWORD));
         }
     }
     @PostMapping("/refreshtoken")
@@ -110,7 +111,7 @@ public class AuthController {
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-                        "Refresh token is not in database!"));
+                        Literals.REFRESH_TOKEN_NOT_FOUND));
     }
 
     /**
@@ -124,12 +125,12 @@ public class AuthController {
 
         // Check if username is already taken
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse(Literals.USERNAME_ALREADY_EXISTS));
         }
 
         // Check if email is already in use
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            return ResponseEntity.badRequest().body(new MessageResponse(Literals.EMAIL_ALREADY_EXISTS));
         }
         
         // Create new user's account
@@ -137,7 +138,7 @@ public class AuthController {
 
         // Set user roles
         Set<Role> roles = new HashSet<>();
-        Role CompagnieRole = roleRepository.findByName(EROLE.ROLE_COMPAGNIE).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        Role CompagnieRole = roleRepository.findByName(EROLE.ROLE_COMPAGNIE).orElseThrow(() -> new RuntimeException(Literals.ROLE_NOT_FOUND));
         roles.add(CompagnieRole);
         user.setRoles(roles);
         userRepository.save(user);
@@ -189,6 +190,6 @@ public class AuthController {
         root.getAuthorisations().add(authorisation);
         dossierRepository.save(root);
         dossierGroupe = dossierService.addDossier(dossierGroupe, root.getId(), compagnie,true);
-        return ResponseEntity.ok(new MessageResponse("Société enregistrée avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.COMPAGNIE_REGISTRATION_SUCCESSFUL));
     }
 }

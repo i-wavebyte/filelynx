@@ -26,14 +26,14 @@
               </div>
           </div>
           <div class="label-container hhhh">
-            <label for="name">Labels</label>
+            <label for="name">Étiquettes</label>
             <div class="row">
               <select class="sele" (change)="onLabelSelected($event)">
                 <option value="">Selectionnez un label</option>
                 <option *ngFor="let label of labels" [value]="label">{{ label }}</option>
               </select>
-              
-              
+
+
             </div>
           </div>
         </div>
@@ -63,4 +63,3 @@
       </div>
     </div>
   </div>
-  

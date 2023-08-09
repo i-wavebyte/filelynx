@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.LogRepository;
@@ -53,7 +54,7 @@ public class MembreService implements IMembreService {
     }
     @Override
     public Membre getMembre(Long id){
-        return membreRepository.findById(id).orElseThrow(()-> new RuntimeException("Membre not found") );
+        return membreRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.MEMBER_NOT_FOUND) );
     }
     @Override
     public Membre addMembre(Membre membre){
@@ -134,24 +135,21 @@ public class MembreService implements IMembreService {
         Compagnie compagnie = compagnieRepository.findByNom(compagnieNom);
         // Vérifier si la compagnie existe
         if(compagnie == null){
-            String messageErreur = "Erreur : Compagnie introuvable !";
-            throw new RuntimeException(messageErreur);
+            throw new RuntimeException(Literals.COMPAGNIE_NOT_FOUND);
 
         }
 //         Vérifier si le nom d'utilisateur est disponible
         if (Boolean.TRUE.equals(userRepository.existsByUsername(membre.getUsername()))) {
-            String messageErreur = "Erreur : Le nom d'utilisateur '" + membre.getUsername() + "' est déjà utilisé !";
-            throw new RuntimeException(messageErreur);
+            throw new RuntimeException(Literals.USERNAME_ALREADY_EXISTS);
         }
         // Vérifier si l'adresse email est disponible
         if (Boolean.TRUE.equals(userRepository.existsByEmail(membre.getEmail()))) {
-            String messageErreur = "Erreur : L'adresse email '" + membre.getEmail() + "' est déjà utilisée !";
-            throw new RuntimeException(messageErreur);
+            throw new RuntimeException(Literals.EMAIL_ALREADY_EXISTS);
         }
 
         // Créer un nouvel utilisateur avec le rôle ROLE_USER
         User user = new User(membre.getUsername(), membre.getEmail(), encoder.encode(membre.getPassword()));
-        user.setRoles(Collections.singleton(roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException("Erreur : Rôle introuvable."))));
+        user.setRoles(Collections.singleton(roleRepository.findByName(EROLE.ROLE_USER).orElseThrow(() -> new RuntimeException(Literals.ROLE_NOT_FOUND))));
         userRepository.save(user);
 
         // Ajouter le nouveau membre à la base de données

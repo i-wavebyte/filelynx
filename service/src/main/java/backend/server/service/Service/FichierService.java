@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.Repository.CategorieRepository;
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.FichierRepository;
@@ -53,8 +54,7 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier addFichier(Fichier f, Long ParentFolderId)
     {
-        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
-
+        Dossier dossierParent = ParentFolderId!=null ? dossierRepository.findById(ParentFolderId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND)): null;
         f.setRacine(dossierParent);
         f= fichierRepository.save(f);
         if (ParentFolderId!=null) {
@@ -62,7 +62,6 @@ public class FichierService implements IFichierService{
 
             dossierRepository.save(dossierParent);
         }
-        log.info("File created at {}", f.getFullPath());
         return f;
     }
 
@@ -73,7 +72,7 @@ public class FichierService implements IFichierService{
     @Override
     public void deleteFichier(Long fichierId)
     {
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         fichierRepository.delete(file);
     }
 
@@ -86,7 +85,7 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier rename(Long fichierId, String name)
     {
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         file.setNom(name);
         return fichierRepository.save(file);
     }
@@ -111,8 +110,8 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier changerEmplacement(Long fichierId,Long dossierCibleId )
     {
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
-        Dossier dossierCible = dossierRepository.findById(dossierCibleId).orElseThrow(()-> new RuntimeException("Folder not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+        Dossier dossierCible = dossierRepository.findById(dossierCibleId).orElseThrow(()-> new RuntimeException(Literals.FOLDER_NOT_FOUND));
         file.setRacine(dossierCible);
         return fichierRepository.save(file);
     }
@@ -125,7 +124,7 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier getFichier(Long id)
     {
-        return fichierRepository.findById(id).orElseThrow(()-> new RuntimeException("File not found"));
+        return fichierRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
     }
 
     /**
@@ -137,7 +136,7 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier updateEtat(Long fichierId, ETAT etat)
     {
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         file.setEtat(etat);
         return fichierRepository.save(file);
     }
@@ -150,7 +149,7 @@ public class FichierService implements IFichierService{
      */
     @Override
     public Fichier changeCategory(Long fichierId,Long categorieId){
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         Categorie categorie = categorieService.getCategorie(categorieId);
         file.setCategorie(categorie);
         return fichierRepository.save(file);
@@ -164,7 +163,7 @@ public class FichierService implements IFichierService{
      */
     @Override
     public Fichier updateLabels(Long fichierId, List<Label> labels){
-        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException("File not found"));
+        Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         file.setLabels(labels);
         return fichierRepository.save(file);
     }
@@ -176,7 +175,7 @@ public class FichierService implements IFichierService{
      */
     @Override
     public List<Fichier> getFichiersByParent(Long parentId){
-        Dossier dossier = dossierRepository.findById(parentId).orElseThrow(()-> new RuntimeException("Folder not found"));
+        Dossier dossier = dossierRepository.findById(parentId).orElseThrow(()-> new RuntimeException(Literals.FOLDER_NOT_FOUND));
         return dossier.getFichiers();
     }
 
@@ -225,7 +224,7 @@ public class FichierService implements IFichierService{
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Fichier fichier = new Fichier();
         Optional<Dossier> dossierOptional = dossierRepository.findById(folderId);
-        Dossier dossier = dossierOptional.orElseThrow(() -> new NoSuchElementException("Dossier not found"));
+        Dossier dossier = dossierOptional.orElseThrow(() -> new NoSuchElementException(Literals.FOLDER_NOT_FOUND));
         int lastIndex = file.getOriginalFilename().lastIndexOf('.');
         fichier.setNom(lastIndex != -1 ? file.getOriginalFilename().substring(0, lastIndex) : file.getOriginalFilename());
         fichier.setExtension(lastIndex != -1 ? file.getOriginalFilename().substring(lastIndex+1, file.getOriginalFilename().length()) : file.getOriginalFilename());

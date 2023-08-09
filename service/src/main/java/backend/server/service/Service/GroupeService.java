@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.*;
@@ -31,7 +32,6 @@ public class GroupeService implements IGroupeService{
     @Autowired
     private LogRepository logRepository;
     public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService) {
-
         this.groupeRepository = groupeRepository;
         this.compagnieService = compagnieService;
         this.dossierService = dossierService;
@@ -44,7 +44,6 @@ public class GroupeService implements IGroupeService{
 
     @Override
     public Groupe getGroupe(String nom, String compagnieNom) {
-        log.info("nom: "+ nom + " compagnieNom: "+ compagnieNom);
         return groupeRepository.findByNomAndCompagnieNom(nom, compagnieNom);
     }
     @Override
@@ -103,7 +102,7 @@ public class GroupeService implements IGroupeService{
             Groupe groupe = getGroupe(group,compagnieNom);
             Groupe defaultGroup = getGroupe(compagnieNom,compagnieNom);
             if(groupe.getNom().equals(compagnieNom))
-                throw new RuntimeException("Impossible de supprimer le groupe par défaut");
+                throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_GROUP);
             for (Membre membre : groupe.getMembres()) {
                 membre.setGroupe(defaultGroup);
                 membreService.updateMembre(membre);
@@ -112,7 +111,6 @@ public class GroupeService implements IGroupeService{
             }
             groupe.getMembres().clear();
             Dossier dossierGroupe = dossierService.getGroupRoot(groupe);
-            Log.builder().message("Le dossier " + dossierGroupe.getFullPath() + " a était supprimé.").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             dossierService.delete(dossierGroupe.getId());
             compagnieService.deleteGroupe(group);
             // Ajouter un message de log pour l'ajout du nouveau membre

@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.Repository.DossierRepository;
 import backend.server.service.Repository.FichierRepository;
 import backend.server.service.Repository.LogRepository;
@@ -266,12 +267,11 @@ public class DossierService implements IDossierService {
     @Override
     public void deleteDossierCtrl(Long dossierId) {
         if(getRootDossier().getId() == dossierId){
-            throw new RuntimeException("Vous ne pouvez pas supprimer la racine");
+            throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_ROOT);
         }
         if(getDossier(dossierId).isGroupRoot()){
-            throw new RuntimeException("Vous ne pouvez pas supprimer un dossier racine de groupe");
+            throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_GROUP_ROOT);
         }
-        System.out.println("dossierId: "+ dossierId);
         delete(dossierId);
     }
 

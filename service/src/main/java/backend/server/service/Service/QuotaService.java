@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.AuthorisationRepository;
 import backend.server.service.Repository.GroupeRepository;
@@ -32,7 +33,7 @@ public class QuotaService implements IQuotaService{
         this.compagnieService = compagnieService;
     }
     public Double getTotalQuotaOfGroup(Long ressourceAccessorId){
-        RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId).orElseThrow(()-> new RuntimeException("RessourceAccessor not found"));
+        RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId).orElseThrow(()-> new RuntimeException(Literals.RESOURCE_ACCESSOR_NOT_FOUND));
         if(ressourceAccessor instanceof Membre){
             ressourceAccessorId = ((Membre) ressourceAccessor).getGroupe().getId();
         }
@@ -40,7 +41,7 @@ public class QuotaService implements IQuotaService{
             ressourceAccessorId = ressourceAccessor.getId();
         }
         else{
-            throw new RuntimeException("ressourceAccessor is not a groupe");
+            throw new RuntimeException(Literals.RESSOURCE_ACCESSOR_IS_NOT_A_GROUP);
         }
         List<Authorisation> authorisations = authorisationRepository.findAllByRessourceAccessorId(ressourceAccessorId);
         Double totalQuota = 0.0;
@@ -67,7 +68,7 @@ public class QuotaService implements IQuotaService{
             ressourceAccessor = ((Membre) ressourceAccessor).getGroupe();
             Double totalQuota = getTotalQuotaOfGroup(ressourceAccessor.getId());
             if(totalQuota + f.getTaille() > ((Groupe) ressourceAccessor).getQuota()){
-                throw new RuntimeException("Quota dépassé pour le groupe");
+                throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
             }
         }
     }
@@ -76,7 +77,7 @@ public class QuotaService implements IQuotaService{
         Compagnie compagnie = (Compagnie) authotisationService.extractResourceAccessorFromSecurityContext();
         Double totalQuota = getTotalQuotaOfCompagnie();
         if(totalQuota + f.getTaille() > compagnie.getQuota()){
-            throw new RuntimeException("Quota dépassé pour la compagnie");
+            throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
         }
     }
 

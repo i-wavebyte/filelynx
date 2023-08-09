@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.LabelRepository;
 import backend.server.service.Repository.LogRepository;
@@ -80,7 +81,7 @@ public class LabelService implements ILabelService{
     @Override
     public Label getLabel(Long id)
     {
-        return labelRepository.findById(id).orElseThrow(()-> new RuntimeException("Label not found"));
+        return labelRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.LABEL_NOT_FOUND));
     }
 
     @Override
