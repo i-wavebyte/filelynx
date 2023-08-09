@@ -1,5 +1,6 @@
 package backend.server.service.controller;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
@@ -55,7 +56,7 @@ public class CompagnieController {
     @PostMapping("/RegisterMembre")
     public ResponseEntity<?> addMembre(@RequestBody RegisterUserRequest membre) {
         membreService.registerMembre(membre);
-        return ResponseEntity.ok(new MessageResponse("Membre enregistré avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.MEMBER_CREATE_SUCCESS));
     }
 
     /**
@@ -68,7 +69,7 @@ public class CompagnieController {
     @PostMapping("/createGroup/{group}")
     public ResponseEntity<?> createGroup(@PathVariable String group) {
         groupeService.createGroupe(group);
-        return ResponseEntity.ok(new MessageResponse("Groupe créé avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.GROUPE_CREATE_SUCCESS));
     }
 
     /**
@@ -81,7 +82,7 @@ public class CompagnieController {
     @PutMapping("/ChangeMemberGroup/{username}/{group}")
     public ResponseEntity<?> changeMemberGroup(@PathVariable String username, @PathVariable String group) {
         membreService.changeMemberGroup(username,group);
-        return ResponseEntity.ok(new MessageResponse("Membre transféré avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.MEMBRE_TRANSTER_SUCCESS));
     }
 
     /**
@@ -177,7 +178,7 @@ public class CompagnieController {
     @DeleteMapping("/deleteGroupe/{group}")
     public ResponseEntity<?> deleteGroup(@PathVariable String group) {
         groupeService.deleteGroup(group);
-        return ResponseEntity.ok(new MessageResponse("Groupe supprimé avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.GROUPE_DELETE_SUCCESS));
     }
 
     /**
@@ -190,7 +191,7 @@ public class CompagnieController {
     @DeleteMapping("/deleteMembre/{membreId}/{username}")
     public ResponseEntity<?> deleteMembre(@PathVariable Long membreId, @PathVariable String username) {
         membreService.deleteMembre(membreId, username);
-        return ResponseEntity.ok(new MessageResponse("Membre supprimé avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.MEMBER_DELETE_SUCCESS));
     }
 
     /**
@@ -203,7 +204,7 @@ public class CompagnieController {
     @PutMapping("/updateGroupe/{groupeId}/{newName}")
     public ResponseEntity<?> updateGroup(@PathVariable Long groupeId, @PathVariable String newName) {
         groupeService.updateGroupe(groupeId, newName);
-        return ResponseEntity.ok(new MessageResponse("Groupe modifié avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.GROUPE_EDIT_SUCCESS));
     }
 
     /**
@@ -215,7 +216,7 @@ public class CompagnieController {
     @PutMapping("/updateMembre")
     public ResponseEntity<?> updateMembre(@RequestBody Membre membre) {
         compagnieService.updateMembre(membre);
-        return ResponseEntity.ok(new MessageResponse("Membre modifié avec succès !"));
+        return ResponseEntity.ok(new MessageResponse(Literals.MEMBER_EDIT_SUCCESS));
     }
 
     /**
@@ -228,7 +229,7 @@ public class CompagnieController {
     @PutMapping("/updateCategorie/{categorieId}/{newName}")
     public ResponseEntity<?> updateCategorie(@PathVariable Long categorieId, @PathVariable String newName ) {
         categorieService.updateCategorie(categorieId, newName);
-        return ResponseEntity.ok(new MessageResponse("Catégorie modifiée avec succès !"));
+        return ResponseEntity.ok(new MessageResponse(Literals.CATEGORY_EDIT_SUCCESS));
     }
 
     /**
@@ -240,7 +241,7 @@ public class CompagnieController {
     @DeleteMapping("/deleteCategorie/{categorieId}")
     public ResponseEntity<?> deleteCategorie(@PathVariable Long categorieId) {
         categorieService.deleteCategorie(categorieId);
-        return ResponseEntity.ok(new MessageResponse("Catégorie supprimée avec succès !"));
+        return ResponseEntity.ok(new MessageResponse(Literals.CATEGORY_DELETE_SUCCESS));
     }
 
     /**
@@ -253,7 +254,7 @@ public class CompagnieController {
     @PutMapping("/updateLabel/{labelId}/{newName}")
     public ResponseEntity<?> updateLabel(@PathVariable Long labelId, @PathVariable String newName ) {
         labelService.updateLabel(labelId, newName);
-        return ResponseEntity.ok(new MessageResponse("Etiquette modifiée avec succès !"));
+        return ResponseEntity.ok(new MessageResponse(Literals.LABEL_EDIT_SUCCESS));
     }
 
     /**
@@ -265,7 +266,7 @@ public class CompagnieController {
     @DeleteMapping("/deleteLabel/{labelId}")
     public ResponseEntity<?> deleteLabel(@PathVariable Long labelId) {
         labelService.deleteLabel(labelId);
-        return ResponseEntity.ok(new MessageResponse("Etiquette supprimée avec succès !"));
+        return ResponseEntity.ok(new MessageResponse(Literals.LABEL_DELETE_SUCCESS));
     }
 
     /**
@@ -346,7 +347,7 @@ public class CompagnieController {
     @PostMapping("/addLabel")
     public ResponseEntity<?> addLabel(@RequestBody Label label) {
             labelService.addLabel(label);
-            return ResponseEntity.ok(new MessageResponse("Etiquette ajoutée avec succès !"));
+            return ResponseEntity.ok(new MessageResponse(Literals.LABEL_CREATE_SUCCESS));
     }
 
     /**
@@ -358,7 +359,7 @@ public class CompagnieController {
     @PostMapping("/addCategorie")
     public ResponseEntity<?> addCategorie(@RequestBody Categorie categorie) {
             categorieService.addCategorie(categorie);
-            return ResponseEntity.ok(new MessageResponse("Catégorie ajoutée avec succès !"));
+            return ResponseEntity.ok(new MessageResponse(Literals.CATEGORY_CREATE_SUCCESS));
     }
 
     /**

@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.Repository.AuthorisationRepository;
 import backend.server.service.Repository.CompagnieRepository;
 import backend.server.service.Repository.MembreRepository;
@@ -56,14 +57,12 @@ public class AuthotisationService implements IAuthotisationService{
      * @return l'objet d'autorisation
      */
     public Authorisation getAuthorisation(Long ressourceAccessorId, Long dossierId) {
-        log.debug("Fetching authorisation for ressourceAccessorId {} and dossierId {}", ressourceAccessorId, dossierId);
         Optional<Authorisation> auth;
         RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId)
-                .orElseThrow(() -> new RuntimeException("resourceAccessorId not found"));
+                .orElseThrow(() -> new RuntimeException(Literals.RESOURCE_ACCESSOR_NOT_FOUND));
         if (ressourceAccessor instanceof Membre) {
             auth = authorisationRepository.findByRessourceAccessorIdAndDossierId(ressourceAccessor.getId(), dossierId);
             if (auth.isPresent()) {
-                log.debug("Authorisation found for ressourceAccessorId {} and dossierId {}", ressourceAccessorId, dossierId);
                 return auth.get();
             } else {
                 ressourceAccessor = ((Membre) ressourceAccessor).getGroupe();
@@ -73,7 +72,6 @@ public class AuthotisationService implements IAuthotisationService{
         if (ressourceAccessor instanceof Groupe) {
             auth = authorisationRepository.findByRessourceAccessorIdAndDossierId(ressourceAccessor.getId(), dossierId);
             if (auth.isPresent()) {
-                log.debug("Authorisation found for ressourceAccessorId {} and dossierId {}", ressourceAccessorId, dossierId);
                 return auth.get();
             } else {
                 ressourceAccessor = ((Groupe) ressourceAccessor).getCompagnie();
@@ -83,13 +81,12 @@ public class AuthotisationService implements IAuthotisationService{
         if (ressourceAccessor instanceof Compagnie) {
             auth = authorisationRepository.findByRessourceAccessorIdAndDossierId(ressourceAccessor.getId(), dossierId);
             if (auth.isPresent()) {
-                log.debug("Authorisation found for ressourceAccessorId {} and dossierId {}", ressourceAccessorId, dossierId);
                 return auth.get();
             } else {
-                throw new RuntimeException("Authorisation not found");
+                throw new RuntimeException(Literals.UNAUTHORIZED);
             }
         }
-        throw new RuntimeException("Authorisation not found");
+        throw new RuntimeException(Literals.UNAUTHORIZED);
     }
 
     /**
@@ -100,11 +97,9 @@ public class AuthotisationService implements IAuthotisationService{
      * @return true si le ressourceAccessor a une autorisation pour le dossier, false sinon
      */
     public boolean hasAuth(Long resourceAccessorId, Long dossierId, String authType) {
-        log.debug("Checking if user with resourceAccessorId {} has authType {}", resourceAccessorId, authType);
         Authorisation auth = getAuthorisation(resourceAccessorId, dossierId);
         if (!auth.isLecture()) {
-            log.debug("Access denied for user with resourceAccessorId {}", resourceAccessorId);
-            throw new RuntimeException("Access denied");
+            throw new RuntimeException(Literals.UNAUTHORIZED);
         }
         switch (authType) {
             case "lecture":
@@ -124,8 +119,7 @@ public class AuthotisationService implements IAuthotisationService{
             case "creationDossier":
                 return auth.isCreationDossier();
             default:
-                log.debug("Invalid authType {} for user with resourceAccessorId {}", authType, resourceAccessorId);
-                throw new RuntimeException("Invalid AuthType");
+                throw new RuntimeException(Literals.UNAUTHORIZED);
         }
     }
 
@@ -136,10 +130,8 @@ public class AuthotisationService implements IAuthotisationService{
      * @param authType le type d'autorisation
      */
     public void authorize(Long resourceAccessorId, Long dossierId, String authType) {
-        log.debug("Checking authorization for user with resourceAccessorId {} and authType {}", resourceAccessorId, authType);
         if (!hasAuth(resourceAccessorId, dossierId, authType)) {
-            log.debug("Access denied for user with resourceAccessorId {} and authType {}", resourceAccessorId, authType);
-            throw new RuntimeException("Access denied");
+            throw new RuntimeException(Literals.UNAUTHORIZED);
         }
     }
 
@@ -150,7 +142,7 @@ public class AuthotisationService implements IAuthotisationService{
      */
     public void generateDefaultAuths(Long resourceAccessorId, Dossier dossier){
         RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(resourceAccessorId)
-                .orElseThrow(() -> new RuntimeException("resourceAccessorId not found"));
+                .orElseThrow(() -> new RuntimeException(Literals.RESOURCE_ACCESSOR_NOT_FOUND));
         if (ressourceAccessor instanceof Membre) {
             Authorisation selfAuth = Authorisation.generateFullAccess();
             selfAuth.setAuthLevel(AuthLevel.MEMBRE);

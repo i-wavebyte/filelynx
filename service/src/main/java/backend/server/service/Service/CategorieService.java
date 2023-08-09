@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.CategorieRepository;
 import backend.server.service.Repository.LogRepository;
@@ -89,7 +90,7 @@ public class CategorieService implements ICategorieService{
         String categorieName = categorie.getNom();
         Optional<Categorie> optCat = categorieRepository.findById(categorieId);
         if(optCat.isEmpty())
-            throw new RuntimeException("La catégorie n'existe pas");
+            throw new RuntimeException(Literals.CATEGORY_NOT_FOUND);
         Categorie cat = optCat.get();
         cat.setNom(newName);
         categorieRepository.save(cat);
@@ -112,7 +113,7 @@ public class CategorieService implements ICategorieService{
      */
     public Categorie getCategorie(Long id)
     {
-        return categorieRepository.findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
+        return categorieRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.CATEGORY_NOT_FOUND));
     }
     /**
      * Récupère une catégorie par son nom

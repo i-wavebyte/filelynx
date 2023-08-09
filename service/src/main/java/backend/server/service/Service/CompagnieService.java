@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
@@ -81,13 +82,13 @@ public class CompagnieService implements ICompagnieService{
         //System.out.println("compagnie name: "+ compagnieName+" nom de groupe: "+ nom);
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, compagnieName) != null){
-            throw new RuntimeException("Groupe already exists");
+            throw new RuntimeException(Literals.GROUPE_ALREADY_EXISTS);
         }
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
         //get the id of the current authenticated user via the security context holder
         Compagnie compagnie = compagnieRepository.findByNom(compagnieName);
         if(groupeRepository.sumQuotasByCompagnieNom(compagnieName) + quota > compagnie.getQuota()){
-            throw new RuntimeException("Quota allocation exceeded");
+            throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
         }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
@@ -106,13 +107,13 @@ public class CompagnieService implements ICompagnieService{
     public Groupe createGroupe(String nom, double quota, Long CompagnieId){
         //check if the compagnie has a groupe with the same name
         if(groupeService.getGroupe(nom, SecurityContextHolder.getContext().getAuthentication().getName()) != null){
-            throw new RuntimeException("Groupe already exists");
+            throw new RuntimeException(Literals.GROUPE_ALREADY_EXISTS);
         }
         Groupe groupe = Groupe.builder().nom(nom).quota(quota).build();
 
         Compagnie compagnie = compagnieRepository.findById(CompagnieId).orElseThrow(()-> new RuntimeException("Compagnie not found") );
         if(groupeRepository.sumQuotasByCompagnieNom(compagnie.getNom()) + quota > compagnie.getQuota()){
-            throw new RuntimeException("Quota allocation exceeded");
+            throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
         }
         groupe.setCompagnie(compagnie);
         compagnie.getGroupes().add(groupe);
@@ -129,13 +130,13 @@ public class CompagnieService implements ICompagnieService{
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Groupe groupe = groupeRepository.findByNomAndCompagnieNom(nom, compagnieName);
         if(groupe == null){
-            throw new RuntimeException("Groupe non trouvé");
+            throw new RuntimeException(Literals.GROUPE_NOT_FOUND);
         }
         if(!(compagnieName.equals(groupe.getCompagnie().getNom()))){
-            throw new RuntimeException("Non autorisé");
+            throw new RuntimeException(Literals.UNAUTHORIZED);
         }
         if(groupe.getNom().equalsIgnoreCase(compagnieName)){
-            throw new RuntimeException("Impossible de supprimer le groupe par défaut");
+            throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_GROUP);
         }
         log.info("groupe name: "+groupe.getNom()+" compagnie name: "+groupe.getCompagnie().getNom());
         groupeRepository.delete(groupe);
@@ -151,7 +152,7 @@ public class CompagnieService implements ICompagnieService{
 
         Groupe grp = groupeRepository.findByIdAndCompagnieNom(groupeId, compagnieName);
         if(grp.getNom().equalsIgnoreCase(compagnieName)){
-            throw new RuntimeException("Impossible de modifier le groupe par défaut");
+            throw new RuntimeException(Literals.CANT_EDIT_DEFAULT_GROUP);
         }
         grp.setNom(newName);
         // Save the updated Professor and return it
@@ -168,10 +169,10 @@ public class CompagnieService implements ICompagnieService{
         String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
         Membre membre = membreRepository.findByUsername(username);
         if(membre == null){
-            throw new RuntimeException("Membre introuvable");
+            throw new RuntimeException(Literals.MEMBER_NOT_FOUND);
         }
         if(!(compagnieName.equals(membre.getCompagnie().getNom()))){
-            throw new RuntimeException("Non autorisé");
+            throw new RuntimeException(Literals.UNAUTHORIZED);
         }
         log.info("membre name: "+membre.getNom()+" compagnie name: "+membre.getCompagnie().getNom());
         membreRepository.deleteById(membreId);
@@ -204,7 +205,7 @@ public class CompagnieService implements ICompagnieService{
             logRepository.save(logMessage);
             return membreRepository.save(existingMembre);
         } else {
-            throw new RuntimeException("membre introuvable");
+            throw new RuntimeException(Literals.MEMBER_NOT_FOUND);
         }
 
 

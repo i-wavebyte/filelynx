@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.*;
@@ -30,12 +31,13 @@ public class GroupeService implements IGroupeService{
     private final IMembreService membreService;
     @Autowired
     private LogRepository logRepository;
-    public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService) {
-
+    private final QuotaService quotaService;
+    public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService, QuotaService quotaService) {
         this.groupeRepository = groupeRepository;
         this.compagnieService = compagnieService;
         this.dossierService = dossierService;
         this.membreService = membreService;
+        this.quotaService = quotaService;
     }
     @Override
     public Groupe addGroupe(Groupe groupe) {
@@ -44,7 +46,6 @@ public class GroupeService implements IGroupeService{
 
     @Override
     public Groupe getGroupe(String nom, String compagnieNom) {
-        log.info("nom: "+ nom + " compagnieNom: "+ compagnieNom);
         return groupeRepository.findByNomAndCompagnieNom(nom, compagnieNom);
     }
     @Override
@@ -75,6 +76,9 @@ public class GroupeService implements IGroupeService{
                     .filter(groupe -> groupe.getNom().toLowerCase().contains(searchQuery.toLowerCase()))
                     .collect(Collectors.toList());
         }
+        for (Groupe groupe : groupes) {
+            groupe.setQuotaUsed(quotaService.getTotalQuotaOfGroup(groupe.getId()));
+        }
         List<Groupe> pageContent = groupes.subList(start, Math.min(end, groupes.size()));
         return new PageResponse<>(pageContent, groupes.size());
     }
@@ -103,7 +107,7 @@ public class GroupeService implements IGroupeService{
             Groupe groupe = getGroupe(group,compagnieNom);
             Groupe defaultGroup = getGroupe(compagnieNom,compagnieNom);
             if(groupe.getNom().equals(compagnieNom))
-                throw new RuntimeException("Impossible de supprimer le groupe par défaut");
+                throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_GROUP);
             for (Membre membre : groupe.getMembres()) {
                 membre.setGroupe(defaultGroup);
                 membreService.updateMembre(membre);
@@ -112,7 +116,6 @@ public class GroupeService implements IGroupeService{
             }
             groupe.getMembres().clear();
             Dossier dossierGroupe = dossierService.getGroupRoot(groupe);
-            Log.builder().message("Le dossier " + dossierGroupe.getFullPath() + " a était supprimé.").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             dossierService.delete(dossierGroupe.getId());
             compagnieService.deleteGroupe(group);
             // Ajouter un message de log pour l'ajout du nouveau membre

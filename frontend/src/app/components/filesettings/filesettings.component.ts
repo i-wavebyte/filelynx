@@ -35,7 +35,7 @@ export class FilesettingsComponent {
         console.log(data);
         this.groupe = data.nom;
       })
-  
+
       // Now you can use the folderId as needed in your component
     });
     this.compagnieService.getAllLabels().subscribe((data) => {
@@ -57,7 +57,7 @@ export class FilesettingsComponent {
         this.selectedFileName = this.selectedFile.name;
         this.selectedFileNameWithoutExtension = this.getFileDisplayName(this.selectedFile.name);
         this.extension = this.getFileExtension(this.selectedFile.name);
-        this.size = this.tailleToBestUnit(this.selectedFile.size, true, 2); 
+        this.size = this.tailleToBestUnit(this.selectedFile.size, true, 2);
 
         // Use the selected file here or save it in a variable for later use
         console.log('Selected file:', this.selectedFile);
@@ -82,7 +82,7 @@ export class FilesettingsComponent {
     tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): string {
       let unit = 'Go'; // Start with Gigabytes as the default unit
       let tailleInUnit = taille;
-    
+
       if (taille >= 1024 * 1024 * 1024 * 1024) {
         unit = 'To';
         tailleInUnit /= (1024 * 1024 * 1024 * 1024);
@@ -98,9 +98,9 @@ export class FilesettingsComponent {
       } else {
         unit = 'B'; // Add Bytes as the smallest unit
       }
-    
+
       const formattedTaille = tailleInUnit.toFixed(precision);
-    
+
       if (showUnit) {
         return `${formattedTaille} ${unit}`;
       } else {
@@ -111,7 +111,7 @@ export class FilesettingsComponent {
     onLabelSelected(event: Event) {
       const selectElement = event.target as HTMLSelectElement;
       const selectedLabel = selectElement.value;
-    
+
       console.log(selectedLabel);
       if (selectedLabel) {
         this.selectedLabels.push(selectedLabel);
@@ -133,6 +133,14 @@ export class FilesettingsComponent {
         formData.append('selectedCategorie', this.selectedCategorie);
         formData.append('folderId', this.folderId.toString());
         // console.log(this.selectedFile);
+        let button = document.getElementById("uploadButton");
+        button?.setAttribute("disabled", "true");
+
+        if(button){
+          button.innerHTML = "En cour...";
+          button.style.backgroundColor = "#505050";
+        }
+
         this.fileService.upload(formData).subscribe((data) => {
           this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});

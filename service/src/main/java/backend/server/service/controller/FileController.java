@@ -1,5 +1,6 @@
 package backend.server.service.controller;
 
+import backend.server.service.Literals;
 import backend.server.service.Service.FichierService;
 import backend.server.service.Service.IFichierService;
 import backend.server.service.domain.Dossier;
@@ -50,7 +51,7 @@ public class FileController {
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addFile(@RequestBody Fichier f,@PathVariable Long parentFolderId) {
         fichierService.addFichier(f, parentFolderId);
-        return ResponseEntity.ok(new MessageResponse("fichier ajouté avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_CREATE_SUCCESS));
 
     }
 
@@ -63,7 +64,7 @@ public class FileController {
     @PostMapping("/admin/delete/{fileId}")
     public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
         fichierService.deleteFichier(fileId);
-        return ResponseEntity.ok(new MessageResponse("fichier supprimé avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_DELETE_SUCCESS));
 
     }
 
@@ -77,7 +78,7 @@ public class FileController {
     @PostMapping("/admin/rename/{fileId}")
     public ResponseEntity<?> renameFile(@PathVariable Long fileId,@RequestParam String name) {
         fichierService.rename(fileId, name);
-        return ResponseEntity.ok(new MessageResponse("fichier renommé avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
 
     }
 
@@ -90,7 +91,7 @@ public class FileController {
     @PostMapping("/admin/update")
     public ResponseEntity<?> updateFile(@RequestBody Fichier f) {
         fichierService.updateFichier(f);
-        return ResponseEntity.ok(new MessageResponse("fochier modifie avec succès!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
 
     }
 
@@ -104,7 +105,7 @@ public class FileController {
     @PostMapping("/admin/move/{fileId}")
     public ResponseEntity<?> moveFile(@PathVariable Long fileId,@RequestParam Long targetFolderId) {
         fichierService.changerEmplacement(fileId, targetFolderId);
-        return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du fichier réussie!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
     }
 
     /**
@@ -128,7 +129,7 @@ public class FileController {
     @GetMapping("/admin/changeCategory/{fileId}")
     public ResponseEntity<?> changeCategory(@PathVariable Long fileId,@RequestBody Long categoryId) {
         fichierService.changeCategory(fileId, categoryId);
-        return ResponseEntity.ok(new MessageResponse("changement de la catégorie du fichier réussie!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
     }
 
     /**
@@ -141,7 +142,7 @@ public class FileController {
     @GetMapping("/admin/changeLabel/{fileId}")
     public ResponseEntity<?> changeLabel(@PathVariable Long fileId,@RequestBody List<Label> labels) {
         fichierService.updateLabels(fileId, labels);
-        return ResponseEntity.ok(new MessageResponse("changement des labels du fichier réussie!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
     }
 
     /**

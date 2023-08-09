@@ -16,13 +16,13 @@ filteredLogs: Log[] = [];
 searchValue: string = '';
 nameOrder: string = '';
 page: number = 0;
-pageSize: number = 7;
+pageSize: number = 20;
 totalLogs!: number;
 
-  
+
 constructor(private compagnieService: CompagnieService){}
   ngOnInit(): void {
-  console.log("hello world");  
+  console.log("hello world");
   this.loadLogs();
 }
 

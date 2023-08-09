@@ -6,4 +6,5 @@ export default interface Groupe {
   membres: string[]
   quota: number
   compagne: Compagnie
+  quotaUsed: number
 }

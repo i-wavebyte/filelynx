@@ -1,5 +1,6 @@
 package backend.server.service.security.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
@@ -39,6 +42,11 @@ public class User{
     @NotBlank
     @Size(max = 120)
     private String password;
+
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
 
     @ManyToMany(fetch = LAZY)
     @JoinTable(

@@ -21,6 +21,7 @@ import java.util.List;
 public class Groupe extends RessourceAccessor{
     private String nom;
     private Double quota;
+    private Double quotaUsed;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Compagnie compagnie;

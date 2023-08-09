@@ -5,14 +5,14 @@
      <button routerLink="/files">Fichiers/Dossiers</button>
      <button routerLink="/users">Collaborateurs</button>
      <button routerLink="/groups">Groupes</button>
-     <button routerLink="/metadata">Metadata</button>
+     <button routerLink="/metadata">Métadonnées</button>
    </nav>
    <div class="header-card-container">
     <div class="header-card">
       <div class="fileExplorer-heading">
         <h2 class="fullPath"><img src="../../../assets/folder.256x204.png" alt="" class="folder-icon-title" style="width:14px"> {{currentFolder?.fullPath}}</h2>
         <div class="buttons">
-          <h3 *ngIf="currentFolder?.racine!==null" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">return</h3>
+          <h3 *ngIf="currentFolder?.racine!==null" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">Retour</h3>
           <h3 class="return-btn" [routerLink]="['/files/upload', currentFolder?.id]">Charger</h3>
           <h3 class="return-btn" [routerLink]="['/files/add-folder', currentFolder?.id]">+ Dossier</h3>
         </div>
@@ -40,7 +40,7 @@
           <!-- Code for displaying the files -->
           <div (click)="onFileClick(fichier)">
             <img src="../../../assets/fileIcon.svg" alt="" class="file-icon">
-            <p>{{fichier.nom}}</p>
+            <p>{{fichier.nom+"."+fichier.extension}}</p>
           </div>
           <div class="file-button-collection">
             <div class="settings-button">

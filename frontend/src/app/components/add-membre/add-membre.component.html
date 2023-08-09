@@ -33,7 +33,7 @@
                 <input type="password" id="password" formControlName="password" minlength="6" required />
                 <div *ngIf="addMemberForm.get('password')?.invalid && (addMemberForm.get('password')?.dirty || addMemberForm.get('password')?.touched)">
                   <div *ngIf="addMemberForm.get('password')?.errors?.['minlength']">
-                    Password must be at least 6 characters long.
+                    Le mot de passe doit contenir au moins 6 caractères
                   </div>
                 </div>
               </div>

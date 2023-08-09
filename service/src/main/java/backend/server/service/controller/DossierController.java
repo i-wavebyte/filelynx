@@ -1,6 +1,7 @@
 package backend.server.service.controller;
 
 
+import backend.server.service.Literals;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.Service.*;
 import backend.server.service.domain.Compagnie;
@@ -43,7 +44,7 @@ public class DossierController {
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
         dossierService.addDossierCtrl(d, parentFolderId);
-        return ResponseEntity.ok(new MessageResponse("Dossier ajouté avec succès"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FOLDER_CREATE_SUCCESS));
 
     }
 
@@ -66,7 +67,7 @@ public class DossierController {
     @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
         dossierService.deleteDossierCtrl(dossierId);
-        return ResponseEntity.ok(new MessageResponse("Dossier supprimé avec succès"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FOLDER_DELETE_SUCCESS));
     }
 
     /**
@@ -79,7 +80,7 @@ public class DossierController {
     @PostMapping("/admin/rename/{dossierId}")
     public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
         dossierService.renameDossierCtrl(dossierId, name);
-        return ResponseEntity.ok(new MessageResponse("Dossier renommé avec succès"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FOLDER_EDIT_SUCCESS));
     }
 
     /**
@@ -92,7 +93,7 @@ public class DossierController {
     @PostMapping("/admin/changerEmplacement/{dossierId}")
     public ResponseEntity<?> changerEmplacement(@PathVariable Long dossierId,@RequestParam Long targetFolderId) {
         dossierService.changerEmplacement(dossierId, targetFolderId);
-        return ResponseEntity.ok(new MessageResponse("changement de l'emplacement du dossier réussie!"));
+        return ResponseEntity.ok(new MessageResponse(Literals.FOLDER_EDIT_SUCCESS));
     }
 
     /**

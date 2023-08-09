@@ -17,16 +17,15 @@
             <label for="name">Categorie</label>
             <div class="row">
               <select class="sele" >
-                <option value="">Rapports</option>
                 <option  >{{categorie}}</option>
               </select>
             </div>
         </div>
         <div class="label-container">
-            <label for="name">Labels</label>
+            <label for="name">Étiquettes</label>
             <div class="row">
               <select class="sele" >
-                <option value="">Selectionnez un label</option>
+                <option value="">Selectionnez une Étiquette</option>
                 <option *ngFor="let label of labels" [value]="label">{{label}}</option>
               </select>
             </div>
