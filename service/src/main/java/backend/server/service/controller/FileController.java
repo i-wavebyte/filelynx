@@ -113,8 +113,8 @@ public class FileController {
      * @return le fichier demandé
      */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @GetMapping("/admin/get")
-    public Fichier getFile(@RequestBody Long fileId) {
+    @GetMapping("/admin/get/{fileId}")
+    public Fichier getFile(@PathVariable Long fileId) {
         return fichierService.getFichier(fileId);
     }
 
