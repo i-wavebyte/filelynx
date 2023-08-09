@@ -28,8 +28,14 @@
                         <input class="table-data editable" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
                     </div>
                 </td>
-                <td>
+                <!-- <td>
                     <input class="table-data" [value]="tailleToUnit(groupe.quota,true,'Go',2)" disabled/>
+                </td> -->
+                <td>
+                  <div class="progressBar table-data">
+                    <div class="progressBarValue" [style.width]="((groupe.quotaUsed/groupe.quota)*100)+'%'"></div>
+                    <div class="progressBarText">{{tailleToUnit(groupe.quotaUsed,true,'Go',2)}}/{{tailleToUnit(groupe.quota,true,'Go',2)}}</div>
+                  </div>
                 </td>
                 <td>
                     <input class="table-data" [(ngModel)]="groupe.membres.length" disabled/>

@@ -31,11 +31,13 @@ public class GroupeService implements IGroupeService{
     private final IMembreService membreService;
     @Autowired
     private LogRepository logRepository;
-    public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService) {
+    private final QuotaService quotaService;
+    public GroupeService(GroupeRepository groupeRepository, @Lazy CompagnieService compagnieService,@Lazy DossierService dossierService, @Lazy IMembreService membreService, QuotaService quotaService) {
         this.groupeRepository = groupeRepository;
         this.compagnieService = compagnieService;
         this.dossierService = dossierService;
         this.membreService = membreService;
+        this.quotaService = quotaService;
     }
     @Override
     public Groupe addGroupe(Groupe groupe) {
@@ -73,6 +75,9 @@ public class GroupeService implements IGroupeService{
             groupes = groupes.stream()
                     .filter(groupe -> groupe.getNom().toLowerCase().contains(searchQuery.toLowerCase()))
                     .collect(Collectors.toList());
+        }
+        for (Groupe groupe : groupes) {
+            groupe.setQuotaUsed(quotaService.getTotalQuotaOfGroup(groupe.getId()));
         }
         List<Groupe> pageContent = groupes.subList(start, Math.min(end, groupes.size()));
         return new PageResponse<>(pageContent, groupes.size());

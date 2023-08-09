@@ -42,8 +42,6 @@ public class DossierService implements IDossierService {
     {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
-
-        List<Dossier> dossiers = compagnie.getDossiers();
         Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
@@ -53,7 +51,9 @@ public class DossierService implements IDossierService {
 
             dossierRepository.save(dossierParent);
         }
-        log.info("File created at {}", d.getFullPath());
+        RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
+        Log logMessage = Log.builder().message("Dossier '" + d.getNom()+ "' ajouté dans " + dossierParent.getFullPath()).type(LogType.CRÉER).date(new Date()).trigger(trigger).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return d;
     }
 
@@ -105,7 +105,7 @@ public class DossierService implements IDossierService {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(()-> new RuntimeException("Folder not found"));
-
+        String oldName = dossier.getNom();
         List<Dossier> dossiers = compagnie.getDossiers();
         for (Dossier d: dossiers)
         {
@@ -124,6 +124,9 @@ public class DossierService implements IDossierService {
         }
         fichierRepository.saveAll(dossier.getFichiers());
         log.info("File Renamed at {}", dossier.getFullPath());
+        RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
+        Log logMessage = Log.builder().message("Dossier '"+oldName+"' renommé à '"+dossier.getNom()+"'").type(LogType.MODIFIER).date(new Date()).trigger(trigger).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return dossierRepository.save(dossier);
     }
     // cette method a été créé initialement pour tester l'arborescence du system de fichiers sur console, elle n'est plus utilisée
@@ -158,6 +161,10 @@ public class DossierService implements IDossierService {
     public void delete(Long DossierId) {
         log.info("Deleting dossier with ID: {}", DossierId);
         Dossier dossier = dossierRepository.findById(DossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie = authotisationService.extractCompagnieFromResourceAccessor();
+        Log logMessage = Log.builder().message("Dossier " + dossier.getFullPath()+ " supprimé avec son contenu").type(LogType.SUPPRIMER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         deleteRecursively(dossier);
     }
 
@@ -188,7 +195,12 @@ public class DossierService implements IDossierService {
     public Dossier changerEmplacement(Long dossierId,Long dossierCibleId ) {
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
         Dossier dossierCible = dossierRepository.findById(dossierCibleId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        String oldPath = dossier.getFullPath();
         dossier.setRacine(dossierCible);
+        RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie = authotisationService.extractCompagnieFromResourceAccessor();
+        Log logMessage = Log.builder().message("Dossier '"+oldPath+"' deplacé vers '"+dossier.getFullPath()+"'" ).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return dossierRepository.save(dossier);
     }
 

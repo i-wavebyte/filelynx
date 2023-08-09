@@ -40,7 +40,7 @@
           <!-- Code for displaying the files -->
           <div (click)="onFileClick(fichier)">
             <img src="../../../assets/fileIcon.svg" alt="" class="file-icon">
-            <p>{{fichier.nom}}</p>
+            <p>{{fichier.nom+"."+fichier.extension}}</p>
           </div>
           <div class="file-button-collection">
             <div class="settings-button">

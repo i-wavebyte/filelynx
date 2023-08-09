@@ -20,7 +20,6 @@
               <label for="name">Categorie</label>
               <div class="row">
                 <select class="sele" (change)="onCategorieSelected($event)" >
-                  <option value="">Rapports</option>
                   <option *ngFor="let categorie of categories" [value]="categorie">{{categorie}}</option>
                 </select>
               </div>
@@ -59,7 +58,7 @@
       </div>
       <div class="row3">
         <button class="annuler" routerLink=".." >annuler</button>
-        <button class="charger" (click)="onUpload()" >charger</button>
+        <button class="charger" id="uploadButton" (click)="onUpload()" >charger</button>
       </div>
     </div>
   </div>

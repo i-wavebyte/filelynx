@@ -35,7 +35,7 @@
             <button routerLink="/log" > Afficher Tout</button>
           </div>
           <table class="log">
-            <tr *ngFor="let log of logs" class="log-row" (click)="openPopup(log)">
+            <tr *ngFor="let log of logs.reverse()" class="log-row" (click)="openPopup(log)">
               <td><span class="log-type" [ngClass]="getLogType(log.type)">{{log.type.length>6?log.type.slice(0,6)+"..":log.type}} </span></td>
               <td class="log-message">{{log.message.length>30?log.message.slice(0,25)+"...":log.message}}</td>
             </tr>
@@ -105,22 +105,25 @@
   </div>
 </div>
 <!-- Custum Modal -->
-<div class="popup" [class]="popupClass" [ngClass]="popupBackgroundColor" *ngIf="showModal">
-  <div class="modal-content">
-    <button class="close" (click)="hideModal()" >X</button>
-    <div class="popup-header">
-      <div class="type" [ngStyle]="{'background-color': getLogTypeColor(selectedLog.type)}">{{selectedLog.type}}</div>
-      <div class="date">{{ selectedLog.date.toString().slice(0,10)}}</div>
-    </div>
-    <div class="log-trigger">
-      <div class="declencheur">Déclencheur : </div>
-      <div class="value">{{ selectedLog.trigger.nom.charAt(0).toUpperCase() + selectedLog.trigger.nom.slice(1) }}</div>
-    </div>
-    <div class="popup-message">
-      <div class="message">
-        {{selectedLog.message}}
+<div class="black-bg" *ngIf="showModal">
+  <div class="popup" [class]="popupClass" [ngClass]="popupBackgroundColor" >
+    <div class="modal-content">
+      <button class="close" (click)="hideModal()" >X</button>
+      <div class="popup-header">
+        <div class="type" [ngStyle]="{'background-color': getLogTypeColor(selectedLog.type)}">{{selectedLog.type}}</div>
+        <div class="date">{{ selectedLog.date.toString().slice(0,10)}}</div>
       </div>
+      <div class="log-trigger">
+        <div class="declencheur">Déclencheur : </div>
+        <div class="value">{{ selectedLog.trigger.nom.charAt(0).toUpperCase() + selectedLog.trigger.nom.slice(1) }}</div>
+      </div>
+      <div class="popup-message">
+        <div class="message">
+          {{selectedLog.message}}
+        </div>
+      </div>
+      <!-- <button (click)="hideModal()">Close</button> -->
     </div>
-    <!-- <button (click)="hideModal()">Close</button> -->
   </div>
+
 </div>

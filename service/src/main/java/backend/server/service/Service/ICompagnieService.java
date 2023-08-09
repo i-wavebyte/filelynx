@@ -1,9 +1,6 @@
 package backend.server.service.Service;
 
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Groupe;
-import backend.server.service.domain.Log;
-import backend.server.service.domain.Membre;
+import backend.server.service.domain.*;
 import backend.server.service.payloads.*;
 import org.springframework.http.ResponseEntity;
 
@@ -38,4 +35,5 @@ public interface ICompagnieService {
     List<GroupConsumption> getAllGroupsConsumption();
 
     CompagnieName getCompagnieName();
+
 }

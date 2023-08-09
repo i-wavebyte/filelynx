@@ -23,4 +23,28 @@ public class Literals {
     public static final String INVALID_USERNAME_OR_PASSWORD = "Nom d'utilisateur ou mot de passe invalide";
     public static final String REFRESH_TOKEN_NOT_FOUND = "Le refresh token n'existe pas";
     public static final String COMPAGNIE_REGISTRATION_SUCCESSFUL = "La société a été créée avec succès";
+    public static final String GROUPE_DELETE_SUCCESS = "Le groupe a été supprimé avec succès";
+    public static final String GROUPE_EDIT_SUCCESS = "Le groupe a été modifié avec succès";
+    public static final String GROUPE_CREATE_SUCCESS = "Le groupe a été créé avec succès";
+    public static final String MEMBER_DELETE_SUCCESS = "Le membre a été supprimé avec succès";
+    public static final String MEMBER_EDIT_SUCCESS = "Le membre a été modifié avec succès";
+    public static final String MEMBER_CREATE_SUCCESS = "Le membre a été créé avec succès";
+    public static final String MEMBRE_TRANSTER_SUCCESS = "Le membre a été transféré avec succès";
+    public static final String CATEGORY_EDIT_SUCCESS = "La catégorie a été modifiée avec succès";
+    public static final String CATEGORY_CREATE_SUCCESS = "La catégorie a été créée avec succès";
+    public static final String CATEGORY_DELETE_SUCCESS = "La catégorie a été supprimée avec succès";
+    public static final String LABEL_EDIT_SUCCESS = "L'Étiquette a été modifié avec succès";
+    public static final String LABEL_CREATE_SUCCESS = "'Étiquette a été créé avec succès";
+    public static final String LABEL_DELETE_SUCCESS = "L'Étiquette a été supprimé avec succès";
+    public static final String FILE_EDIT_SUCCESS = "Le fichier a été modifié avec succès";
+    public static final String FILE_CREATE_SUCCESS = "Le fichier a été créé avec succès";
+    public static final String FILE_DELETE_SUCCESS = "Le fichier a été supprimé avec succès";
+    public static final String FOLDER_EDIT_SUCCESS = "Le dossier a été modifié avec succès";
+    public static final String FOLDER_CREATE_SUCCESS = "Le dossier a été créé avec succès";
+    public static final String FOLDER_DELETE_SUCCESS = "Le dossier a été supprimé avec succès";
+    public static final String ROLE_EDIT_SUCCESS = "Le rôle a été modifié avec succès";
+    public static final String ROLE_CREATE_SUCCESS = "Le rôle a été créé avec succès";
+    public static final String ROLE_DELETE_SUCCESS = "Le rôle a été supprimé avec succès";
+
+
 }

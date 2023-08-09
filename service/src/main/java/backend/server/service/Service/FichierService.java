@@ -1,12 +1,10 @@
 package backend.server.service.Service;
 
 import backend.server.service.Literals;
-import backend.server.service.Repository.CategorieRepository;
-import backend.server.service.Repository.DossierRepository;
-import backend.server.service.Repository.FichierRepository;
-import backend.server.service.Repository.LabelRepository;
+import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.ETAT;
+import backend.server.service.enums.LogType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +31,28 @@ public class FichierService implements IFichierService{
     private CategorieRepository categorieRepository;
     private LabelRepository labelRepository;
     private CompagnieService compagnieService;
+    private LogRepository logRepository;
+    private IAuthotisationService authotisationService;
 
 
     @Autowired
-    public FichierService(@Lazy DossierService dossierService, FichierRepository fichierRepository, DossierRepository dossierRepository, CategorieRepository categorieRepository, CategorieService categorieService, LabelRepository labelRepository, CompagnieService compagnieService) {
+    public FichierService(@Lazy DossierService dossierService,
+                          FichierRepository fichierRepository,
+                          DossierRepository dossierRepository,
+                          CategorieRepository categorieRepository,
+                          CategorieService categorieService,
+                          LabelRepository labelRepository,
+                          CompagnieService compagnieService,
+                          LogRepository logRepository,
+                          IAuthotisationService authotisationService) {
         this.fichierRepository = fichierRepository;
         this.dossierRepository = dossierRepository;
         this.categorieService = categorieService;
         this.categorieRepository = categorieRepository;
         this.labelRepository = labelRepository;
         this.compagnieService = compagnieService;
-
+        this.logRepository = logRepository;
+        this.authotisationService = authotisationService;
     }
     /**
      * ajoute et persiste un nouveau fichier
@@ -73,6 +82,7 @@ public class FichierService implements IFichierService{
     public void deleteFichier(Long fichierId)
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+
         fichierRepository.delete(file);
     }
 
@@ -85,8 +95,13 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier rename(Long fichierId, String name)
     {
+        RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie = authotisationService.extractCompagnieFromResourceAccessor();
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+        String oldName = file.getNom();
         file.setNom(name);
+        Log logMessage = Log.builder().message("Fichier '" + oldName+"."+file.getExtension() + "' Renommé à "+file.getNom()+"."+file.getExtension()).type(LogType.MODIFIER).date(new Date()).trigger(trigger).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         return fichierRepository.save(file);
     }
 
@@ -235,6 +250,8 @@ public class FichierService implements IFichierService{
         fichier.setCategorie(getCategorie(selectedCategorie));
         fichier.setDateCreation(new Date());
         fichier.setLabels(getLabels(selectedlabels));
+        Log logMessage = Log.builder().message("Fichier '" + fichier.getNom()+"."+fichier.getExtension() + "' chargé dans " + dossier.getFullPath()).type(LogType.UPLOAD).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        logRepository.save(logMessage);
         fichierRepository.save(fichier);
     }
 
