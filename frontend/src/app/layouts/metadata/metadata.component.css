@@ -65,7 +65,7 @@ nav{
 
 .header-card{
   padding: 24px;
-  height: 400px;
+  height: 75vh;
   /* background-color: white; */
   background: white;
   box-shadow: 1px 20px 27px -2px rgba(0,0,0,0.15);

@@ -36,7 +36,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 public class FileController {
 
-    private static final String path = "/Users/macbookpro/Desktop/files/upload/";
+    private static final String pathReda = "/Users/macbookpro/Desktop/files/upload/";
     private static final String pathd = "/Users/macbookpro/Desktop/files/download/";
     private static final String pathDiae = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload/";
 
@@ -204,7 +204,7 @@ public class FileController {
     public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
         fichierService.dowloadFile(name);
         // 1. Construct the File object representing the file to be downloaded
-        File file = new File(path + name);
+        File file = new File(pathReda + name);
         // 2. Create a Path object from the File's absolute path
         Path filePath = Paths.get(file.getAbsolutePath());
         // 3. Read the file's content into a ByteArrayResource
@@ -228,7 +228,7 @@ public class FileController {
     @GetMapping("/getImage/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
         Fichier f = fichierService.getFichier(fichierId);
-        String path = pathDiae + f.getNom() + "." + f.getExtension();
+        String path = pathReda + f.getNom() + "." + f.getExtension();
         File file = new File(path);
         Path filePath = Paths.get(file.getAbsolutePath());
         org.springframework.core.io.Resource res = new UrlResource(file.toURI());
