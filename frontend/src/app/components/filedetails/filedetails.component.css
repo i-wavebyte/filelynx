@@ -27,6 +27,11 @@
     /* flex-direction: column; */
   }
 
+  .labels{
+    display: flex;
+    gap: 10px;
+  }
+
   .enregistrer {
     border: none;
     background-color: #000;

@@ -242,4 +242,13 @@ public class FileController {
         }
 
     }
+
+    @PostMapping("/updateFile")
+    public ResponseEntity<?> updateFile(@RequestParam("selectedLabels") List<String> selectedLabels,
+                                        @RequestParam("selectedCategorie") String selectedCategorie,
+                                        @RequestParam("fileName") String fileName,
+                                        @RequestParam("fileId") Long fileId){
+        fichierService.updateFile(fileName, selectedLabels, selectedCategorie, fileId);
+        return ResponseEntity.ok(new MessageResponse(Literals.FILE_EDIT_SUCCESS));
+    }
 }

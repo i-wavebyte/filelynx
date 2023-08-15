@@ -12,15 +12,15 @@
         <div class="label-container">
             <label for="name">Fichier</label>
             <div class="file">
-                <input id="fileName" type="text" class="rectangle" value={{fileName}}>
+                <input id="fileName" type="text" class="rectangle" value={{fileName}} (change)="onNamechange($event)">
                 <span>.{{extension}}</span>
             </div>
         </div>
         <div class="label-container">
             <label for="name">Categorie</label>
             <div class="row">
-              <select class="sele" >
-                <option value="">Selectionnez une catégorie</option>
+              <select class="sele" (change)="onCategorieSelected($event)">
+                <option [value]="categorie">{{categorie}}</option>
                 <option *ngFor="let categorie of categories" [value]="categorie" >{{categorie}}</option>
               </select>
             </div>
@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="row2">
-              <div class="left-side">
+              <div class="labels">
                 <div *ngFor="let label of selectedLabels" class="selected-label">
                   {{ label }}
                   <img (click)="removeLabel(label)" src="../../../assets/close.svg" alt="">

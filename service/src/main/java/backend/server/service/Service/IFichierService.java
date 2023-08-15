@@ -24,4 +24,6 @@ public interface IFichierService {
     List<String> uploadFile(MultipartFile file, Long folderId, List<String> selectedLabels, String selectedCategorie) throws Exception;
 
     ByteArrayResource dowloadFile(String name);
+
+    void updateFile(String fileName, List<String> selectedLabels, String selectedCategorie, Long fileId);
 }

@@ -17,6 +17,8 @@ export class FileService {
   upload(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
     headers.delete('Content-Type');
+    console.log('uploading file', formData);
+
     return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
   }
 
@@ -34,5 +36,14 @@ export class FileService {
       observe: 'response'
     });
   }
+
+  update(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.delete('Content-Type');
+    console.log('updating file', formData);
+
+    return this.http.post<any>(this.baseUrl + "/updateFile",formData, { headers });
+  }
+
 
 }

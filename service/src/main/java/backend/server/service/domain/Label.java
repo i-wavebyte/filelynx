@@ -21,7 +21,7 @@ public class Label {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nom;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "labels")
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "labels")
     @JsonIncludeProperties({"id","nom","taille","extension"})
     private List<Fichier> fichiers = new ArrayList<>();
     @ManyToOne(cascade = CascadeType.PERSIST)

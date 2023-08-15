@@ -234,6 +234,16 @@ public class FichierService implements IFichierService{
         return null;
     }
 
+    @Override
+    public void updateFile(String fileName, List<String> selectedLabels, String selectedCategorie, Long fileId) {
+        Fichier f = fichierRepository.findById(fileId).orElseThrow(() -> new RuntimeException(Literals.FILE_NOT_FOUND));
+        f.setLabels(getLabels(selectedLabels));
+        Categorie categorie = categorieService.getCategorie(selectedCategorie);
+        f.setCategorie(categorie);
+        f.setNom(fileName);
+        fichierRepository.save(f);
+    }
+
     private void saveFile(MultipartFile file, Long folderId, List<String> selectedlabels, String selectedCategorie) {
         String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
         Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
@@ -249,7 +259,7 @@ public class FichierService implements IFichierService{
         fichier.setRacine(dossier);
         fichier.setCategorie(getCategorie(selectedCategorie));
         fichier.setDateCreation(new Date());
-        fichier.setLabels(getLabels(selectedlabels));
+        fichier.getLabels().addAll(getLabels(selectedlabels));;
         Log logMessage = Log.builder().message("Fichier '" + fichier.getNom()+"."+fichier.getExtension() + "' chargé dans " + dossier.getFullPath()).type(LogType.UPLOAD).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
         logRepository.save(logMessage);
         fichierRepository.save(fichier);
@@ -257,8 +267,13 @@ public class FichierService implements IFichierService{
 
     private List<Label> getLabels(List<String> selectedlabels) {
         List<Label> labels = new ArrayList<>();
+
         for (String s: selectedlabels)
         {
+            //removes "[", "]", """ and "," from the string
+            s = s.replace("[", "").replace("]", "").replace("\"", "").replace(",", "");
+            log.info("trying label: "+ s);
+            log.info("label: "+ labelRepository.findByNom(s));
             labels.add(labelRepository.findByNom(s));
         }
         return labels;

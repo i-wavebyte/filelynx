@@ -33,7 +33,7 @@ public class Fichier {
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})
     private Categorie categorie;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JsonIncludeProperties({"id","nom"})
     private List<Label> labels = new ArrayList<>();
     @Enumerated (value = EnumType.STRING)

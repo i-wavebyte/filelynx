@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { data } from 'jquery';
+import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FileService } from 'src/app/_services/file.service';
 
@@ -11,7 +12,7 @@ import { FileService } from 'src/app/_services/file.service';
   styleUrls: ['./filedetails.component.css']
 })
 export class FiledetailsComponent {
-  labels!: string[];
+  labels: string[] = [];
   categories!: string[];
   fileId!: number;
   extension!: string;
@@ -19,11 +20,11 @@ export class FiledetailsComponent {
   groupe!: string;
   size!: string;
   imageUrl!: any;
-categorie!: string;
+  categorie!: string;
   selectedLabels: string[] = [];
 
 
-  constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService  ){}
+  constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService, private toast: NgToastService,  private router:Router){}
 
   ngOnInit(){
     this.extension = '..';
@@ -32,6 +33,8 @@ categorie!: string;
       this.fichierService.getFileById(this.fileId).subscribe((data) => {
         this.extension = data.extension;
         this.fileName = data.nom;
+        this.selectedLabels = data.labels.map(label => label.nom);
+        ;
         this.size = this.tailleToBestUnit(data.taille, true,2) ;
         if (data.categorie)
         this.categorie = data.categorie.nom;
@@ -43,7 +46,7 @@ categorie!: string;
             console.log(blob);
             // Create a temporary URL for the downloaded image
             this.imageUrl = URL.createObjectURL(blob);
-            console.log(this.imageUrl);
+
           })
         }
         this.compagnieService.getAllCategories().subscribe((data) => {
@@ -52,6 +55,7 @@ categorie!: string;
         })
         this.compagnieService.getAllLabels().subscribe((data) => {
           this.labels = data;
+          this.labels = this.labels.filter(label => !this.selectedLabels.includes(label))
         })
 
     })
@@ -91,8 +95,43 @@ tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): s
 }
 
 onSave() {
-
+  const formData: FormData = new FormData();
+        formData.append('selectedLabels', JSON.stringify(this.selectedLabels));
+        formData.append('selectedCategorie', this.categorie);
+        formData.append('fileName', this.fileName);
+        formData.append('fileId', this.fileId.toString());
+        console.log(this.selectedLabels);
+        console.log(this.categorie);
+        console.log(this.fileName);
+        this.fichierService.update(formData).subscribe((data) => {
+          this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
+          this.toast.success({detail:"Message de réussite", summary: "Fichier mis a jour avec succès", duration: 3000});
+        },
+        (err) => {
+          this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
+        }
+        );
 }
+
+onNamechange(event: Event) {
+  const inputElement = event.target as HTMLInputElement;
+  const selectedName = inputElement.value;
+  console.log(selectedName);
+  if (selectedName) {
+    this.fileName = selectedName;
+    console.log(this.fileName);
+  }
+  }
+
+onCategorieSelected(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedCategorie = selectElement.value;
+  console.log(selectedCategorie);
+  if (selectedCategorie) {
+    this.categorie = selectedCategorie;
+    console.log(this.categorie);
+  }
+  }
 
 isImage(): boolean {
   let imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico' , 'tif', 'tiff' , 'jfif' , 'pjpeg' , 'pjp', "avif"];
