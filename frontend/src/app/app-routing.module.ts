@@ -27,6 +27,7 @@ import { UserFilesComponent } from './layouts/user-files/user-files.component';
 import { FilesettingsComponent } from './components/filesettings/filesettings.component';
 import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
 import { FiledetailsComponent } from './components/filedetails/filedetails.component';
+import { GroupDetailsComponent } from './components/group-details/group-details.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -45,7 +46,8 @@ const routes: Routes = [
   { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },
 
   { path: 'groups', component: GroupesComponent , canActivate: [AuthGuard] ,
-  children: [{ path: 'add-groupe', component: AddGroupeComponent }],},
+  children: [{ path: 'add-groupe', component: AddGroupeComponent },
+  { path: 'details/:groupId', component: GroupDetailsComponent }],},
   { path: 'users', component: UsersComponent , canActivate: [AuthGuard] ,
   children: [
     { path: 'add-collaborateur', component: AddMembreComponent },
@@ -54,9 +56,9 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {path : "files", component : FilesComponent,
-  children: [{ path: "add-folder/:parentId", component: AddFileComponent }, 
+  children: [{ path: "add-folder/:parentId", component: AddFileComponent },
       { path: "folderdetails", component: FoldersettingComponent, children: [{path: "add-collab", component: AddFolderCollabComponent}] },
-       { path: "upload/:parentId", component: FilesettingsComponent }, 
+       { path: "upload/:parentId", component: FilesettingsComponent },
       { path: "filedetails/:fileId", component: FiledetailsComponent}]},
   { path: 'metadata', component: MetadataComponent ,
   children: [{ path: "add-label", component: AddLabelComponent },

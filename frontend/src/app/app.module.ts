@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import {MatSliderModule} from '@angular/material/slider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -46,6 +47,7 @@ import { FoldersettingComponent } from './components/foldersetting/foldersetting
 import { FilesettingsComponent } from './components/filesettings/filesettings.component';
 import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
 import { FiledetailsComponent } from './components/filedetails/filedetails.component';
+import { GroupDetailsComponent } from './components/group-details/group-details.component';
 
 
 
@@ -84,7 +86,8 @@ import { FiledetailsComponent } from './components/filedetails/filedetails.compo
     UserFilesComponent,
     FilesettingsComponent,
     AddFolderCollabComponent,
-    FiledetailsComponent
+    FiledetailsComponent,
+    GroupDetailsComponent
 
   ],
   imports: [
@@ -94,7 +97,9 @@ import { FiledetailsComponent } from './components/filedetails/filedetails.compo
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    BrowserAnimationsModule,
+    MatSliderModule
   ],
   providers: [authInterceptorProviders, AuthGuard, HelperService],
   bootstrap: [AppComponent]

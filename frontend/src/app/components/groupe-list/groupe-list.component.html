@@ -23,8 +23,7 @@
             <tr *ngFor="let groupe of filteredGroups">
                 <td>
                     <div class="name-info">
-                        <!-- <button (click)="onInfoProfessor(professor.id)" class="info">?</button> -->
-                        <button class="info">?</button>
+                        <button (click)="onInfoProfessor(groupe)" class="info">?</button>
                         <input class="table-data editable" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
                     </div>
                 </td>

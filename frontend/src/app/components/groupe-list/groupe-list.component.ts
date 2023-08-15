@@ -22,7 +22,8 @@ export class GroupeListComponent implements OnInit,OnChanges {
   constructor(
     private compagnieService: CompagnieService,
     private route: ActivatedRoute,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private router: Router,
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
@@ -88,6 +89,12 @@ export class GroupeListComponent implements OnInit,OnChanges {
     this.loadGroupes();
   }
 
+  onInfoProfessor(groupe: Groupe): void {
+    console.log(groupe);
+    this.router.navigate(['groups/details/', groupe.id] ,{
+      queryParams: { membreData: JSON.stringify(groupe) }
+    });
+  }
   onSubjectFilterChange(subject: string): void {
     this.page=0;
     this.loadGroupes();

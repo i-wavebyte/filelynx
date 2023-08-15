@@ -26,4 +26,6 @@ export class FolderService {
   addFolderAsAdmin(folder: Dossier, parentId:number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/admin/add/${parentId}`, folder, httpOptions);
   }
+
+
 }

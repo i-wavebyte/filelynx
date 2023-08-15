@@ -6,6 +6,7 @@ import { HelperService } from 'src/app/_services/helper.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Dossier from 'src/app/domain/Dossier';
 import Fichier from 'src/app/domain/Fichier';
+import { FileService } from 'src/app/_services/file.service';
 
 @Component({
   selector: 'app-files',
@@ -21,7 +22,7 @@ export class FilesComponent implements OnInit{
   popupClass= 'popup';
 
   constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private location: Location, private _helper: HelperService,
-    private cdRef: ChangeDetectorRef) {}
+    private cdRef: ChangeDetectorRef, private fileService:FileService) {}
 
   ngOnInit(): void {
     this.loadFolders();
@@ -33,7 +34,7 @@ export class FilesComponent implements OnInit{
   }
 
   loadFolders(): void{
-    
+
     if(this.currentFolder == null){
       this.folderService.getRootFolderAsAdmin().subscribe(
         (data) => {
@@ -125,4 +126,28 @@ export class FilesComponent implements OnInit{
     openFilePopup(fichier: Fichier) {
       this.router.navigate(['files/filedetails'], { queryParams: { fileId: fichier.id } });
     }
+
+    onDownload(file: Fichier) {
+      this.fileService.downloadFile(file.id).subscribe(
+        (response) => {
+          const fileName = file.nom; // Get the file name from the Fichier object
+          const extension = file.extension; // Get the file extension from the Fichier object
+          const blob = new Blob([response.body], { type: response.headers.get('content-type') });
+          const url = window.URL.createObjectURL(blob);
+
+          // Create a temporary link element to trigger the download
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${fileName}.${extension}`; // Set the file name with extension
+          link.click();
+
+          // Clean up the temporary URL
+          window.URL.revokeObjectURL(url);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    }
 }
+

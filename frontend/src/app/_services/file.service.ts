@@ -46,4 +46,13 @@ export class FileService {
   }
 
 
+  downloadFile(fileId: number): Observable<any> {
+    const url = `${this.baseUrl}/downloadFile/${fileId}`;
+    return this.http.get<any>(url, {
+      responseType: 'blob' as 'json',
+      observe: 'response'
+    });
+  }
+
+
 }

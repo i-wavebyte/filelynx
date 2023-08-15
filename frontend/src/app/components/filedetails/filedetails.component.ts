@@ -52,6 +52,7 @@ export class FiledetailsComponent {
         this.compagnieService.getAllCategories().subscribe((data) => {
 
           this.categories = data;
+          this.categories = this.categories.filter(categorie => categorie !== this.categorie)
         })
         this.compagnieService.getAllLabels().subscribe((data) => {
           this.labels = data;

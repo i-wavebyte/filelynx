@@ -228,7 +228,7 @@ public class FileController {
     @GetMapping("/getImage/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
         Fichier f = fichierService.getFichier(fichierId);
-        String path = pathDiae + f.getNom() + "." + f.getExtension();
+        String path = f.getRealPath();
         File file = new File(path);
         Path filePath = Paths.get(file.getAbsolutePath());
         org.springframework.core.io.Resource res = new UrlResource(file.toURI());
@@ -240,7 +240,23 @@ public class FileController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @GetMapping("/downloadFile/{fichierId}")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long fichierId) throws IOException {
+        Fichier f = fichierService.getFichier(fichierId);
+        String path = f.getRealPath();
+        File file = new File(path);
+        Path filePath = Paths.get(file.getAbsolutePath());
+        org.springframework.core.io.Resource res = new UrlResource(file.toURI());
+        if (res.exists()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE,Files.probeContentType(filePath))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
+                    .body(res);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/updateFile")

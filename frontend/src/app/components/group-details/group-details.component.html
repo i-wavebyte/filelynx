@@ -1,0 +1,26 @@
+<div class="popup-bg">
+  <div class="member-setting">
+      <button class="close" routerLink="../..">X</button>
+      <div class="head">
+          <h2>Paramètres de groupe</h2>
+      </div>
+      <div class="nom">
+          <p>Nom du groupe <span>hhhh</span></p>
+      </div>
+      <div class="groupe-line">
+          <label for="groupe">Quota</label>
+          <!-- <select id="groupe" (change)="" [(ngModel)]="selectedGroupe">
+              <option [value]="collaborateur.groupe.nom">{{collaborateur.groupe.nom}}</option>
+              <option *ngFor="let groupe of groupes" [value]="groupe">{{groupe}}</option>
+          </select> -->
+          <mat-slider min="1" max="10" step="1" value="5">
+            <input matSliderThumb>
+          </mat-slider>
+      </div>
+
+      <div class="button-line">
+          <button class="disable-account">Enregister</button>
+          <!-- <button class="save-button" (click)="onSave()" routerLink="../..">enregistrer</button> -->
+      </div>
+  </div>
+</div>
