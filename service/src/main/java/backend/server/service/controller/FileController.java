@@ -6,10 +6,14 @@ import backend.server.service.Service.IFichierService;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
+import backend.server.service.payloads.FileResponse;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,6 +38,7 @@ public class FileController {
 
     private static final String path = "/Users/macbookpro/Desktop/files/upload/";
     private static final String pathd = "/Users/macbookpro/Desktop/files/download/";
+    private static final String pathDiae = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload/";
 
     @Autowired
     private IFichierService fichierService;
@@ -221,5 +223,23 @@ public class FileController {
                 .contentLength(file.length()) // Set the Content-Length header
                 .contentType(MediaType.parseMediaType("application/octet-stream")) // Set the Content-Type header
                 .body(resource); // Set the response body with the file content
+    }
+
+    @GetMapping("/getImage/{fichierId}")
+    public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
+        Fichier f = fichierService.getFichier(fichierId);
+        String path = pathDiae + f.getNom() + "." + f.getExtension();
+        File file = new File(path);
+        Path filePath = Paths.get(file.getAbsolutePath());
+        org.springframework.core.io.Resource res = new UrlResource(file.toURI());
+        if (res.exists()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE,Files.probeContentType(filePath))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
+                    .body(res);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }

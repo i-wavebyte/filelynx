@@ -2,8 +2,11 @@
 <div class="popup-bg" >
     <div class="popup-content">
       <button class="close" routerLink="../..">X</button>
-      <div class="left-side">
-        <img src="../../../assets/left-side.png" alt="">
+      <div class="left-side" id="left-side" [ngStyle]="{'backgroundImage':'url('+imageUrl+')'}" *ngIf="isImage()">
+        <!-- <img src="../../../assets/left-side.png" alt="" class="filePicture"> -->
+      </div>
+      <div class="left-side" id="left-side" *ngIf="!isImage()">
+        {{("."+extension)|uppercase}}
       </div>
       <div class="right-side">
         <div class="label-container">

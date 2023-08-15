@@ -39,8 +39,8 @@
         <div *ngFor="let fichier of currentFolder?.fichiers" class="file-or-folder">
           <!-- Code for displaying the files -->
           <div (click)="onFileClick(fichier)">
-            <img src="../../../assets/fileIcon.svg" alt="" class="file-icon">
-            <p>{{fichier.nom+"."+fichier.extension}}</p>
+            <img [src]="'../../../assets/extensions/new/'+fichier.extension+'.png'" alt="" class="file-icon" class="folder-icon-title">
+            <p>{{(fichier.nom+"."+fichier.extension).slice(0,23)+((fichier.nom+"."+fichier.extension).length>=23?"...":"")}}</p>
           </div>
           <div class="file-button-collection">
             <div class="settings-button">

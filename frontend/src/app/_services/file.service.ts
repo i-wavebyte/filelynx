@@ -24,4 +24,15 @@ export class FileService {
   {
     return this.http.get<Fichier>(`${this.baseUrl}/admin/get/${fileId}`, httpOptions);
   }
+
+  getImageById(fileId: number): Observable<any> {
+    const url = `${this.baseUrl}/getImage/${fileId}`;
+
+
+    return this.http.get<any>(url, {
+      responseType: 'blob' as 'json',
+      observe: 'response'
+    });
+  }
+
 }

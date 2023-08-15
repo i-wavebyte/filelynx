@@ -23,8 +23,8 @@ import java.util.*;
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
 
-//    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
-    private static final String path = "/Users/macbookpro/Desktop/files/upload";
+    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
+//    private static final String path = "/Users/macbookpro/Desktop/files/upload";
     private FichierRepository fichierRepository;
     private DossierRepository dossierRepository;
     private CategorieService categorieService;
