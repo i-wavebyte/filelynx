@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { data } from 'jquery';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FileService } from 'src/app/_services/file.service';
 
@@ -10,15 +11,17 @@ import { FileService } from 'src/app/_services/file.service';
   styleUrls: ['./filedetails.component.css']
 })
 export class FiledetailsComponent {
-
   labels!: string[];
-  categorie!: string;
+  categories!: string[];
   fileId!: number;
   extension!: string;
   fileName!: string;
   groupe!: string;
   size!: string;
   imageUrl!: any;
+categorie!: string;
+  selectedLabels: string[] = [];
+
 
   constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService  ){}
 
@@ -28,7 +31,6 @@ export class FiledetailsComponent {
       this.fileId = params['fileId']; // Here 'id' is the route parameter name defined in the routerLink
       this.fichierService.getFileById(this.fileId).subscribe((data) => {
         this.extension = data.extension;
-        this.labels = data.labels.map(label => label.nom);
         this.fileName = data.nom;
         this.size = this.tailleToBestUnit(data.taille, true,2) ;
         if (data.categorie)
@@ -44,9 +46,18 @@ export class FiledetailsComponent {
             console.log(this.imageUrl);
           })
         }
+        this.compagnieService.getAllCategories().subscribe((data) => {
+
+          this.categories = data;
+        })
+        this.compagnieService.getAllLabels().subscribe((data) => {
+          this.labels = data;
+        })
 
     })
-  })
+      })
+
+
 
 }
 
@@ -88,4 +99,21 @@ isImage(): boolean {
   return imageExtensions.includes(this.extension);
 }
 
+onLabelSelected(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedLabel = selectElement.value;
+
+  if (selectedLabel) {
+    this.selectedLabels.push(selectedLabel);
+    this.labels = this.labels.filter(label => label !== selectedLabel);
+    console.log(this.selectedLabels);
+    console.log(this.labels);
+  }
+}
+
+removeLabel(label: string): void
+{
+  this.selectedLabels = this.selectedLabels.filter(selectedLabel => selectedLabel !== label);
+  this.labels.push(label);
+}
 }
