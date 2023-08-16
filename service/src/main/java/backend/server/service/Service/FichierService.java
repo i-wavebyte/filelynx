@@ -82,7 +82,7 @@ public class FichierService implements IFichierService{
     public void deleteFichier(Long fichierId)
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
-
+        System.out.println(file.getNom());
         fichierRepository.delete(file);
     }
 

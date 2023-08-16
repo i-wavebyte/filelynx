@@ -10,6 +10,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class FileService {
+
   private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/fichier';
   constructor(private http: HttpClient) { }
 
@@ -45,5 +46,9 @@ export class FileService {
     return this.http.post<any>(this.baseUrl + "/updateFile",formData, { headers });
   }
 
+  deleteFile(fileId: number) {
+    console.log(fileId);
+    return this.http.delete<any>(`${this.baseUrl}/admin/delete/${fileId}`, httpOptions);
+  }
 
 }

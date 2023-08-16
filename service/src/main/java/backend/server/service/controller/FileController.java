@@ -63,7 +63,7 @@ public class FileController {
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
     @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
-    @PostMapping("/admin/delete/{fileId}")
+    @DeleteMapping("/admin/delete/{fileId}")
     public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
         fichierService.deleteFichier(fileId);
         return ResponseEntity.ok(new MessageResponse(Literals.FILE_DELETE_SUCCESS));

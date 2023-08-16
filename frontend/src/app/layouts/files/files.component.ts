@@ -6,6 +6,7 @@ import { HelperService } from 'src/app/_services/helper.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Dossier from 'src/app/domain/Dossier';
 import Fichier from 'src/app/domain/Fichier';
+import { FileService } from 'src/app/_services/file.service';
 
 @Component({
   selector: 'app-files',
@@ -21,7 +22,7 @@ export class FilesComponent implements OnInit{
   popupClass= 'popup';
 
   constructor(private folderService:FolderService, private tokenStorage: TokenStorageService, private router: Router, private route: ActivatedRoute, private location: Location, private _helper: HelperService,
-    private cdRef: ChangeDetectorRef) {}
+    private cdRef: ChangeDetectorRef, private fileService: FileService) {}
 
   ngOnInit(): void {
     this.loadFolders();
@@ -80,7 +81,33 @@ export class FilesComponent implements OnInit{
       );
       }
 
-     deletePopup(folder: Dossier): void
+    openPopup(folder: Dossier){
+      this.router.navigate(['files/folderdetails'], { queryParams: { folderId: folder.id } });
+    }
+
+    hideModal(): void {
+      this.showModal = false;
+    }
+
+    onFileClick(_t47: Fichier) {
+      throw new Error('Method not implemented.');
+      }
+
+    deleteFilePopup(fichier: Fichier): void {
+      var message = "êtes-vous sûr de vouloir supprimer le fichier "+ fichier.nom+" ?";
+      this._helper.show("", message, "", fichier.id, 2 ).then((result) => {
+        console.log(result);
+        if (result == 0)
+        {
+            this.folderService.getFolderByIdAsAdmin(fichier.racine.id).subscribe((data) =>{
+            this.currentFolder = data;
+          })
+        }
+      })
+    }
+
+
+    deletePopup(folder: Dossier): void
     {
       var newFolder: Dossier;
       var f: Dossier;
@@ -100,27 +127,11 @@ export class FilesComponent implements OnInit{
                 this.currentFolder = data;
               })
             }
-            // this.cdRef.detectChanges();
           });
         }
       );
     }
 
-    openPopup(folder: Dossier){
-      this.router.navigate(['files/folderdetails'], { queryParams: { folderId: folder.id } });
-    }
-
-    hideModal(): void {
-      this.showModal = false;
-    }
-
-    onFileClick(_t47: Fichier) {
-      throw new Error('Method not implemented.');
-      }
-
-    deleteFilePopup(fichier: Fichier) {
-      throw new Error('Method not implemented.');
-    }
 
     openFilePopup(fichier: Fichier) {
       this.router.navigate(['files/filedetails'], { queryParams: { fileId: fichier.id } });

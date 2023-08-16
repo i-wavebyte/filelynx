@@ -9,6 +9,7 @@ import { PageResponse } from 'src/app/domain/PageRespone';
   templateUrl: './log-list.component.html',
   styleUrls: ['./log-list.component.css']
 })
+
 export class LogListComponent implements OnInit {
 
 logs: Log[] = [];
@@ -16,9 +17,8 @@ filteredLogs: Log[] = [];
 searchValue: string = '';
 nameOrder: string = '';
 page: number = 0;
-pageSize: number = 20;
+pageSize: number = 12;
 totalLogs!: number;
-
 
 constructor(private compagnieService: CompagnieService){}
   ngOnInit(): void {
