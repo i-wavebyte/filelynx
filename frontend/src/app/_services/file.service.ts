@@ -20,7 +20,7 @@ export class FileService {
     headers.delete('Content-Type');
     console.log('uploading file', formData);
 
-    return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
+    return this.http.post<any>(this.baseUrl + "/upload",formData, { headers , reportProgress: true, observe: 'events'});
   }
 
   getFileById(fileId: number): Observable<Fichier>
@@ -50,5 +50,14 @@ export class FileService {
     console.log(fileId);
     return this.http.delete<any>(`${this.baseUrl}/admin/delete/${fileId}`, httpOptions);
   }
+
+  downloadFile(fileId: number): Observable<any> {
+    const url = `${this.baseUrl}/downloadFile/${fileId}`;
+    return this.http.get<any>(url, {
+      responseType: 'blob' as 'json',
+      observe: 'response'
+    });
+  }
+
 
 }

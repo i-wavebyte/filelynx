@@ -254,7 +254,7 @@ public class FichierService implements IFichierService{
         fichier.setNom(lastIndex != -1 ? file.getOriginalFilename().substring(0, lastIndex) : file.getOriginalFilename());
         fichier.setExtension(lastIndex != -1 ? file.getOriginalFilename().substring(lastIndex+1, file.getOriginalFilename().length()) : file.getOriginalFilename());
         fichier.setTaille((double)file.getSize());
-        fichier.setRealPath(path);
+        fichier.setRealPath(path+"/"+fichier.getNom()+"."+fichier.getExtension());
         fichier.setCompagnie(compagnie);
         fichier.setRacine(dossier);
         fichier.setCategorie(getCategorie(selectedCategorie));

@@ -5,4 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface IQuotaService {
     Quota getQuotaStatus();
+    Double getCompagnieUnallocatedQuota();
 }

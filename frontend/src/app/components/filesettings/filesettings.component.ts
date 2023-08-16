@@ -6,6 +6,7 @@ import * as $ from 'jquery';
 import { FileService } from 'src/app/_services/file.service';
 import { NgToastService } from 'ng-angular-popup';
 import Dossier from 'src/app/domain/Dossier';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-filesettings',
@@ -141,9 +142,19 @@ export class FilesettingsComponent {
           button.style.backgroundColor = "#505050";
         }
 
-        this.fileService.upload(formData).subscribe((data) => {
+        this.fileService.upload(formData).subscribe((response) => {
+          if(response.type === HttpEventType.UploadProgress){
+            let percentDone = Math.round(100 * response.loaded / response.total);
+            console.log(percentDone);
+            if(button){
+              button.innerHTML = "En cour... " + percentDone + "%";
+            }
+          }
+          if(response.type === HttpEventType.Response){
+
           this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
+          }
         },
         (err) => {
           this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});

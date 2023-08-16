@@ -28,7 +28,7 @@ public class Fichier {
     private String type;
     private Double taille;
     @ManyToOne
-    @JsonIncludeProperties({"id","nom"})
+    @JsonIncludeProperties({"id","nom","groupe"})
     private Dossier racine;
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})

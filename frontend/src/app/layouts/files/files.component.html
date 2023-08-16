@@ -44,6 +44,9 @@
           </div>
           <div class="file-button-collection">
             <div class="settings-button">
+              <img class="settings-icon" src="../../../assets/apps.png" alt="" (click)="onDownload(fichier)">
+            </div>
+            <div class="settings-button">
               <img class="settings-icon" src="../../../assets/services.240x256.png" alt="" [routerLink]="['/files/filedetails', fichier?.id]">
             </div>
             <div class="settings-button">

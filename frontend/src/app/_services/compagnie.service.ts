@@ -239,5 +239,19 @@ export class CompagnieService {
     return this.http.get<CompagnieName>(`${this.baseUrl}/getCompagnieName`);
   }
 
+  getGroupe(groupeId: number): Observable<Groupe> {
+    return this.http.get<Groupe>(`${this.baseUrl}/getGroupe/${groupeId}`);
+  }
+
+  getCompagnieUnallocatedQuota(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/getCompagnieUnallocatedQuota`);
+  }
+
+  //quota is passed in request body
+  updateGroupeQuota(groupeId: number, quota: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateGroupeQuota/${groupeId}`,quota, httpOptions);
+  }
+
+
 
 }

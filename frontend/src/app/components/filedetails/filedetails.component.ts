@@ -5,6 +5,7 @@ import { data } from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FileService } from 'src/app/_services/file.service';
+import Fichier from 'src/app/domain/Fichier';
 
 @Component({
   selector: 'app-filedetails',
@@ -22,6 +23,7 @@ export class FiledetailsComponent {
   imageUrl!: any;
   categorie!: string;
   selectedLabels: string[] = [];
+  file!: Fichier;
 
 
   constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService, private toast: NgToastService,  private router:Router){}
@@ -32,6 +34,9 @@ export class FiledetailsComponent {
       this.fileId = params['fileId']; // Here 'id' is the route parameter name defined in the routerLink
       this.fichierService.getFileById(this.fileId).subscribe((data) => {
         this.extension = data.extension;
+        this.file = data;
+        console.log("data",data);
+
         this.fileName = data.nom;
         this.selectedLabels = data.labels.map(label => label.nom);
         ;
@@ -52,6 +57,7 @@ export class FiledetailsComponent {
         this.compagnieService.getAllCategories().subscribe((data) => {
 
           this.categories = data;
+          this.categories = this.categories.filter(categorie => categorie !== this.categorie)
         })
         this.compagnieService.getAllLabels().subscribe((data) => {
           this.labels = data;

@@ -32,6 +32,7 @@ public class Dossier {
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
     @ManyToOne
+    @JsonIncludeProperties({"id","nom"})
     private Groupe groupe;
     private boolean isGroupRoot;
     public String getFullPath(){

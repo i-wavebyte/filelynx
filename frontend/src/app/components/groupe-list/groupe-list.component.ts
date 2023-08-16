@@ -22,7 +22,8 @@ export class GroupeListComponent implements OnInit,OnChanges {
   constructor(
     private compagnieService: CompagnieService,
     private route: ActivatedRoute,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private router: Router,
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
@@ -88,6 +89,12 @@ export class GroupeListComponent implements OnInit,OnChanges {
     this.loadGroupes();
   }
 
+  onInfoProfessor(groupe: Groupe): void {
+    console.log(groupe);
+    this.router.navigate(['groups/details/', groupe.id] ,{
+      queryParams: { membreData: JSON.stringify(groupe) }
+    });
+  }
   onSubjectFilterChange(subject: string): void {
     this.page=0;
     this.loadGroupes();
@@ -144,5 +151,34 @@ export class GroupeListComponent implements OnInit,OnChanges {
   titleCase(value: string): string {
     if (!value) return value;
     return value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
+  tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): string {
+    let unit = 'Go'; // Start with Gigabytes as the default unit
+    let tailleInUnit = taille;
+
+    if (taille >= 1024 * 1024 * 1024 * 1024) {
+      unit = 'To';
+      tailleInUnit /= (1024 * 1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024 * 1024) {
+      unit = 'Go';
+      tailleInUnit /= (1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024) {
+      unit = 'Mo';
+      tailleInUnit /= (1024 * 1024);
+    } else if (taille >= 1024) {
+      unit = 'Ko';
+      tailleInUnit /= 1024;
+    } else {
+      unit = 'B'; // Add Bytes as the smallest unit
+    }
+
+    const formattedTaille = tailleInUnit.toFixed(precision);
+
+    if (showUnit) {
+      return `${formattedTaille} ${unit}`;
+    } else {
+      return formattedTaille;
+    }
   }
 }

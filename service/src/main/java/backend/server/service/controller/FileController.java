@@ -3,6 +3,8 @@ package backend.server.service.controller;
 import backend.server.service.Literals;
 import backend.server.service.Service.FichierService;
 import backend.server.service.Service.IFichierService;
+import backend.server.service.Service.IQuotaService;
+import backend.server.service.Service.QuotaService;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
@@ -42,7 +44,8 @@ public class FileController {
 
     @Autowired
     private IFichierService fichierService;
-
+    @Autowired
+    private QuotaService quotaService;
     /**
      * ajoute un fichier dans le dossier parent spécifié
      * @param f fichier à ajouter
@@ -171,6 +174,7 @@ public class FileController {
              @RequestParam("selectedCategorie") String selectedCategorie,
              @RequestParam("folderId") Long folderId)
             throws Exception {
+        quotaService.QuotaAuthFilter(file.getSize(), folderId);
         return new ResponseEntity<>(fichierService.uploadFile(file, folderId, selectedLabels, selectedCategorie),
                 HttpStatus.OK);
 
@@ -228,7 +232,8 @@ public class FileController {
     @GetMapping("/getImage/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
         Fichier f = fichierService.getFichier(fichierId);
-        String path = pathReda + f.getNom() + "." + f.getExtension();
+//        String path = pathReda + f.getNom() + "." + f.getExtension();
+        String path = f.getRealPath();
         File file = new File(path);
         Path filePath = Paths.get(file.getAbsolutePath());
         org.springframework.core.io.Resource res = new UrlResource(file.toURI());
@@ -240,7 +245,23 @@ public class FileController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @GetMapping("/downloadFile/{fichierId}")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long fichierId) throws IOException {
+        Fichier f = fichierService.getFichier(fichierId);
+        String path = f.getRealPath();
+        File file = new File(path);
+        Path filePath = Paths.get(file.getAbsolutePath());
+        org.springframework.core.io.Resource res = new UrlResource(file.toURI());
+        if (res.exists()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE,Files.probeContentType(filePath))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
+                    .body(res);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/updateFile")
