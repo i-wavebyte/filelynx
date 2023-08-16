@@ -17,7 +17,7 @@ export class CategoryListComponent implements OnInit,OnChanges {
   searchValue: string = '';
   nameOrder: string = '';
   page: number = 0;
-  pageSize: number = 6;
+  pageSize: number = 12;
   totalCategories!: number;
 
   constructor(
