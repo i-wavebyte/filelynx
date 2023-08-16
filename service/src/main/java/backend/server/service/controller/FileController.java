@@ -3,6 +3,8 @@ package backend.server.service.controller;
 import backend.server.service.Literals;
 import backend.server.service.Service.FichierService;
 import backend.server.service.Service.IFichierService;
+import backend.server.service.Service.IQuotaService;
+import backend.server.service.Service.QuotaService;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
@@ -42,7 +44,8 @@ public class FileController {
 
     @Autowired
     private IFichierService fichierService;
-
+    @Autowired
+    private QuotaService quotaService;
     /**
      * ajoute un fichier dans le dossier parent spécifié
      * @param f fichier à ajouter
@@ -171,6 +174,7 @@ public class FileController {
              @RequestParam("selectedCategorie") String selectedCategorie,
              @RequestParam("folderId") Long folderId)
             throws Exception {
+        quotaService.QuotaAuthFilter(file.getSize(), folderId);
         return new ResponseEntity<>(fichierService.uploadFile(file, folderId, selectedLabels, selectedCategorie),
                 HttpStatus.OK);
 

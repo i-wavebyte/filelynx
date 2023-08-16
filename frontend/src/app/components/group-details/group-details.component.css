@@ -138,3 +138,33 @@ h2 {
   cursor: pointer;
 }
 
+.quotaFormContainer{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+select{
+  margin: 0!important;
+  width: 40px!important;
+}
+
+input{
+ height: 31px;
+ border-radius: 10px;
+  border: 1px solid #E0E0E0;
+  width: 75px;
+  padding: 0 10px;
+}
+
+.quotaInterval{
+  font-size: 0.8em;
+  color: #4B5361;
+}
+
+button:disabled
+{
+  background-color: #E0E0E0;
+  color: white;
+  cursor: not-allowed;
+}

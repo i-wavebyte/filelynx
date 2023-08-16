@@ -152,4 +152,33 @@ export class GroupeListComponent implements OnInit,OnChanges {
     if (!value) return value;
     return value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
+
+  tailleToBestUnit(taille: number, showUnit: boolean = true, precision: number): string {
+    let unit = 'Go'; // Start with Gigabytes as the default unit
+    let tailleInUnit = taille;
+
+    if (taille >= 1024 * 1024 * 1024 * 1024) {
+      unit = 'To';
+      tailleInUnit /= (1024 * 1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024 * 1024) {
+      unit = 'Go';
+      tailleInUnit /= (1024 * 1024 * 1024);
+    } else if (taille >= 1024 * 1024) {
+      unit = 'Mo';
+      tailleInUnit /= (1024 * 1024);
+    } else if (taille >= 1024) {
+      unit = 'Ko';
+      tailleInUnit /= 1024;
+    } else {
+      unit = 'B'; // Add Bytes as the smallest unit
+    }
+
+    const formattedTaille = tailleInUnit.toFixed(precision);
+
+    if (showUnit) {
+      return `${formattedTaille} ${unit}`;
+    } else {
+      return formattedTaille;
+    }
+  }
 }

@@ -5,21 +5,27 @@
           <h2>Paramètres de groupe</h2>
       </div>
       <div class="nom">
-          <p>Nom du groupe <span>hhhh</span></p>
+          <p>Nom du groupe <span>{{groupe.nom}}</span></p>
       </div>
       <div class="groupe-line">
-          <label for="groupe">Quota</label>
-          <!-- <select id="groupe" (change)="" [(ngModel)]="selectedGroupe">
-              <option [value]="collaborateur.groupe.nom">{{collaborateur.groupe.nom}}</option>
-              <option *ngFor="let groupe of groupes" [value]="groupe">{{groupe}}</option>
-          </select> -->
-          <mat-slider min="1" max="10" step="1" value="5">
-            <input matSliderThumb>
-          </mat-slider>
+
+          <div class="quotaFormContainer">
+            <label for="groupe" style="margin-right: 132px;">Quota</label>
+            <input type="number" id="taille" [value]="tailleToBestUnit(groupe.quota,false,0)" (keypress)="handleNewQuotaChange($event)" (change)="handleNewQuotaChange($event)">
+            <select name="" id="unit" (change)="handleNewQuotaUnitChange($event)">
+                <option [value]="1024" [defaultSelected]="tailleToUnit(groupe.quota)==='Ko'">Ko</option>
+                <option [value]="1024*1024" [defaultSelected]="tailleToUnit(groupe.quota)==='Mo'">Mo</option>
+                <option [value]="1024*1024*1024" [defaultSelected]="tailleToUnit(groupe.quota)==='Go'">Go</option>
+                <option [value]="1024*1024*1024*1024" [defaultSelected]="tailleToUnit(groupe.quota)==='To'">To</option>
+            </select>
+            <span class="quotaInterval">min {{tailleToBestUnit(groupe.quotaUsed,true,2)}} ~ max {{tailleToBestUnit(unallocated+groupe.quota,true,2)}}</span>
+          </div>
+
+
       </div>
 
       <div class="button-line">
-          <button class="disable-account">Enregister</button>
+          <button class="disable-account" [disabled]="!(newQuota>=groupe.quotaUsed&&newQuota<=(unallocated+groupe.quota))" (click)="updateQuota()">Enregister</button>
           <!-- <button class="save-button" (click)="onSave()" routerLink="../..">enregistrer</button> -->
       </div>
   </div>

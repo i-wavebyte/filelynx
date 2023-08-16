@@ -25,15 +25,10 @@ public interface ICompagnieService {
     List<String> getAllUniqueGroups();
     EntitiesCountResponse getEntitiesCount();
     QuotaUsedToday getQuotaUsedToday();
-
     List<String> getAllLabels();
-
     List<String> getAllCategories();
-
     ConsumptionHistoryChart getQuotaUsedByDay();
-
     List<GroupConsumption> getAllGroupsConsumption();
-
     CompagnieName getCompagnieName();
 
 }

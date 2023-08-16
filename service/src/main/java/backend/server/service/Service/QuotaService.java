@@ -7,6 +7,7 @@ import backend.server.service.Repository.GroupeRepository;
 import backend.server.service.Repository.RessourceAccessorRepository;
 import backend.server.service.domain.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service @Transactional
+@Service @Transactional @Slf4j
 public class QuotaService implements IQuotaService{
 
     private final AuthorisationRepository authorisationRepository;
@@ -24,13 +25,17 @@ public class QuotaService implements IQuotaService{
     private final RessourceAccessorRepository ressourceAccessorRepository;
     private final GroupeRepository groupeRepository;
     private final ICompagnieService compagnieService;
+    private final IDossierService dossierService;
 
-    public QuotaService(AuthorisationRepository authorisationRepository, AuthotisationService authotisationService, RessourceAccessorRepository ressourceAccessorRepository, GroupeRepository groupeRepository,@Lazy ICompagnieService compagnieService) {
+    public QuotaService(AuthorisationRepository authorisationRepository, AuthotisationService authotisationService, RessourceAccessorRepository ressourceAccessorRepository, GroupeRepository groupeRepository,
+                        @Lazy ICompagnieService compagnieService,
+                        @Lazy IDossierService dossierService) {
         this.authorisationRepository = authorisationRepository;
         this.authotisationService = authotisationService;
         this.ressourceAccessorRepository = ressourceAccessorRepository;
         this.groupeRepository = groupeRepository;
         this.compagnieService = compagnieService;
+        this.dossierService = dossierService;
     }
     public Double getTotalQuotaOfGroup(Long ressourceAccessorId){
         RessourceAccessor ressourceAccessor = ressourceAccessorRepository.findById(ressourceAccessorId).orElseThrow(()-> new RuntimeException(Literals.RESOURCE_ACCESSOR_NOT_FOUND));
@@ -64,18 +69,21 @@ public class QuotaService implements IQuotaService{
 
     public void CheckQuotaOfGroupe(Fichier f){
         RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
-        if(ressourceAccessor instanceof Membre){
-            ressourceAccessor = ((Membre) ressourceAccessor).getGroupe();
+            ressourceAccessor = f.getRacine().getGroupe();
             Double totalQuota = getTotalQuotaOfGroup(ressourceAccessor.getId());
             if(totalQuota + f.getTaille() > ((Groupe) ressourceAccessor).getQuota()){
                 throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
-            }
+
         }
     }
 
     public void checkQuotaOfCompagnie(Fichier f){
         Compagnie compagnie = (Compagnie) authotisationService.extractResourceAccessorFromSecurityContext();
         Double totalQuota = getTotalQuotaOfCompagnie();
+        log.info("total used quota of compagnie : " + totalQuota);
+        log.info("quota of compagnie : " + compagnie.getQuota());
+        log.info("used quota after adding the file : " + (totalQuota + f.getTaille()));
+
         if(totalQuota + f.getTaille() > compagnie.getQuota()){
             throw new RuntimeException(Literals.QUOTA_ALLOCATION_EXCEEDED);
         }
@@ -89,6 +97,24 @@ public class QuotaService implements IQuotaService{
         }
         else{
             checkQuotaOfCompagnie(f);
+            CheckQuotaOfGroupe(f);
+        }
+    }
+
+    public void QuotaAuthFilter(Long size, Long FolderId){
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        Fichier f = new Fichier();
+        Dossier dossier = dossierService.getDossier(FolderId);
+        f.setRacine(dossier);
+        f.setTaille((size.doubleValue()));
+        log.info("size of the entering file : " + size);
+        if(ressourceAccessor instanceof Membre){
+            checkQuotaOfCompagnie(f);
+            CheckQuotaOfGroupe(f);
+        }
+        else{
+            checkQuotaOfCompagnie(f);
+            CheckQuotaOfGroupe(f);
         }
     }
 
@@ -111,5 +137,23 @@ public class QuotaService implements IQuotaService{
         quota1.setUsedQuota(getTotalQuotaOfCompagnie());
         quota1.setQuotaLeft(compagnie.getQuota() - getTotalQuotaOfCompagnie());
         return quota1;
+    }
+
+    @Override
+    public Double getCompagnieUnallocatedQuota() {
+        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
+        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        return compagnie.getQuota() - getTotalAllocatedQuota();
+    }
+
+
+    public void updateGroupeQuota(Long groupe, Double quota) {
+        Groupe groupe1 = groupeRepository.findById(groupe).orElseThrow(()-> new RuntimeException(Literals.GROUPE_NOT_FOUND));
+        if(quota < groupe1.getQuotaUsed())
+            throw new RuntimeException(Literals.QUOTA_ALLOCATION_UNDER_ALLOWED);
+        if(quota > getCompagnieUnallocatedQuota()+groupe1.getQuota())
+            throw new RuntimeException(Literals.QUOTA_ALLOCATION_OVER_ALLOWED);
+        groupe1.setQuota(quota);
+        groupeRepository.save(groupe1);
     }
 }

@@ -413,4 +413,23 @@ public class CompagnieController {
         return ResponseEntity.ok(compagnieService.getCompagnieName());
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getGroupe/{id}")
+    public ResponseEntity<Groupe> getGroupe(@PathVariable Long id){
+        return ResponseEntity.ok(groupeService.getGroupe(id));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getCompagnieUnallocatedQuota")
+    public ResponseEntity<Double> getCompagnieUnallocatedQuota(){
+        return ResponseEntity.ok(quotaService.getCompagnieUnallocatedQuota());
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateGroupeQuota/{id}")
+    public ResponseEntity<?> updateGroupeQuota(@PathVariable Long id, @RequestBody Double quota){
+        quotaService.updateGroupeQuota(id, quota);
+        return ResponseEntity.ok(new MessageResponse(Literals.GROUPE_EDIT_SUCCESS));
+    }
+
 }

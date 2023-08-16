@@ -19,7 +19,7 @@ export class FileService {
     headers.delete('Content-Type');
     console.log('uploading file', formData);
 
-    return this.http.post<any>(this.baseUrl + "/upload",formData, { headers });
+    return this.http.post<any>(this.baseUrl + "/upload",formData, { headers , reportProgress: true, observe: 'events'});
   }
 
   getFileById(fileId: number): Observable<Fichier>
