@@ -24,7 +24,7 @@ import java.util.*;
 public class FichierService implements IFichierService{
 
 //    private static final String path = "C:/Users/stagiaire7/Documents/GitHub/filelynx/files/upload";
-    private static final String path = "/Users/macbookpro/Desktop/files/upload";
+    private static final String path = "/Users/macbookpro/Desktop/files/upload/";
     private FichierRepository fichierRepository;
     private DossierRepository dossierRepository;
     private CategorieService categorieService;
@@ -83,6 +83,15 @@ public class FichierService implements IFichierService{
     {
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         System.out.println(file.getNom());
+        // Create a File object
+        File fileToDelete = new File(path + file.getNom()+"."+file.getExtension());
+        System.out.println(fileToDelete);
+        // Delete the file
+        if(fileToDelete.delete()){
+            System.out.println("File deleted successfully");
+        }else{
+            System.out.println("Failed to delete the file");
+        }
         fichierRepository.delete(file);
     }
 

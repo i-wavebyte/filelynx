@@ -232,7 +232,6 @@ public class FileController {
     @GetMapping("/getImage/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
         Fichier f = fichierService.getFichier(fichierId);
-//        String path = pathReda + f.getNom() + "." + f.getExtension();
         String path = f.getRealPath();
         File file = new File(path);
         Path filePath = Paths.get(file.getAbsolutePath());
@@ -247,23 +246,36 @@ public class FileController {
         }
     }
 
+    // This method handles the download of a file based on its fichierId
     @GetMapping("/downloadFile/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long fichierId) throws IOException {
+        // Retrieve the Fichier (file) based on the given fichierId
         Fichier f = fichierService.getFichier(fichierId);
+
+        // Get the real path of the file
         String path = f.getRealPath();
+
+        // Create a File object from the path
         File file = new File(path);
+
+        // Get the absolute file path
         Path filePath = Paths.get(file.getAbsolutePath());
+
+        // Create a Spring Resource from the File's URI
         org.springframework.core.io.Resource res = new UrlResource(file.toURI());
+
+        // Check if the resource (file) exists
         if (res.exists()) {
+            // If the resource exists, build a ResponseEntity with the file content for download
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE,Files.probeContentType(filePath))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
-                    .body(res);
+                    .header(HttpHeaders.CONTENT_TYPE,Files.probeContentType(filePath)) // Set the content type based on file type
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"") // Set the filename for download
+                    .body(res); // Set the file content as the response body
         } else {
+            // If the resource does not exist, return a not found response
             return ResponseEntity.notFound().build();
         }
     }
-
     @PostMapping("/updateFile")
     public ResponseEntity<?> updateFile(@RequestParam("selectedLabels") List<String> selectedLabels,
                                         @RequestParam("selectedCategorie") String selectedCategorie,
