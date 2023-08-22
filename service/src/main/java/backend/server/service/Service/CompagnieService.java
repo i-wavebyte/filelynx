@@ -1,6 +1,7 @@
 package backend.server.service.Service;
 
 import backend.server.service.Literals;
+import backend.server.service.POJO.PageResponse;
 import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
@@ -338,6 +339,11 @@ public class CompagnieService implements ICompagnieService{
         CompagnieName compagnieName = new CompagnieName();
         compagnieName.setName(SecurityContextHolder.getContext().getAuthentication().getName());
         return compagnieName;
+    }
+
+    @Override
+    public PageResponse<Groupe> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery) {
+        return null;
     }
 
     public QuotaUsedToday getQuotaUsedToday() {

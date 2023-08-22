@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,9 +14,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { BoardAdminComponent } from './components/board-admin/board-admin.component';
 import { BoardModeratorComponent } from './components/board-moderator/board-moderator.component';
 import { BoardUserComponent } from './components/board-user/board-user.component';
-
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
-import { EventBusService } from './_shared/event-bus.service';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { NgToastModule } from 'ng-angular-popup';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
@@ -30,10 +28,8 @@ import { LogsComponent } from './layouts/logs/logs.component';
 import { LogListComponent } from './components/log-list/log-list.component';
 import { FilesComponent } from './layouts/files/files.component';
 import { AddFileComponent } from './components/add-file/add-file.component';
-
 import { AuthGuard } from './_services/authguard.service';
 import { UserDashboardComponent } from './layouts/user-dashboard/user-dashboard.component';
-
 import { MetadataComponent } from './layouts/metadata/metadata.component';
 import { LabelListComponent } from './components/label-list/label-list.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
@@ -48,9 +44,9 @@ import { FilesettingsComponent } from './components/filesettings/filesettings.co
 import { AddFolderCollabComponent } from './components/add-folder-collab/add-folder-collab.component';
 import { FiledetailsComponent } from './components/filedetails/filedetails.component';
 import { GroupDetailsComponent } from './components/group-details/group-details.component';
-
-
-
+import { AdminDashboardComponent } from './layouts/admin-dashboard/admin-dashboard.component';
+import { EntreprisesComponent } from './layouts/entreprises/entreprises.component';
+import { EntreprisesListComponent } from './components/entreprises-list/entreprises-list.component';
 
 @NgModule({
   declarations: [
@@ -87,8 +83,10 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
     FilesettingsComponent,
     AddFolderCollabComponent,
     FiledetailsComponent,
-    GroupDetailsComponent
-
+    GroupDetailsComponent,
+    AdminDashboardComponent,
+    EntreprisesComponent,
+    EntreprisesListComponent
   ],
   imports: [
     NgToastModule,

@@ -432,4 +432,18 @@ public class CompagnieController {
         return ResponseEntity.ok(new MessageResponse(Literals.GROUPE_EDIT_SUCCESS));
     }
 
+
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+    @GetMapping("/getCompagnies")
+    public PageResponse<Groupe> getAllCompagnies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "7") int size,
+            @RequestParam(defaultValue = "nom") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder,
+            @RequestParam(required = false) String searchQuery
+    ) {
+        return compagnieService.getCompagniesPage(page, size, sortBy, sortOrder, searchQuery);
+    }
+
+
 }

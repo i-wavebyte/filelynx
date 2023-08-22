@@ -1,5 +1,6 @@
 package backend.server.service.Service;
 
+import backend.server.service.POJO.PageResponse;
 import backend.server.service.domain.*;
 import backend.server.service.payloads.*;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,5 @@ public interface ICompagnieService {
     List<GroupConsumption> getAllGroupsConsumption();
     CompagnieName getCompagnieName();
 
+    PageResponse<Groupe> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery);
 }
