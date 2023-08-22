@@ -1,10 +1,7 @@
 package backend.server.service.Service;
 
 import backend.server.service.Literals;
-import backend.server.service.Repository.AuthorisationRepository;
-import backend.server.service.Repository.CompagnieRepository;
-import backend.server.service.Repository.MembreRepository;
-import backend.server.service.Repository.RessourceAccessorRepository;
+import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.AuthLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,6 +23,7 @@ public class AuthotisationService implements IAuthotisationService{
     private final AuthorisationRepository authorisationRepository;
     private final CompagnieRepository compagnieRepository;
     private final MembreRepository membreRepository;
+    private final DossierRepository dossierRepository;
 
     /**
      * Extrait l'id du ressourceAccessor (compagnie ou membre) depuis le contexte de sécurité
@@ -207,4 +207,45 @@ public class AuthotisationService implements IAuthotisationService{
             return membreRepository.findByUsername(resourceAccessorName);
         }
     }
+
+    @Override
+    public List<Membre> getMembresWithAuthObjects(Long dossierId) {
+        List<Membre> membres = new ArrayList<>();
+        List<Authorisation> authorisations = authorisationRepository.findByDossierId(dossierId);
+        for (Authorisation authorisation : authorisations) {
+            if (authorisation.getAuthLevel().equals(AuthLevel.MEMBRE)) {
+                membres.add((Membre) authorisation.getRessourceAccessor());
+            }
+        }
+        return membres;
+    }
+
+    @Override
+    public List<Membre> getMembresWithoutAuthObjects(Long dossierId) {
+        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException(Literals.FOLDER_NOT_FOUND));
+        Groupe groupe = dossier.getGroupe();
+        List<Membre> membres = groupe.getMembres();
+        List<Membre> membresWithAuths = getMembresWithAuthObjects(dossierId);
+        membres.removeAll(membresWithAuths);
+        return membres;
+    }
+
+    @Override
+    public Authorisation giveMemberAccessToDossier(Long dossierId, Long membreId) {
+        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException(Literals.FOLDER_NOT_FOUND));
+        Membre membre = membreRepository.findById(membreId).orElseThrow(() -> new RuntimeException(Literals.MEMBER_NOT_FOUND));
+        Authorisation authorisation = Authorisation.generateReadOnly();
+        authorisation.setAuthLevel(AuthLevel.MEMBRE);
+        authorisation.setRessourceAccessor(membre);
+        authorisation.setDossier(dossier);
+        return authorisationRepository.save(authorisation);
+    }
+
+    @Override
+    public void updateAuthorisation(Authorisation authorisation) {
+
+        authorisationRepository.save(authorisation);
+    }
+
+
 }

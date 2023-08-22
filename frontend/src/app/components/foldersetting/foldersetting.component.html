@@ -13,10 +13,10 @@
           <div class="label-container">
               <label for="name">Collaborateur</label>
               <div class="row">
-                <select class="sele">
+                <select class="sele" (change)="onUserSelected($event)">
                   <option value="" *ngFor="let membre of membres" [value]="membre.id">{{membre.username}}</option>
                 </select>
-                <button routerLink="add-collab" >+</button>
+                <button [routerLink]="'add-collab/'+folderId" >+</button>
               </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="left-side">
           <div class="checkbox-container">
             <div *ngFor="let checkbox of checkboxeUser" class="checkbox-item">
-              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked">
+              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked" (change)="onUserAuthChange($event)">
               <label [for]="'checkbox-' + checkbox.id">{{ checkbox.description }}</label>
             </div>
           </div>
@@ -47,7 +47,7 @@
         <div class="right-side">
           <div class="checkbox-container">
             <div *ngFor="let checkbox of checkboxeGroupe" class="checkbox-item">
-              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked">
+              <input type="checkbox" [id]="'checkbox-' + checkbox.id" [name]="'checkbox-' + checkbox.id" [(ngModel)]="checkbox.checked" (change)="onGroupeAuthChange($event)">
               <label [for]="'checkbox-' + checkbox.id">{{ checkbox.description }}</label>
             </div>
           </div>

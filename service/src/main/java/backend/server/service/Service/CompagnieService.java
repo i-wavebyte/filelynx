@@ -156,7 +156,6 @@ public class CompagnieService implements ICompagnieService{
             throw new RuntimeException(Literals.CANT_EDIT_DEFAULT_GROUP);
         }
         grp.setNom(newName);
-        // Save the updated Professor and return it
         return groupeRepository.save(grp);
     }
 

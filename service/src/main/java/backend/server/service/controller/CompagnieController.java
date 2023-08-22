@@ -45,6 +45,7 @@ public class CompagnieController {
     private final ILabelService labelService;
     private final IDossierService dossierService;
     private final QuotaService quotaService;
+    private final IAuthotisationService authotisationService;
 
     /**
      * Ajoute un nouveau membre à la compagnie actuelle.
@@ -445,5 +446,37 @@ public class CompagnieController {
         return compagnieService.getCompagniesPage(page, size, sortBy, sortOrder, searchQuery);
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getMembresWithAuth/{folderId}")
+    public ResponseEntity<List<Membre>> getMembresWithAuth(@PathVariable Long folderId){
+        return ResponseEntity.ok(authotisationService.getMembresWithAuthObjects(folderId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getMembresWithoutAuth/{folderId}")
+    public ResponseEntity<List<Membre>> getMembresWithoutAuth(@PathVariable Long folderId){
+        return ResponseEntity.ok(authotisationService.getMembresWithoutAuthObjects(folderId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/giveMemberAccessToDossier/{folderId}/{membreId}")
+    public ResponseEntity<?> giveMemberAccessToDossier(@PathVariable Long folderId, @PathVariable Long membreId){
+        authotisationService.giveMemberAccessToDossier(folderId, membreId);
+        return ResponseEntity.ok(new MessageResponse(Literals.ACCESS_GRANTED));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @GetMapping("/getAuthObject/{folderId}/{resourceAccessorId}")
+    public ResponseEntity<Authorisation> getMembreAuthObject(@PathVariable Long folderId, @PathVariable Long resourceAccessorId){
+        return ResponseEntity.ok(authotisationService.getAuthorisation(resourceAccessorId, folderId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PutMapping("/updateAuth")
+    public ResponseEntity<?> updateAuth(@RequestBody Authorisation authorisation){
+        log.info("update auth");
+        authotisationService.updateAuthorisation(authorisation);
+        return ResponseEntity.ok(new MessageResponse(Literals.ACCESS_GRANTED));
+    }
 
 }

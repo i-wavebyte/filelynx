@@ -17,8 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
-
-public abstract class RessourceAccessor {
+public class RessourceAccessor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -15,6 +15,7 @@ import QuotaUsedToday from '../domain/QuotaUsedToday';
 import ConsumptionHistoryChart from '../domain/ConsumptionHistoryChart';
 import GroupConsumption from '../domain/GroupConsumption';
 import CompagnieName from '../domain/CompagnieName';
+import Authorisation from '../domain/Authorisation';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -250,6 +251,26 @@ export class CompagnieService {
   //quota is passed in request body
   updateGroupeQuota(groupeId: number, quota: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/updateGroupeQuota/${groupeId}`,quota, httpOptions);
+  }
+
+  getMembresWithoutAuth(folderId: number): Observable<Membre[]> {
+    return this.http.get<Membre[]>(`${this.baseUrl}/getMembresWithoutAuth/${folderId}`);
+  }
+
+  getMembresWithAuth(folderId: number): Observable<Membre[]> {
+    return this.http.get<Membre[]>(`${this.baseUrl}/getMembresWithAuth/${folderId}`);
+  }
+
+  giveMemberAccessToDossier(folderId: number,membreId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/giveMemberAccessToDossier/${folderId}/${membreId}`);
+  }
+
+  getAuthObject(folderId: number,resourceAccessorId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/getAuthObject/${folderId}/${resourceAccessorId}`);
+  }
+
+  updateAuth(auth:Authorisation): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateAuth`,auth, httpOptions);
   }
 
 

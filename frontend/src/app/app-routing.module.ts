@@ -67,7 +67,7 @@ const routes: Routes = [
   {
     path: "files", component: FilesComponent,
     children: [{ path: "add-folder/:parentId", component: AddFileComponent },
-    { path: "folderdetails", component: FoldersettingComponent, children: [{ path: "add-collab", component: AddFolderCollabComponent }] },
+    { path: "folderdetails", component: FoldersettingComponent, children: [{ path: "add-collab/:folderId", component: AddFolderCollabComponent }] },
     { path: "upload/:parentId", component: FilesettingsComponent },
     { path: "filedetails/:fileId", component: FiledetailsComponent }]
   },

@@ -13,4 +13,5 @@ public interface MembreRepository extends JpaRepository<Membre, Long> {
     List<Membre> findAllByCompagnieNom(String compagnieNom, org.springframework.data.domain.Sort sort);
     List<Membre> findAllByGroupeId(Long groupeId);
     Long countByCompagnieNom(String compagnieNom);
+
 }

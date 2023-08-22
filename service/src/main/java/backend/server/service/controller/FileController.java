@@ -208,7 +208,7 @@ public class FileController {
     public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
         fichierService.dowloadFile(name);
         // 1. Construct the File object representing the file to be downloaded
-        File file = new File(pathReda + name);
+        File file = new File(pathDiae + name);
         // 2. Create a Path object from the File's absolute path
         Path filePath = Paths.get(file.getAbsolutePath());
         // 3. Read the file's content into a ByteArrayResource
