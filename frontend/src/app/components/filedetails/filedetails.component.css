@@ -29,6 +29,8 @@
 
   .labels{
     display: flex;
+    width: 500px;
+    flex-wrap: wrap;
     gap: 10px;
   }
 
@@ -257,7 +259,6 @@
   }
 
   .selected-label {
-    width: 100%;
     /* border: 1px solid #C6CED6; */
     border-radius: 14px;
     color: #727E75;
