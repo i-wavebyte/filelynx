@@ -30,6 +30,8 @@ import { FiledetailsComponent } from './components/filedetails/filedetails.compo
 import { GroupDetailsComponent } from './components/group-details/group-details.component';
 import { AdminDashboardComponent } from './layouts/admin-dashboard/admin-dashboard.component';
 import { EntreprisesComponent } from './layouts/entreprises/entreprises.component';
+import { UserSearchPromptComponent } from './components/user-search-prompt/user-search-prompt.component';
+import { UserSearchResultsComponent } from './layouts/user-search-results/user-search-results.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -46,11 +48,13 @@ const routes: Routes = [
   },
   { path: 'admindashboard', component: AdminDashboardComponent },
   { path: 'entreprises', component: EntreprisesComponent },
+  { path: 'search', component: UserSearchResultsComponent},
   {
     path: 'userdashboard',
     component: UserFilesComponent,
     children: [
       { path: 'add-folder/:parentId', component: AddFileComponent },
+      { path: 'filter', component: UserSearchPromptComponent},
       {
         path: 'folderdetails',
         component: FoldersettingComponent,
@@ -60,6 +64,7 @@ const routes: Routes = [
       },
       { path: 'upload/:parentId', component: FilesettingsComponent },
       { path: 'filedetails/:fileId', component: FiledetailsComponent },
+
     ],
   },
   { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },

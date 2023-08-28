@@ -57,7 +57,8 @@ export class FilesettingsComponent {
 
     this.compagnieService.getAllCategories().subscribe((data) => {
       this.categories = data;
-      console.log(this.categories);
+      this.selectedCategorie = this.categories[0].toString();
+      console.log("this is a cat: "+this.selectedCategorie);
     })
       // Use the folderId as needed
     };
@@ -186,8 +187,8 @@ export class FilesettingsComponent {
         this.selectedCategorie = selectedCategorie;
         console.log(this.selectedCategorie);
       }
-      }
-      removeLabel(label: string): void
+    }
+    removeLabel(label: string): void
       {
         this.selectedLabels = this.selectedLabels.filter(selectedLabel => selectedLabel !== label);
         this.labels.push(label);

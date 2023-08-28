@@ -1,3 +1,4 @@
+import Authorisation from "./Authorisation";
 import Categorie from "./Categorie";
 import Compagnie from "./Compagnie";
 import Dossier from "./Dossier";
@@ -13,5 +14,6 @@ export default interface Fichier {
     extension: string;
     labels:Label[];
     categorie: Categorie;
+    currentAuth:Authorisation;
 }
 

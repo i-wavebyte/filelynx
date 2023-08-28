@@ -4,6 +4,7 @@ import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Groupe;
 import backend.server.service.domain.Membre;
+import backend.server.service.payloads.FileFilterRequest;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface IDossierService {
     Dossier getGroupRootForUser(Groupe groupe);
 
     Dossier getDossierByIdAsUser(Long id);
+
+
 }

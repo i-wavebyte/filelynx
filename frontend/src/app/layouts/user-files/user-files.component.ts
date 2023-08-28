@@ -120,9 +120,18 @@ export class UserFilesComponent implements OnInit{
         throw new Error('Method not implemented.');
         }
 
-      deleteFilePopup(fichier: Fichier) {
-        throw new Error('Method not implemented.');
-      }
+        deleteFilePopup(fichier: Fichier): void {
+          var message = "êtes-vous sûr de vouloir supprimer le fichier "+ fichier.nom+" ?";
+          this._helper.show("", message, "", fichier.id, 2 ).then((result) => {
+            console.log(result);
+            if (result == 0)
+            {
+                this.folderService.getFolderByIdAsAdmin(fichier.racine.id).subscribe((data) =>{
+                this.currentFolder = data;
+              })
+            }
+          })
+        }
 
       openFilePopup(fichier: Fichier) {
         this.router.navigate(['userdashboard/filedetails'], { queryParams: { fileId: fichier.id } });

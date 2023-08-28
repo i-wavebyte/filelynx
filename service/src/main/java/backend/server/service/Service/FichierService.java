@@ -5,6 +5,8 @@ import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.ETAT;
 import backend.server.service.enums.LogType;
+import backend.server.service.payloads.CurrentAuth;
+import backend.server.service.payloads.FileFilterRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor @Service @Slf4j
 public class FichierService implements IFichierService{
@@ -33,10 +36,10 @@ public class FichierService implements IFichierService{
     private CompagnieService compagnieService;
     private LogRepository logRepository;
     private IAuthotisationService authotisationService;
-
-
+    private IMembreService membreService;
     @Autowired
     public FichierService(@Lazy DossierService dossierService,
+                          @Lazy IMembreService membreService,
                           FichierRepository fichierRepository,
                           DossierRepository dossierRepository,
                           CategorieRepository categorieRepository,
@@ -53,6 +56,8 @@ public class FichierService implements IFichierService{
         this.compagnieService = compagnieService;
         this.logRepository = logRepository;
         this.authotisationService = authotisationService;
+        this.membreService = membreService;
+
     }
     /**
      * ajoute et persiste un nouveau fichier
@@ -267,9 +272,52 @@ public class FichierService implements IFichierService{
         fichierRepository.save(f);
     }
 
+    @Override
+    public List<Fichier> getFilteredFiles(FileFilterRequest fileFilterRequest) {
+        Membre membre = membreService.getMembre(authotisationService.extractResourceAssessorIdFromSecurityContext());
+        List<Fichier> fichiers = fichierRepository.findAllByCompagnieNom(membre.getCompagnie().getNom());
+        log.info("current file count no filters : {}", fichiers.size());
+        // fileFilterRequest contains the file name to filter with, the category name and a list of labels names
+        if (fileFilterRequest.getQuery() != null && !fileFilterRequest.getQuery().isEmpty() && !fileFilterRequest.getQuery().equals("null")) {
+            fichiers = fichiers.stream().filter(fichier -> fichier.getNom().toLowerCase().contains(fileFilterRequest.getQuery().toLowerCase())).collect(Collectors.toList());
+        }
+        log.info("current file count after query filter : {}", fichiers.size());
+        if (fileFilterRequest.getCategory() != null && !fileFilterRequest.getCategory().isEmpty() && !fileFilterRequest.getCategory().equals("null")) {
+            fichiers = fichiers.stream().filter(fichier -> fichier.getCategorie().getNom().equalsIgnoreCase(fileFilterRequest.getCategory())).collect(Collectors.toList());
+        }
+        log.info("current file count after category filter : {}", fichiers.size());
+        log.info("category : {}", fileFilterRequest.getCategory());
+        if (fileFilterRequest.getLabels() != null && !fileFilterRequest.getLabels().isEmpty() && !fileFilterRequest.getLabels().equals("null")) {
+            List<Label> labels = new ArrayList<>();
+            for (String labelName : fileFilterRequest.getLabels()) {
+                labels.add(labelRepository.findByNom(labelName));
+            }
+            fichiers = fichiers.stream().filter(fichier -> fichier.getLabels().containsAll(labels)).collect(Collectors.toList());
+        }
+        log.info("current file count after labels filter : {}", fichiers.size());
+        log.info("labels : {}", fileFilterRequest.getLabels());
+        //checks if the member has the lecture right
+            fichiers = fichiers.stream().filter(fichier -> {
+                return authotisationService.hasAuth(membre.getId(),fichier.getRacine().getId(),"lecture");
+            }).collect(Collectors.toList());
+        log.info("current file count after auth filter : {}", fichiers.size());
+        for(Fichier f : fichiers){
+           Authorisation a = authotisationService.getAuthorisation(membre.getId(),f.getRacine().getId());
+           f.setCurrentAuth(new CurrentAuth(a));
+        }
+        return fichiers;
+    }
+
     private void saveFile(MultipartFile file, Long folderId, List<String> selectedlabels, String selectedCategorie) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie;
+        if(ressourceAccessor instanceof  Membre){
+            compagnie = ((Membre) ressourceAccessor).getCompagnie();
+        }
+        else{
+            compagnie = ((Compagnie) ressourceAccessor);
+        }
+
         Fichier fichier = new Fichier();
         Optional<Dossier> dossierOptional = dossierRepository.findById(folderId);
         Dossier dossier = dossierOptional.orElseThrow(() -> new NoSuchElementException(Literals.FOLDER_NOT_FOUND));

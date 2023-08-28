@@ -48,6 +48,8 @@ import { AdminDashboardComponent } from './layouts/admin-dashboard/admin-dashboa
 import { EntreprisesComponent } from './layouts/entreprises/entreprises.component';
 import { EntreprisesListComponent } from './components/entreprises-list/entreprises-list.component';
 import { FilesForCollabComponent } from './components/files-for-collab/files-for-collab.component';
+import { UserSearchResultsComponent } from './layouts/user-search-results/user-search-results.component';
+import { UserSearchPromptComponent } from './components/user-search-prompt/user-search-prompt.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import { FilesForCollabComponent } from './components/files-for-collab/files-for
     AdminDashboardComponent,
     EntreprisesComponent,
     EntreprisesListComponent,
-    FilesForCollabComponent
+    FilesForCollabComponent,
+    UserSearchResultsComponent,
+    UserSearchPromptComponent
   ],
   imports: [
     NgToastModule,

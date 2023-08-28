@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { FolderService } from 'src/app/_services/folder.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Dossier from 'src/app/domain/Dossier';
 
 @Component({
@@ -20,7 +21,8 @@ export class AddFileComponent implements OnInit{
     private folderService: FolderService,
     private router: Router,
     private toast: NgToastService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenStorage: TokenStorageService
   ) {
     this.createForm();
   }
@@ -39,17 +41,21 @@ export class AddFileComponent implements OnInit{
   }
 
   onSubmit() {
+    let role = ""
+            if (this.tokenStorage.getToken())
+            role = this.tokenStorage.getUser().roles
     if (this.addDossierForm.valid) {
       const newDossier: Dossier = this.addDossierForm.value;
       this.folderService.addFolderAsAdmin(newDossier,this.currentFolder).subscribe((data) => {
         this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000})
         this.addDossierForm.reset();
-        this.router.navigate(['/files'], { replaceUrl: true, queryParams: { reload: true } });
+        ;
+        this.router.navigate([role=="ROLE_COMPAGNIE"?'/files':'/userdashboard'], { replaceUrl: true, queryParams: { reload: true } });
       },
       (err) => {
         this.toast.error({detail:"Message d'erreur", summary:err.error, duration:3000});
         this.addDossierForm.reset();
-        this.router.navigate(['/files'], { replaceUrl: true, queryParams: { reload: true } });
+        this.router.navigate([role=="ROLE_COMPAGNIE"?'/files':'/userdashboard'], { replaceUrl: true, queryParams: { reload: true } });
       }
       );
     }

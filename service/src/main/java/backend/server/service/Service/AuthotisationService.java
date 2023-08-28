@@ -83,10 +83,10 @@ public class AuthotisationService implements IAuthotisationService{
             if (auth.isPresent()) {
                 return auth.get();
             } else {
-                throw new RuntimeException(Literals.UNAUTHORIZED);
+                return null;
             }
         }
-        throw new RuntimeException(Literals.UNAUTHORIZED);
+        return null;
     }
 
     /**
@@ -98,7 +98,7 @@ public class AuthotisationService implements IAuthotisationService{
      */
     public boolean hasAuth(Long resourceAccessorId, Long dossierId, String authType) {
         Authorisation auth = getAuthorisation(resourceAccessorId, dossierId);
-        if (!auth.isLecture()) {
+        if (auth == null||!auth.isLecture()) {
             return false;
         }
         switch (authType) {
@@ -147,7 +147,7 @@ public class AuthotisationService implements IAuthotisationService{
             selfAuth.setRessourceAccessor(ressourceAccessor);
             selfAuth.setDossier(dossier);
             Authorisation groupeAuth = Authorisation.generateReadOnly();
-            selfAuth.setAuthLevel(AuthLevel.GROUPE);
+            groupeAuth.setAuthLevel(AuthLevel.GROUPE);
             groupeAuth.setRessourceAccessor(((Membre) ressourceAccessor).getGroupe());
             groupeAuth.setDossier(dossier);
             Authorisation compagnieAuth = Authorisation.generateNoAuths();

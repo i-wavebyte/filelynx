@@ -1,8 +1,10 @@
 package backend.server.service.Service;
 
+import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Label;
 import backend.server.service.enums.ETAT;
+import backend.server.service.payloads.FileFilterRequest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,4 +28,6 @@ public interface IFichierService {
     ByteArrayResource dowloadFile(String name);
 
     void updateFile(String fileName, List<String> selectedLabels, String selectedCategorie, Long fileId);
+
+    List<Fichier> getFilteredFiles(FileFilterRequest fileFilterRequest);
 }

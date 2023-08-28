@@ -9,7 +9,7 @@
           <div>
             <label for="name">Nom</label>
             <select name="id" id="id" formControlName="id" required>
-              <option value="" *ngFor="let membre of membersWithoutAuth" [value]="membre.id">{{membre.nom}}</option>
+              <option value="" *ngFor="let membre of membersWithoutAuth" [value]="membre.id">{{membre.username}}</option>
             </select>
           </div>
           <button type="submit" [disabled]="!addGroupeForm.valid" class="add-button">

@@ -7,6 +7,7 @@ import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
 import backend.server.service.payloads.CurrentAuth;
+import backend.server.service.payloads.FileFilterRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,18 @@ public class DossierService implements IDossierService {
      */
     public Dossier addDossier(Dossier d, Long parentFolderId)
     {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        String compagnieNom;
+        Compagnie compagnie;
+        if(ressourceAccessor instanceof Membre){
+            compagnieNom = ((Membre) ressourceAccessor).getGroupe().getCompagnie().getNom();
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnieNom = ((Compagnie) ressourceAccessor).getNom();
+            compagnie = (Compagnie) ressourceAccessor;
+        }
         Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
@@ -277,15 +288,29 @@ public class DossierService implements IDossierService {
 
     @Override
     public Dossier addDossierCtrl(Dossier d, Long parentFolderId) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Dossier parent = dossierRepository.findById(parentFolderId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        String compagnieNom;
+        Compagnie compagnie;
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), parent.getId(), "creationDossier");
+            compagnieNom = ((Membre) ressourceAccessor).getGroupe().getCompagnie().getNom();
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnieNom = ((Compagnie) ressourceAccessor).getNom();
+            compagnie = (Compagnie) ressourceAccessor;
+        }
+
+
         if(getRootDossier().getId() == parentFolderId){
             throw new RuntimeException("Vous ne pouvez pas ajouter un dossier à la racine");
         }
         d.setGroupe(getGroupRootGroupe(parentFolderId));
+        d.setCompagnie(compagnie);
         authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(), d);
         d= addDossier(d, parentFolderId);
-        Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(ressourceAccessor).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return d;
 
@@ -355,5 +380,6 @@ public class DossierService implements IDossierService {
         authotisationService.hasAuth(membre.getId(), id, "lecture");
         return dossierRepository.findById(id).orElseThrow(() -> new RuntimeException("Folder not found"));
     }
+
 
 }

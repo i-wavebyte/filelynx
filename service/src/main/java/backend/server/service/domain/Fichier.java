@@ -1,6 +1,7 @@
 package backend.server.service.domain;
 
 import backend.server.service.enums.ETAT;
+import backend.server.service.payloads.CurrentAuth;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +48,8 @@ public class Fichier {
     @ManyToOne
     @JsonIncludeProperties({"id","nom"})
     private Compagnie compagnie;
+    @Transient
+    private CurrentAuth currentAuth;
 
     public String toString(){
         String str = "\nFichier: "+nom+"."+extension+" ("+type+")";

@@ -5,6 +5,7 @@ import { data } from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FileService } from 'src/app/_services/file.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Fichier from 'src/app/domain/Fichier';
 
 @Component({
@@ -26,7 +27,7 @@ export class FiledetailsComponent {
   file!: Fichier;
 
 
-  constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService, private toast: NgToastService,  private router:Router){}
+  constructor(private compagnieService: CompagnieService,private route: ActivatedRoute, private fichierService: FileService, private toast: NgToastService,  private router:Router,private tokenStorage: TokenStorageService){}
 
   ngOnInit(){
     this.extension = '..';
@@ -109,8 +110,11 @@ onSave() {
         console.log(this.selectedLabels);
         console.log(this.categorie);
         console.log(this.fileName);
+        let role = ""
+        if (this.tokenStorage.getToken())
+        role = this.tokenStorage.getUser().roles;
         this.fichierService.update(formData).subscribe((data) => {
-          this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
+          this.router.navigate([role=="ROLE_COMPAGNIE"?'/files':'/userdashboard'],{ replaceUrl: true, queryParams: { reload: true } });
           this.toast.success({detail:"Message de réussite", summary: "Fichier mis a jour avec succès", duration: 3000});
         },
         (err) => {

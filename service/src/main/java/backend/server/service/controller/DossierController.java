@@ -40,7 +40,7 @@ public class DossierController {
      * @param parentFolderId id du dossier parent
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
         dossierService.addDossierCtrl(d, parentFolderId);

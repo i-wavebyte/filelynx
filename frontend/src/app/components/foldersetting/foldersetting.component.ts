@@ -62,7 +62,7 @@ export class FoldersettingComponent {
           if(this.membres.length>0)
           this.compagnieService.getAuthObject(this.folderId,this.membres[0].id).subscribe(data => {
             this.selectedMemberAuth = data;
-            console.log(this.selectedMemberAuth);
+            console.log("auth de user", this.selectedMemberAuth);
             this.checkboxeUser[0].checked = this.selectedMemberAuth.lecture;
             this.checkboxeUser[1].checked = this.selectedMemberAuth.ecriture;
             this.checkboxeUser[2].checked = this.selectedMemberAuth.modification;
@@ -96,7 +96,7 @@ export class FoldersettingComponent {
     this.selectedMembre = event.target.value;
     this.compagnieService.getAuthObject(this.folderId,this.selectedMembre).subscribe(data => {
       this.selectedMemberAuth = data;
-      console.log(this.selectedMemberAuth);
+      console.log("db user auth ", this.selectedMemberAuth);
       this.checkboxeUser[0].checked = this.selectedMemberAuth.lecture;
       this.checkboxeUser[1].checked = this.selectedMemberAuth.ecriture;
       this.checkboxeUser[2].checked = this.selectedMemberAuth.modification;
@@ -122,6 +122,7 @@ export class FoldersettingComponent {
     this.selectedMemberAuth.telechargement = this.checkboxeUser[4].checked;
     this.selectedMemberAuth.upload = this.checkboxeUser[5].checked;
     this.selectedMemberAuth.creationDossier = this.checkboxeUser[6].checked;
+    this.selectedMemberAuth.dossier = this.dossier;
     this.compagnieService.updateAuth(this.selectedMemberAuth).subscribe(data => {
       console.log(data);
       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 500})
@@ -137,6 +138,7 @@ export class FoldersettingComponent {
     this.groupeAuth.telechargement = this.checkboxeGroupe[4].checked;
     this.groupeAuth.upload = this.checkboxeGroupe[5].checked;
     this.groupeAuth.creationDossier = this.checkboxeGroupe[6].checked;
+    this.groupeAuth.dossier = this.dossier;
     this.compagnieService.updateAuth(this.groupeAuth).subscribe(data => {
       console.log(data);
       this.toast.success({detail:"Message de réussite", summary: data.message, duration: 500})

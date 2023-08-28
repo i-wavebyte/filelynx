@@ -9,6 +9,7 @@
           <h2 class="fullPath"><img src="../../../assets/folder.256x204.png" alt="" class="folder-icon-title" style="width:14px"> {{currentFolder?.fullPath}}</h2>
           <div class="buttons">
             <h3 *ngIf="currentFolder?.groupRoot===false" (click)="returnToRoot(currentFolder?.racine)" class="return-btn">Retour</h3>
+            <h3  class="return-btn" routerLink="/userdashboard/filter">Recherche/filtre</h3>
             <h3 class="return-btn" *ngIf="currentFolder?.currentAuth?.upload" [routerLink]="['/userdashboard/upload', currentFolder?.id]">Charger</h3>
             <h3 class="return-btn" *ngIf="currentFolder?.currentAuth?.creationDossier" [routerLink]="['/userdashboard/add-folder', currentFolder?.id]">+ Dossier</h3>
           </div>

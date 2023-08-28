@@ -17,6 +17,7 @@ import GroupConsumption from '../domain/GroupConsumption';
 import CompagnieName from '../domain/CompagnieName';
 import Authorisation from '../domain/Authorisation';
 import Dossier from '../domain/Dossier';
+import Fichier from '../domain/Fichier';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -34,5 +35,8 @@ export class CollabServiceService {
 
   getFolderByIdAsUser(id:number | undefined):Observable<Dossier> {
     return this.http.get<Dossier>(`${this.baseUrl}/getDossier/${id}`, httpOptions);
+  }
+  getFilteredFiles(body:any):Observable<Fichier[]> {
+    return this.http.post<Fichier[]>(`${this.baseUrl}/getFilteredFiles`,body, httpOptions);
   }
 }

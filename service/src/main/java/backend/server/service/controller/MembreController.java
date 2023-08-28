@@ -4,14 +4,18 @@ import backend.server.service.Repository.*;
 import backend.server.service.Service.*;
 import backend.server.service.domain.Authorisation;
 import backend.server.service.domain.Dossier;
+import backend.server.service.domain.Fichier;
 import backend.server.service.domain.Membre;
 import backend.server.service.payloads.CurrentAuth;
+import backend.server.service.payloads.FileFilterRequest;
 import backend.server.service.security.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -35,6 +39,7 @@ public class MembreController {
     private final IDossierService dossierService;
     private final QuotaService quotaService;
     private final IAuthotisationService authotisationService;
+    private final IFichierService fichierService;
 
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -43,6 +48,14 @@ public class MembreController {
         Membre membre = membreService.getMembre(authotisationService.extractResourceAccessorFromSecurityContext().getId());
         return dossierService.getGroupRootForUser(membre.getGroupe());
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/getFilteredFiles")
+    public List<Fichier> getFilteredFiles(@RequestBody FileFilterRequest fileFilterRequest) {
+        return fichierService.getFilteredFiles(fileFilterRequest);
+    }
+
+
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/getDossier/{id}")
