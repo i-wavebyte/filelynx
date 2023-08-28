@@ -10,9 +10,9 @@
                 <p class="fullpath">{{dossier.nom}}</p>
               </div>
           </div>
-          <div class="label-container">
+          <div class="label-container" *ngIf="roles[0] == 'ROLE_COMPAGNIE'">
               <label for="name">Collaborateur</label>
-              <div class="row">
+              <div class="row" >
                 <select class="sele" (change)="onUserSelected($event)">
                   <option value="" *ngFor="let membre of membres" [value]="membre.id">{{membre.username}}</option>
                 </select>
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="row2">
+      <div class="row2" *ngIf="roles[0] == 'ROLE_COMPAGNIE'">
         <div class="left-side">
           <div class="checkbox-container">
             <div *ngFor="let checkbox of checkboxeUser" class="checkbox-item">

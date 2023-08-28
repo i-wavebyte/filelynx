@@ -283,7 +283,7 @@ public class CompagnieController {
      * @return une liste des labels de la compagnie
      */
 
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/labels")
     public List<String> getAllLabels() {
          return compagnieService.getAllLabels();
@@ -292,7 +292,7 @@ public class CompagnieController {
     /**
      * @return une liste des catégories de la compagnie
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/categories")
     public List<String> getAllCategories() {
         return compagnieService.getAllCategories();

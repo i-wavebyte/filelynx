@@ -31,8 +31,6 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
 import { AdminDashboardComponent } from './layouts/admin-dashboard/admin-dashboard.component';
 import { EntreprisesComponent } from './layouts/entreprises/entreprises.component';
 
-
-
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
@@ -48,40 +46,73 @@ const routes: Routes = [
   },
   { path: 'admindashboard', component: AdminDashboardComponent },
   { path: 'entreprises', component: EntreprisesComponent },
-  { path: 'userdashboard', component: UserDashboardComponent },
+  {
+    path: 'userdashboard',
+    component: UserFilesComponent,
+    children: [
+      { path: 'add-folder/:parentId', component: AddFileComponent },
+      {
+        path: 'folderdetails',
+        component: FoldersettingComponent,
+        children: [
+          { path: 'add-collab/:folderId', component: AddFolderCollabComponent },
+        ],
+      },
+      { path: 'upload/:parentId', component: FilesettingsComponent },
+      { path: 'filedetails/:fileId', component: FiledetailsComponent },
+    ],
+  },
   { path: 'log', component: LogsComponent, canActivate: [AuthGuard] },
 
   {
-    path: 'groups', component: GroupesComponent, canActivate: [AuthGuard],
-    children: [{ path: 'add-groupe', component: AddGroupeComponent },
-    { path: 'details/:groupId', component: GroupDetailsComponent }],
+    path: 'groups',
+    component: GroupesComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'add-groupe', component: AddGroupeComponent },
+      { path: 'details/:groupId', component: GroupDetailsComponent },
+    ],
   },
   {
-    path: 'users', component: UsersComponent, canActivate: [AuthGuard],
+    path: 'users',
+    component: UsersComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'add-collaborateur', component: AddMembreComponent },
-      { path: 'details/:profId', component: MembersettingComponent }]
+      { path: 'details/:profId', component: MembersettingComponent },
+    ],
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {
-    path: "files", component: FilesComponent,
-    children: [{ path: "add-folder/:parentId", component: AddFileComponent },
-    { path: "folderdetails", component: FoldersettingComponent, children: [{ path: "add-collab/:folderId", component: AddFolderCollabComponent }] },
-    { path: "upload/:parentId", component: FilesettingsComponent },
-    { path: "filedetails/:fileId", component: FiledetailsComponent }]
+    path: 'files',
+    component: FilesComponent,
+    children: [
+      { path: 'add-folder/:parentId', component: AddFileComponent },
+      {
+        path: 'folderdetails',
+        component: FoldersettingComponent,
+        children: [
+          { path: 'add-collab/:folderId', component: AddFolderCollabComponent },
+        ],
+      },
+      { path: 'upload/:parentId', component: FilesettingsComponent },
+      { path: 'filedetails/:fileId', component: FiledetailsComponent },
+    ],
   },
   {
-    path: 'metadata', component: MetadataComponent,
-    children: [{ path: "add-label", component: AddLabelComponent },
-    { path: "add-categorie", component: AddCategorieComponent },
-    { path: 'user-files', component: UserFilesComponent },
-    ]
-  }
+    path: 'metadata',
+    component: MetadataComponent,
+    children: [
+      { path: 'add-label', component: AddLabelComponent },
+      { path: 'add-categorie', component: AddCategorieComponent },
+      { path: 'user-files', component: UserFilesComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

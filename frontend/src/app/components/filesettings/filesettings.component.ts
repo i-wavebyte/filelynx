@@ -7,6 +7,8 @@ import { FileService } from 'src/app/_services/file.service';
 import { NgToastService } from 'ng-angular-popup';
 import Dossier from 'src/app/domain/Dossier';
 import { HttpEventType } from '@angular/common/http';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
+import { CollabServiceService } from 'src/app/_services/collab-service.service';
 
 @Component({
   selector: 'app-filesettings',
@@ -28,11 +30,20 @@ export class FilesettingsComponent {
 
   folderId!: number;
 
-    constructor(private compagnieService: CompagnieService, private route: ActivatedRoute, private folderService: FolderService, private fileService: FileService,  private toast: NgToastService,  private router:Router) {}
+    constructor(
+      private compagnieService: CompagnieService,
+      private route: ActivatedRoute,
+      private folderService: FolderService,
+      private fileService: FileService,
+      private toast: NgToastService,
+      private router:Router,
+      private tokenStorage: TokenStorageService,
+      private collabService: CollabServiceService,
+      ) {}
   ngOnInit() {
     this.route.params.subscribe(params => {
        this.folderId = params['parentId']; // Here 'id' is the route parameter name defined in the routerLink
-      this.folderService.getFolderByIdAsAdmin(this.folderId).subscribe((data) => {
+      this.collabService.getFolderByIdAsUser(this.folderId).subscribe((data) => {
         console.log(data);
         this.groupe = data.nom;
       })
@@ -151,8 +162,12 @@ export class FilesettingsComponent {
             }
           }
           if(response.type === HttpEventType.Response){
+            let role = ""
+            if (this.tokenStorage.getToken())
+            role = this.tokenStorage.getUser().roles;
+          console.log(role);
 
-          this.router.navigate(['/files'],{ replaceUrl: true, queryParams: { reload: true } });
+          this.router.navigate([role=="ROLE_COMPAGNIE"?'/files':'/userdashboard'],{ replaceUrl: true, queryParams: { reload: true } });
           this.toast.success({detail:"Message de réussite", summary: "Fichier chargé avec succès", duration: 3000});
           }
         },

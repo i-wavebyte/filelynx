@@ -1,3 +1,4 @@
+import Authorisation from "./Authorisation";
 import Compagnie from "./Compagnie";
 import Fichier from "./Fichier";
 import Groupe from "./Groupe";
@@ -12,4 +13,5 @@ export default interface Dossier {
     fullPath: string;
     groupe:Groupe;
     groupRoot: boolean;
+    currentAuth:Authorisation;
 }

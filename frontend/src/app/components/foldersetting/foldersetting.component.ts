@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastComponent, NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
 import { FolderService } from 'src/app/_services/folder.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import Authorisation from 'src/app/domain/Authorisation';
 import Dossier from 'src/app/domain/Dossier';
 import Groupe from 'src/app/domain/Groupe';
@@ -43,8 +44,10 @@ export class FoldersettingComponent {
   selectedMembre!:number;
   selectedMemberAuth!:Authorisation;
   groupeAuth!:Authorisation;
-  constructor(private router: Router, private route: ActivatedRoute, private folderService:FolderService,private compagnieService:CompagnieService, private toast: NgToastService) {}
+  roles: string[] = [];
+  constructor(private router: Router, private route: ActivatedRoute, private folderService:FolderService,private compagnieService:CompagnieService, private toast: NgToastService, private tokenStorage:TokenStorageService) {}
   ngOnInit() {
+    this.roles = this.tokenStorage.getUser().roles;
     this.route.queryParams.subscribe(params => {
       this.folderId = params['folderId'];
       console.log(this.folderId);

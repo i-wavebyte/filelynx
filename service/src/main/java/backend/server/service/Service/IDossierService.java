@@ -3,6 +3,7 @@ package backend.server.service.Service;
 import backend.server.service.domain.Compagnie;
 import backend.server.service.domain.Dossier;
 import backend.server.service.domain.Groupe;
+import backend.server.service.domain.Membre;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface IDossierService {
     void deleteDossierCtrl(Long dossierId);
 
     Dossier renameDossierCtrl(Long dossierId, String name);
+
+    Dossier getGroupRootForUser(Groupe groupe);
+
+    Dossier getDossierByIdAsUser(Long id);
 }

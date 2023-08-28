@@ -99,15 +99,13 @@ public class AuthotisationService implements IAuthotisationService{
     public boolean hasAuth(Long resourceAccessorId, Long dossierId, String authType) {
         Authorisation auth = getAuthorisation(resourceAccessorId, dossierId);
         if (!auth.isLecture()) {
-            throw new RuntimeException(Literals.UNAUTHORIZED);
+            return false;
         }
         switch (authType) {
             case "lecture":
                 return true;
             case "ecriture":
                 return auth.isEcriture();
-            case "partage":
-                return auth.isPartage();
             case "suppression":
                 return auth.isSuppression();
             case "upload":

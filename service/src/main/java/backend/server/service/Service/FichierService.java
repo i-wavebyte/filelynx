@@ -84,6 +84,10 @@ public class FichierService implements IFichierService{
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
         System.out.println(file.getNom());
         // Create a File object
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), file.getRacine().getId(), "suppression");
+        }
         File fileToDelete = new File(path + file.getNom()+"."+file.getExtension());
         System.out.println(fileToDelete);
         // Delete the file
@@ -107,6 +111,10 @@ public class FichierService implements IFichierService{
         RessourceAccessor trigger = authotisationService.extractResourceAccessorFromSecurityContext();
         Compagnie compagnie = authotisationService.extractCompagnieFromResourceAccessor();
         Fichier file = fichierRepository.findById(fichierId).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), file.getRacine().getId(), "modification");
+        }
         String oldName = file.getNom();
         file.setNom(name);
         Log logMessage = Log.builder().message("Fichier '" + oldName+"."+file.getExtension() + "' Renommé à "+file.getNom()+"."+file.getExtension()).type(LogType.MODIFIER).date(new Date()).trigger(trigger).compagnie(compagnie).build();
@@ -148,7 +156,13 @@ public class FichierService implements IFichierService{
     @Override
     public Fichier getFichier(Long id)
     {
-        return fichierRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+        Fichier file = fichierRepository.findById(id).orElseThrow(()-> new RuntimeException(Literals.FILE_NOT_FOUND));
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), file.getRacine().getId(), "lecture");
+        }
+
+        return file;
     }
 
     /**

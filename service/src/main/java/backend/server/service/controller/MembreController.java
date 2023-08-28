@@ -2,16 +2,19 @@ package backend.server.service.controller;
 
 import backend.server.service.Repository.*;
 import backend.server.service.Service.*;
+import backend.server.service.domain.Authorisation;
+import backend.server.service.domain.Dossier;
+import backend.server.service.domain.Membre;
+import backend.server.service.payloads.CurrentAuth;
 import backend.server.service.security.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/collaborateurs")
+@RequestMapping("/api/v1/user")
 @CrossOrigin(origins = "*", maxAge = 3600) // Allow requests from any origin for one hour
 @RequiredArgsConstructor
 @Slf4j
@@ -19,7 +22,6 @@ public class MembreController {
     private final ICompagnieService compagnieService;
     private final CompagnieRepository compagnieRepository;
     private final PasswordEncoder encoder;
-
     private final RoleRepository roleRepository;
     private final IGroupeService groupeService;
     private final GroupeRepository groupeRepository;
@@ -33,4 +35,22 @@ public class MembreController {
     private final IDossierService dossierService;
     private final QuotaService quotaService;
     private final IAuthotisationService authotisationService;
+
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/getRoot")
+    public Dossier getRoot() {
+        Membre membre = membreService.getMembre(authotisationService.extractResourceAccessorFromSecurityContext().getId());
+        return dossierService.getGroupRootForUser(membre.getGroupe());
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/getDossier/{id}")
+    public Dossier getDossier(@PathVariable Long id) {
+        Membre membre = membreService.getMembre(authotisationService.extractResourceAccessorFromSecurityContext().getId());
+        Dossier dossier = dossierService.getDossierByIdAsUser(id);
+        Authorisation authorisation = authotisationService.getAuthorisation(membre.getId(), dossier.getId());
+        dossier.setCurrentAuth(new CurrentAuth(authorisation));
+        return dossierService.getDossierByIdAsUser(id);
+    }
 }

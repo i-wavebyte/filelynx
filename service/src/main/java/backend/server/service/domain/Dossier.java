@@ -1,6 +1,8 @@
 package backend.server.service.domain;
 
+import backend.server.service.payloads.CurrentAuth;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +26,7 @@ public class Dossier {
     @JsonIncludeProperties({"id","nom","extension","type","taille","etat"})
     private List<Fichier> fichiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "racine")
-    @JsonIncludeProperties({"id","nom","groupRoot"})
+    @JsonIncludeProperties({"id","nom","groupRoot","currentAuth"})
     private List<Dossier> dossiers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL , mappedBy = "dossier")
     private List<Authorisation> authorisations = new ArrayList<>();
@@ -35,12 +37,13 @@ public class Dossier {
     @JsonIncludeProperties({"id","nom"})
     private Groupe groupe;
     private boolean isGroupRoot;
+    @Transient
+    private CurrentAuth currentAuth;
     public String getFullPath(){
         String path= "/"+nom;
         if(racine != null) path = racine.getFullPath() + path;
         return path;
     }
-
     @Override
     public String toString() {
         return nom;
