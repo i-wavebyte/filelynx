@@ -15,36 +15,31 @@
         <thead>
             <tr>
                 <th>Nom</th>
-                <th>Entreprises</th>
                 <th>Quota</th>
                 <th>UsedQuota</th>
-                <th>Groupes</th>
-                <th>Membres</th>
             </tr>
         </thead>
         <tbody>
-            <!-- <tr *ngFor="let groupe of filteredGroups">
+            <tr *ngFor="let compagnie of filteredCompagnies">
                 <td>
                     <div class="name-info">
-                        <button (click)="onInfoProfessor(groupe)" class="info">?</button>
-                        <input class="table-data editable" [(ngModel)]="groupe.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="groupe.nom | titlecase"/>
+                        <input class="table-data editable" [(ngModel)]="compagnie.nom" [ngModelOptions]="{ updateOn: 'blur' }" [value]="compagnie.nom | titlecase"/>
                     </div>
                 </td>
-
                 <td>
-                  <div class="progressBar table-data">
-                    <div class="progressBarValue" [style.width]="((groupe.quotaUsed/groupe.quota)*100)+'%'"></div>
-                    <div class="progressBarText">{{tailleToBestUnit(groupe.quotaUsed,true,2)}}/{{tailleToBestUnit(groupe.quota,true,2)}}</div>
-                  </div>
+                    <div class="name-info">
+                        <input class="table-data editable" [(ngModel)]="compagnie.quota" [ngModelOptions]="{ updateOn: 'blur' }" [value]="compagnie.quota"/>
+                    </div>
                 </td>
                 <td>
-                    <input class="table-data" [(ngModel)]="groupe.membres.length" disabled/>
+                    <div class="name-info">
+                        {{compagnie.usedQuota}}
+                    </div>
                 </td>
                 <td class="actions">
-                    <button (click)="onUpdateGroupe(groupe.id,groupe.nom)" class="edit">Modifier</button>
-                    <button (click)="onDeleteGroupe(groupe.nom)" class="delete">Supprimer</button>
+                    <button (click)="onUpdateGroupe(compagnie.id,compagnie.nom, compagnie.quota)" class="edit">Modifier</button>
                 </td>
-            </tr> -->
+            </tr>
         </tbody>
     </table>
     <div class="pagination">
@@ -53,7 +48,7 @@
         <button
             class="pagination-button"
             (click)="nextPage()"
-            [disabled]="(page + 1) * pageSize >= totalGroups"
+            [disabled]="(page + 1) * pageSize >= totalCompagnies"
         >&raquo;
         </button>
     </div>

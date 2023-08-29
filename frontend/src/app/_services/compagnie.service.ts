@@ -15,6 +15,7 @@ import QuotaUsedToday from '../domain/QuotaUsedToday';
 import ConsumptionHistoryChart from '../domain/ConsumptionHistoryChart';
 import GroupConsumption from '../domain/GroupConsumption';
 import CompagnieName from '../domain/CompagnieName';
+import Compagnie from '../domain/Compagnie';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -24,6 +25,7 @@ const httpOptions = {
 
 
 export class CompagnieService {
+
   private baseUrl = 'http://'+window.location.hostname+':8080/api/v1/compagnie';
   constructor(private http: HttpClient) {}
 
@@ -44,6 +46,10 @@ export class CompagnieService {
 
   updateCategorie(catId: number,catName: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/updateCategorie/${catId}/${catName}`, httpOptions);
+  }
+
+  updateCompagnie(catId: number,catName: string, compagnieQuota: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/updateCompagnieQuota/${catId}/${catName}`, compagnieQuota, httpOptions);
   }
 
   updateLabel(labelId: number, labelName: string): Observable<any>{
@@ -117,6 +123,23 @@ export class CompagnieService {
       `${this.baseUrl}/getGroups`,
       { params }
     );
+  }
+
+  getAllCompagnies(page: number, size: number, sortBy: string, sortOrder: string,  searchQuery: string): Observable<PageResponse<Compagnie>> {
+    let params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sortBy', sortBy)
+    .set('sortOrder', sortOrder);
+
+  if (searchQuery) {
+    params = params.set('searchQuery', searchQuery);
+  }
+
+  return this.http.get<PageResponse<Compagnie>>(
+    `${this.baseUrl}/getCompagnies`,
+    { params }
+  );
   }
 
   getLabelsPage(

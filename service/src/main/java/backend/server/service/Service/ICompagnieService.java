@@ -3,7 +3,6 @@ package backend.server.service.Service;
 import backend.server.service.POJO.PageResponse;
 import backend.server.service.domain.*;
 import backend.server.service.payloads.*;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -32,5 +31,7 @@ public interface ICompagnieService {
     List<GroupConsumption> getAllGroupsConsumption();
     CompagnieName getCompagnieName();
 
-    PageResponse<Groupe> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery);
+    PageResponse<Compagnie> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery);
+
+    void updateCompagnieQuota(Long id, String name, Double quota);
 }

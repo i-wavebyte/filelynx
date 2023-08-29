@@ -6,6 +6,7 @@ td {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
+  width: 35%;
 }
 
 tr:last-child td {
@@ -21,10 +22,14 @@ input {
   background-color: white;
   border-radius: 4px;
   border: 1px solid #c6ced6;
-  width: 300px;
+  width: 70%;
   padding: 13px;
   outline: none;
   font-size: 0.9em;
+}
+
+.filters input{
+  width: 300px;
 }
 
 .filters {

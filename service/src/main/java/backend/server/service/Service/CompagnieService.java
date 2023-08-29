@@ -2,22 +2,17 @@ package backend.server.service.Service;
 
 import backend.server.service.Literals;
 import backend.server.service.POJO.PageResponse;
-import backend.server.service.POJO.Quota;
 import backend.server.service.Repository.*;
 import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
 import backend.server.service.payloads.*;
-import backend.server.service.security.POJOs.responses.MessageResponse;
 import backend.server.service.security.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -342,8 +337,31 @@ public class CompagnieService implements ICompagnieService{
     }
 
     @Override
-    public PageResponse<Groupe> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery) {
-        return null;
+    public PageResponse<Compagnie> getCompagniesPage(int page, int size, String sortBy, String sortOrder, String searchQuery) {
+        String compagnieName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
+        Sort sort = Sort.by(direction, sortBy);
+        int start = page * size;
+        int end = Math.min(start + size, (int) compagnieRepository.count());
+        List<Compagnie> compagnies = compagnieRepository.findAll(sort);
+        if (searchQuery != null && !searchQuery.isEmpty()){
+            compagnies = compagnies.stream()
+                    .filter(compagnie -> compagnie.getNom().toLowerCase().contains(searchQuery.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+//        for (Compagnie compagnie : compagnies) {
+//            groupe.setQuotaUsed(quotaService.getTotalQuotaOfGroup(groupe.getId()));
+//        }
+        List<Compagnie> pageContent = compagnies.subList(start, Math.min(end, compagnies.size()));
+        return new PageResponse<>(pageContent, compagnies.size());
+     }
+
+    @Override
+    public void updateCompagnieQuota(Long id, String name, Double quota) {
+        Compagnie compagnie = getCompagnie(id);
+        compagnie.setQuota(quota);
+        compagnie.setNom(name);
+        compagnieRepository.save(compagnie);
     }
 
     public QuotaUsedToday getQuotaUsedToday() {
@@ -369,7 +387,5 @@ public class CompagnieService implements ICompagnieService{
 
         return quotaUsedToday;
      }
-
-
 
 }

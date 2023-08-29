@@ -1,7 +1,11 @@
+import { group } from '@angular/animations';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { data } from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 import { CompagnieService } from 'src/app/_services/compagnie.service';
+import Compagnie from 'src/app/domain/Compagnie';
+import { PageResponse } from 'src/app/domain/PageRespone';
 
 @Component({
   selector: 'app-entreprises-list',
@@ -9,13 +13,14 @@ import { CompagnieService } from 'src/app/_services/compagnie.service';
   styleUrls: ['./entreprises-list.component.css']
 })
 export class EntreprisesListComponent {
-  // groups: Groupe[] = [];
-  // filteredGroups: Groupe[] = [];
+  compagnies: Compagnie[] = [];
+  filteredCompagnies: Compagnie[] = [];
   searchValue: string = '';
   nameOrder: string = '';
   page: number = 0;
   pageSize: number = 6;
-  totalGroups!: number;
+  totalCompagnies!: number;
+  quota: number = 0;
 
   constructor(
     private compagnieService: CompagnieService,
@@ -28,15 +33,30 @@ export class EntreprisesListComponent {
   // }
 
   ngOnInit(): void {
-    this.loadGroupes();
+    this.loadEntreprises();
     this.route.queryParams.subscribe(params => {
       if (params['reload']) {
 
           console.log('reload');
 
-          this.loadGroupes();
+          this.loadEntreprises();
       }
     });
+  }
+
+  loadEntreprises() {
+    this.compagnieService.getAllCompagnies(this.page, this.pageSize, 'nom', this.nameOrder, this.searchValue).subscribe((response: PageResponse<Compagnie>)=>{
+      this.compagnies = response.content.map((compagnie) => {
+        compagnie.nom = this.titleCase(compagnie.nom);
+        return compagnie;
+      })
+      this.filteredCompagnies = this.compagnies;
+      for (let i=0;i<this.compagnies.length;i++)
+      {
+        console.log(this.compagnies[i].usedQuota);
+      }
+      this.totalCompagnies = response.totalElements;
+    })
   }
 
   tailleToUnit(taille: number, showUnit: boolean = true, unit: string = 'Go', precision:number): string {
@@ -112,7 +132,7 @@ export class EntreprisesListComponent {
 
   nextPage(): void {
     console.log('nextPage');
-    if ((this.page + 1) * this.pageSize < this.totalGroups) {
+    if ((this.page + 1) * this.pageSize < this.totalCompagnies) {
       this.page++;
       this.loadGroupes();
     }
@@ -132,12 +152,12 @@ export class EntreprisesListComponent {
     );
   }
 
-  onUpdateGroupe(groupeId : number, newName : string){
-    this.compagnieService.updateGroupe(groupeId,newName).subscribe(
+  onUpdateGroupe(groupeId : number, newName : string, newQuota: number){
+    this.compagnieService.updateCompagnie(groupeId,newName, newQuota).subscribe(
       (data) => {
         this.toast.success({detail:"Message de réussite", summary: data.message, duration: 3000});
         console.log(data);
-        this.loadGroupes();
+        this.loadEntreprises();
       },
       (err) => {
         this.toast.error({detail:"Message d'erreur", summary: err.error, duration: 3000});

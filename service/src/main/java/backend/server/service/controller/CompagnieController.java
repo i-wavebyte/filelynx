@@ -434,14 +434,22 @@ public class CompagnieController {
 
 
     @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+    @PutMapping("/updateCompagnieQuota/{id}/{name}")
+    public ResponseEntity<?> updateCompagnieQuota(@PathVariable Long id, @PathVariable String name,@RequestBody Double quota){
+        compagnieService.updateCompagnieQuota(id, name, quota);
+        return ResponseEntity.ok(new MessageResponse(Literals.COMPAGNIEQUOTA_EDIT_SUCCESS));
+    }
+
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @GetMapping("/getCompagnies")
-    public PageResponse<Groupe> getAllCompagnies(
+    public PageResponse<Compagnie> getAllCompagnies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "7") int size,
             @RequestParam(defaultValue = "nom") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortOrder,
             @RequestParam(required = false) String searchQuery
     ) {
+        System.out.println("here pleaaaase");
         return compagnieService.getCompagniesPage(page, size, sortBy, sortOrder, searchQuery);
     }
 

@@ -25,6 +25,7 @@ public class Literals {
     public static final String COMPAGNIE_REGISTRATION_SUCCESSFUL = "La société a été créée avec succès";
     public static final String GROUPE_DELETE_SUCCESS = "Le groupe a été supprimé avec succès";
     public static final String GROUPE_EDIT_SUCCESS = "Le groupe a été modifié avec succès";
+    public static final String COMPAGNIEQUOTA_EDIT_SUCCESS = "Le quota a été modifié avec succès";
     public static final String GROUPE_CREATE_SUCCESS = "Le groupe a été créé avec succès";
     public static final String MEMBER_DELETE_SUCCESS = "Le membre a été supprimé avec succès";
     public static final String MEMBER_EDIT_SUCCESS = "Le membre a été modifié avec succès";
