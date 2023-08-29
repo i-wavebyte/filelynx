@@ -59,7 +59,14 @@ public class QuotaService implements IQuotaService{
     }
 
     public Double getTotalQuotaOfCompagnie(){
-        Compagnie compagnie = (Compagnie) authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie;
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnie = (Compagnie) ressourceAccessor;
+        }
         Double totalQuota = 0.0;
         for (Groupe groupe : compagnie.getGroupes()) {
             totalQuota += getTotalQuotaOfGroup(groupe.getId());
@@ -78,7 +85,15 @@ public class QuotaService implements IQuotaService{
     }
 
     public void checkQuotaOfCompagnie(Fichier f){
-        Compagnie compagnie = (Compagnie) authotisationService.extractResourceAccessorFromSecurityContext();
+        Compagnie compagnie;
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnie = (Compagnie) ressourceAccessor;
+        }
+
         Double totalQuota = getTotalQuotaOfCompagnie();
         log.info("total used quota of compagnie : " + totalQuota);
         log.info("quota of compagnie : " + compagnie.getQuota());

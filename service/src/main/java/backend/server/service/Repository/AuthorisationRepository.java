@@ -14,5 +14,5 @@ public interface AuthorisationRepository extends JpaRepository<Authorisation, Lo
     Optional<Authorisation> findByRessourceAccessorIdAndDossierId(Long ressourceAccessorId,Long dossierId);
     //get all authorisations by ressourceAccessorId
     List<Authorisation> findAllByRessourceAccessorId(Long ressourceAccessorId);
-
+    List<Authorisation> findByDossierId(Long dossierId);
 }

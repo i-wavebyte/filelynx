@@ -40,7 +40,7 @@ public class DossierController {
      * @param parentFolderId id du dossier parent
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/admin/add/{parentFolderId}")
     public ResponseEntity<?> addDossier(@RequestBody Dossier d, @PathVariable Long parentFolderId) {
         dossierService.addDossierCtrl(d, parentFolderId);
@@ -63,7 +63,7 @@ public class DossierController {
      * @param dossierId id du dossier à supprimer
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @DeleteMapping("/admin/delete/{dossierId}")
     public ResponseEntity<?> deleteDossier(@PathVariable Long dossierId) {
         dossierService.deleteDossierCtrl(dossierId);
@@ -76,7 +76,7 @@ public class DossierController {
      * @param name nouveau nom du dossier
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/admin/rename/{dossierId}")
     public ResponseEntity<?> renameDossier(@PathVariable Long dossierId,@RequestParam String name) {
         dossierService.renameDossierCtrl(dossierId, name);
@@ -112,7 +112,7 @@ public class DossierController {
      * @param dossierId id du dossier à récupérer
      * @return le dossier spécifié
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/admin/get/{dossierId}")
     public Dossier getDossier(@PathVariable Long dossierId) {
         return dossierService.getDossier(dossierId);

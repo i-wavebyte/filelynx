@@ -1,9 +1,8 @@
 package backend.server.service.Service;
 
-import backend.server.service.domain.Authorisation;
-import backend.server.service.domain.Compagnie;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.RessourceAccessor;
+import backend.server.service.domain.*;
+
+import java.util.List;
 
 public interface IAuthotisationService {
     Long extractResourceAssessorIdFromSecurityContext();
@@ -14,4 +13,9 @@ public interface IAuthotisationService {
     boolean determineResourceAssessor();
     Compagnie extractCompagnieFromResourceAccessor();
     RessourceAccessor extractResourceAccessorFromSecurityContext();
+    List<Membre> getMembresWithAuthObjects(Long dossierId);
+    List<Membre> getMembresWithoutAuthObjects(Long dossierId);
+    Authorisation giveMemberAccessToDossier(Long dossierId, Long membreId);
+
+    void updateAuthorisation(Authorisation authorisation);
 }

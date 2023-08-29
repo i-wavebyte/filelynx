@@ -3,10 +3,7 @@ package backend.server.service.domain;
 import backend.server.service.enums.AuthLevel;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -25,7 +22,6 @@ public class Authorisation {
     private boolean ecriture;
     private boolean modification;
     private boolean suppression;
-    private boolean partage;
     private boolean telechargement;
     private boolean upload;
     private boolean creationDossier;
@@ -42,7 +38,6 @@ public class Authorisation {
                 .ecriture(true)
                 .modification(true)
                 .suppression(true)
-                .partage(true)
                 .telechargement(true)
                 .upload(true)
                 .creationDossier(true)
@@ -55,7 +50,6 @@ public class Authorisation {
                 .ecriture(false)
                 .modification(false)
                 .suppression(false)
-                .partage(false)
                 .telechargement(false)
                 .upload(false)
                 .creationDossier(false)
@@ -68,7 +62,6 @@ public class Authorisation {
                 .ecriture(false)
                 .modification(false)
                 .suppression(false)
-                .partage(false)
                 .telechargement(false)
                 .upload(false)
                 .creationDossier(false)
@@ -86,37 +79,34 @@ public class Authorisation {
     }
 
     public void setEcriture(boolean ecriture) {
-        checkLecture();
+        if(ecriture==true) checkLecture();
         this.ecriture = ecriture;
     }
 
     public void setModification(boolean modification) {
-        checkLecture();
+        if(modification) checkLecture();
         this.modification = modification;
     }
 
     public void setSuppression(boolean suppression) {
-        checkLecture();
+        if(suppression) checkLecture();
         this.suppression = suppression;
     }
 
-    public void setPartage(boolean partage) {
-        checkLecture();
-        this.partage = partage;
-    }
+
 
     public void setTelechargement(boolean telechargement) {
-        checkLecture();
+        if(telechargement) checkLecture();
         this.telechargement = telechargement;
     }
 
     public void setUpload(boolean upload) {
-        checkLecture();
+        if(upload) checkLecture();
         this.upload = upload;
     }
 
     public void setCreationDossier(boolean creationDossier) {
-        checkLecture();
+        if(creationDossier) checkLecture();
         this.creationDossier = creationDossier;
     }
 }

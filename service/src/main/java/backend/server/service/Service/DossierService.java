@@ -6,6 +6,8 @@ import backend.server.service.Repository.FichierRepository;
 import backend.server.service.Repository.LogRepository;
 import backend.server.service.domain.*;
 import backend.server.service.enums.LogType;
+import backend.server.service.payloads.CurrentAuth;
+import backend.server.service.payloads.FileFilterRequest;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class DossierService implements IDossierService {
     private final DossierRepository dossierRepository;
     private final FichierRepository fichierRepository;
 //    private final IFichierService fichierService;
+    private final IMembreService membreService;
     private final ICompagnieService compagnieService;
     private final IAuthotisationService authotisationService;
     @Autowired
@@ -40,8 +44,18 @@ public class DossierService implements IDossierService {
      */
     public Dossier addDossier(Dossier d, Long parentFolderId)
     {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        String compagnieNom;
+        Compagnie compagnie;
+        if(ressourceAccessor instanceof Membre){
+            compagnieNom = ((Membre) ressourceAccessor).getGroupe().getCompagnie().getNom();
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnieNom = ((Compagnie) ressourceAccessor).getNom();
+            compagnie = (Compagnie) ressourceAccessor;
+        }
         Dossier dossierParent = parentFolderId!=null ? dossierRepository.findById(parentFolderId).orElseThrow(()-> new RuntimeException("Folder not found")): null;
         d.setCompagnie(compagnieService.getCompagnie(compagnieNom));
         d.setRacine(dossierParent);
@@ -219,6 +233,12 @@ public class DossierService implements IDossierService {
      * @return le dossier
      */
     public Dossier getDossier(Long dossierId) {
+        Compagnie compagnie;
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), dossierId, "lecture");
+        }
+
         return dossierRepository.findById(dossierId).orElseThrow(() -> new RuntimeException("Folder not found"));
     }
 
@@ -228,8 +248,15 @@ public class DossierService implements IDossierService {
      */
     @Override
     public Dossier getRootDossier() {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        return dossierRepository.findByCompagnieNomAndRacineIsNull(compagnieNom);
+        Compagnie compagnie;
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnie = (Compagnie) ressourceAccessor;
+        }
+        return dossierRepository.findByCompagnieNomAndRacineIsNull(compagnie.getNom());
     }
 
     /**
@@ -261,15 +288,29 @@ public class DossierService implements IDossierService {
 
     @Override
     public Dossier addDossierCtrl(Dossier d, Long parentFolderId) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Dossier parent = dossierRepository.findById(parentFolderId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        String compagnieNom;
+        Compagnie compagnie;
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), parent.getId(), "creationDossier");
+            compagnieNom = ((Membre) ressourceAccessor).getGroupe().getCompagnie().getNom();
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnieNom = ((Compagnie) ressourceAccessor).getNom();
+            compagnie = (Compagnie) ressourceAccessor;
+        }
+
+
         if(getRootDossier().getId() == parentFolderId){
             throw new RuntimeException("Vous ne pouvez pas ajouter un dossier à la racine");
         }
         d.setGroupe(getGroupRootGroupe(parentFolderId));
+        d.setCompagnie(compagnie);
         authotisationService.generateDefaultAuths(authotisationService.extractResourceAssessorIdFromSecurityContext(), d);
         d= addDossier(d, parentFolderId);
-        Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+        Log logMessage = Log.builder().message("Dossier "+d.getNom()+" ajouté à la société "+compagnieNom).type(LogType.CRÉER).date(new Date()).trigger(ressourceAccessor).compagnie(compagnie).build();
         logRepository.save(logMessage);
         return d;
 
@@ -277,6 +318,10 @@ public class DossierService implements IDossierService {
 
     @Override
     public void deleteDossierCtrl(Long dossierId) {
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), dossierId, "suppression");
+        }
         if(getRootDossier().getId() == dossierId){
             throw new RuntimeException(Literals.CANT_DELETE_DEFAULT_ROOT);
         }
@@ -288,14 +333,52 @@ public class DossierService implements IDossierService {
 
     @Override
     public Dossier renameDossierCtrl(Long dossierId, String name) {
-        String compagnieNom = SecurityContextHolder.getContext().getAuthentication().getName();
-        Compagnie compagnie = compagnieService.getCompagnie(compagnieNom);
+        Compagnie compagnie;
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre){
+            authotisationService.authorize(ressourceAccessor.getId(), dossierId, "modification");
+            compagnie = ((Membre) ressourceAccessor).getGroupe().getCompagnie();
+        }
+        else{
+            compagnie = (Compagnie) ressourceAccessor;
+        }
 
             Dossier dossier = renameDossier(dossierId, name);
-            Log logMessage = Log.builder().message("Dossier "+name+" ajouté à la société "+compagnieNom).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
+            Log logMessage = Log.builder().message("Dossier "+name+" ajouté à la société "+compagnie.getNom()).type(LogType.MODIFIER).date(new Date()).trigger(compagnie).compagnie(compagnie).build();
             logRepository.save(logMessage);
             return dossier;
 
+    }
+
+    @Override
+    public Dossier getGroupRootForUser(Groupe groupe) {
+        Dossier root = dossierRepository.findByGroupeIdAndRacineIsNotNullAndIsGroupRootTrue(groupe.getId());
+        Dossier dossierAfterAuthFilter = new Dossier();
+        List<Dossier> dossiersAfterAuthFilter = new ArrayList<>(root.getDossiers());
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        Membre membre = membreService.getMembre(ressourceAccessor.getId());
+        Iterator<Dossier> iterator = dossiersAfterAuthFilter.iterator();
+        while (iterator.hasNext()) {
+            Dossier dossier = iterator.next();
+            if (!authotisationService.hasAuth(membre.getId(), dossier.getId(), "lecture")) {
+                iterator.remove();
+            }
+            else{
+                Authorisation auth = authotisationService.getAuthorisation(membre.getId(), dossier.getId());
+                dossier.setCurrentAuth(new CurrentAuth(auth));
+            }
+        }
+        root.setDossiers(dossiersAfterAuthFilter);
+        Authorisation auth = authotisationService.getAuthorisation(membre.getId(), root.getId());
+        root.setCurrentAuth(new CurrentAuth(auth));
+        return root;
+    }
+
+    @Override
+    public Dossier getDossierByIdAsUser(Long id) {
+        Membre membre = membreService.getMembre(authotisationService.extractResourceAssessorIdFromSecurityContext());
+        authotisationService.hasAuth(membre.getId(), id, "lecture");
+        return dossierRepository.findById(id).orElseThrow(() -> new RuntimeException("Folder not found"));
     }
 
 

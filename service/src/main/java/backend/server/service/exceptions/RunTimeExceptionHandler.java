@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class RunTimeExceptionHandler {
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseEntity<Object> handelApiRunTimeException(RuntimeException e){
+        throw e;
         // return handler exception
-        return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        //return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
 }

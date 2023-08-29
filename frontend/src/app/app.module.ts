@@ -47,6 +47,9 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
 import { AdminDashboardComponent } from './layouts/admin-dashboard/admin-dashboard.component';
 import { EntreprisesComponent } from './layouts/entreprises/entreprises.component';
 import { EntreprisesListComponent } from './components/entreprises-list/entreprises-list.component';
+import { FilesForCollabComponent } from './components/files-for-collab/files-for-collab.component';
+import { UserSearchResultsComponent } from './layouts/user-search-results/user-search-results.component';
+import { UserSearchPromptComponent } from './components/user-search-prompt/user-search-prompt.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +89,10 @@ import { EntreprisesListComponent } from './components/entreprises-list/entrepri
     GroupDetailsComponent,
     AdminDashboardComponent,
     EntreprisesComponent,
-    EntreprisesListComponent
+    EntreprisesListComponent,
+    FilesForCollabComponent,
+    UserSearchResultsComponent,
+    UserSearchPromptComponent
   ],
   imports: [
     NgToastModule,

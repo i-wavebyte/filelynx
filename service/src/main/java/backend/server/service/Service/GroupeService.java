@@ -141,8 +141,6 @@ public class GroupeService implements IGroupeService{
             authorisation.setRessourceAccessor(getGroupe(group,compagnieNom));
             authorisation.setDossier(dossier);
             dossier.getAuthorisations().add(authorisation);
-
-
             dossierService.addDossier(dossier,dossierService.getRootDossier().getId());
             return groupe;
 

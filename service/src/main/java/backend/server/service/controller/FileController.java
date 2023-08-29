@@ -1,13 +1,8 @@
 package backend.server.service.controller;
 
 import backend.server.service.Literals;
-import backend.server.service.Service.FichierService;
-import backend.server.service.Service.IFichierService;
-import backend.server.service.Service.IQuotaService;
-import backend.server.service.Service.QuotaService;
-import backend.server.service.domain.Dossier;
-import backend.server.service.domain.Fichier;
-import backend.server.service.domain.Label;
+import backend.server.service.Service.*;
+import backend.server.service.domain.*;
 import backend.server.service.payloads.FileResponse;
 import backend.server.service.security.POJOs.responses.MessageResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +41,8 @@ public class FileController {
     private IFichierService fichierService;
     @Autowired
     private QuotaService quotaService;
+    @Autowired
+    private AuthotisationService authotisationService;
     /**
      * ajoute un fichier dans le dossier parent spécifié
      * @param f fichier à ajouter
@@ -65,7 +62,7 @@ public class FileController {
      * @param fileId id du fichier à supprimer
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @DeleteMapping("/admin/delete/{fileId}")
     public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
         fichierService.deleteFichier(fileId);
@@ -79,7 +76,7 @@ public class FileController {
      * @param name nouveau nom du fichier
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/admin/rename/{fileId}")
     public ResponseEntity<?> renameFile(@PathVariable Long fileId,@RequestParam String name) {
         fichierService.rename(fileId, name);
@@ -118,7 +115,7 @@ public class FileController {
      * @param fileId id du fichier à retourner
      * @return le fichier demandé
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/admin/get/{fileId}")
     public Fichier getFile(@PathVariable Long fileId) {
         return fichierService.getFichier(fileId);
@@ -155,7 +152,7 @@ public class FileController {
      * @param parentFolderId id du dossier parent
      * @return la liste des fichiers du dossier parent
      */
-    @PreAuthorize("hasRole('ROLE_COMPAGNIE')")
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/admin/getFromParent")
     public List<Fichier> getFilesFromParent(@RequestBody Long parentFolderId) {
         return fichierService.getFichiersByParent(parentFolderId);
@@ -167,6 +164,7 @@ public class FileController {
      * @return Réponse HTTP contenenant un message de succès ou d'erreur en cas d'échec
      * @throws Exception exception
      */
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/upload")
     public ResponseEntity<List<String>> fileUpload
             (@RequestParam("file") MultipartFile file,
@@ -175,6 +173,9 @@ public class FileController {
              @RequestParam("folderId") Long folderId)
             throws Exception {
         quotaService.QuotaAuthFilter(file.getSize(), folderId);
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre)
+            authotisationService.authorize(ressourceAccessor.getId(), folderId, "telechargement");
         return new ResponseEntity<>(fichierService.uploadFile(file, folderId, selectedLabels, selectedCategorie),
                 HttpStatus.OK);
 
@@ -204,11 +205,12 @@ public class FileController {
      * @return le fichier demandé
      * @throws IOException exception
      */
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping(path = "/download/{name}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable("name") String name) throws IOException {
         fichierService.dowloadFile(name);
         // 1. Construct the File object representing the file to be downloaded
-        File file = new File(pathReda + name);
+        File file = new File(pathDiae + name);
         // 2. Create a Path object from the File's absolute path
         Path filePath = Paths.get(file.getAbsolutePath());
         // 3. Read the file's content into a ByteArrayResource
@@ -229,6 +231,7 @@ public class FileController {
                 .body(resource); // Set the response body with the file content
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/getImage/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> getImage(@PathVariable Long fichierId) throws IOException {
         Fichier f = fichierService.getFichier(fichierId);
@@ -247,11 +250,15 @@ public class FileController {
     }
 
     // This method handles the download of a file based on its fichierId
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @GetMapping("/downloadFile/{fichierId}")
     public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long fichierId) throws IOException {
+
         // Retrieve the Fichier (file) based on the given fichierId
         Fichier f = fichierService.getFichier(fichierId);
-
+        RessourceAccessor ressourceAccessor = authotisationService.extractResourceAccessorFromSecurityContext();
+        if(ressourceAccessor instanceof Membre)
+            authotisationService.authorize(ressourceAccessor.getId(), f.getRacine().getId(), "telechargement");
         // Get the real path of the file
         String path = f.getRealPath();
 
@@ -276,6 +283,8 @@ public class FileController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_COMPAGNIE') or hasRole('ROLE_USER')")
     @PostMapping("/updateFile")
     public ResponseEntity<?> updateFile(@RequestParam("selectedLabels") List<String> selectedLabels,
                                         @RequestParam("selectedCategorie") String selectedCategorie,

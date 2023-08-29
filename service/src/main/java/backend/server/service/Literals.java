@@ -48,6 +48,5 @@ public class Literals {
     public static final String ROLE_DELETE_SUCCESS = "Le rôle a été supprimé avec succès";
     public static final String QUOTA_ALLOCATION_UNDER_ALLOWED = "Le quota alloué est inférieur à la limite autorisée";
     public static final String QUOTA_ALLOCATION_OVER_ALLOWED = "Le quota alloué est supérieur à la limite autorisée";
-
-
+    public static final String ACCESS_GRANTED = "Accès accordé";
 }

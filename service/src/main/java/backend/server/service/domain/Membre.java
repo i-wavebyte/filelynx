@@ -19,4 +19,6 @@ public class Membre extends RessourceAccessor{
     private Groupe groupe;
     @ManyToOne @JsonIncludeProperties({"nom","id"})
     private Compagnie compagnie;
+
+
 }
